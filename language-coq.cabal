@@ -3,7 +3,7 @@
 
 name:                language-coq
 version:             0.0.0.0
-synopsis:            AST and pretty printer for Coq
+synopsis:            AST and pretty-printer for Coq
 homepage:            https://github.com/just95/language-coq
 license:             MIT
 license-file:        LICENSE
@@ -46,30 +46,15 @@ library
                      , DeriveDataTypeable, GeneralizedNewtypeDeriving
                      , PatternSynonyms, ViewPatterns, TemplateHaskell
 
-  -- TODO(just95) remove unused dependencies
-  build-depends:       base                 ==4.11.*
-                     , template-haskell     ==2.13.*
-                     , ghc                  ==8.4.*
-                     , ghc-boot             ==8.4.*
-                     , ghc-paths            ==0.1.*
-                     , bifunctors           ==5.*
-                     , semigroups           ==0.18.*
-                     , transformers         ==0.5.*
-                     , mtl                  ==2.2.*
-                     , array                ==0.5.*
-                     , lens                 ==4.16.*
-                     , pipes                ==4.3.*
-                     , containers           ==0.5.*
-                     , validation           ==1.*
-                     , syb                  ==0.7.*
-                     , text                 ==1.2.*
-                     , directory            ==1.3.*
-                     , filepath             ==1.4.*
-                     , wl-pprint-text       ==1.2.*
-                     , parsec               ==3.1.*
-                     , indents              ==0.5.*
-                     , optparse-applicative ==0.14.*
-                     , yaml                 ==0.8.*
+  build-depends:      base                 ==4.11.*
+                    , ghc                  ==8.4.*
+                    , transformers         ==0.5.*
+                    , mtl                  ==2.2.*
+                    , lens                 ==4.16.*
+                    , containers           ==0.5.*
+                    , text                 ==1.2.*
+                    , wl-pprint-text       ==1.2.*
+                    , parsec               ==3.1.*
 
   -- These are actually not used directly by hs-to-coq, but work around a
   -- bug(?) in GHC-8.4 that no longer loads other packages if there is a GHC
