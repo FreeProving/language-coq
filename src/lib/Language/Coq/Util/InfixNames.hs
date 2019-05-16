@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase, OverloadedStrings #-}
 
-module HsToCoq.ConvertHaskell.InfixNames (
+module Language.Coq.Util.InfixNames (
   identIsVariable,
   infixToPrefix, toPrefix, toLocalPrefix,
   prefixOpToInfix,
@@ -95,4 +95,3 @@ identToOp :: Ident -> Maybe Op
 identToOp t
    | identIsOp t = Just $ T.pack (zDecodeString (T.unpack (T.drop 3 (T.dropEnd 2 t))))
    | otherwise   = Nothing
-

@@ -1,9 +1,9 @@
 {-# LANGUAGE MultiParamTypeClasses, DefaultSignatures, FlexibleInstances,
              GeneralizedNewtypeDeriving, DeriveTraversable, DeriveGeneric, DeriveDataTypeable #-}
 
-module HsToCoq.Util.FVs where
+module Language.Coq.Util.FVs where
 
-import HsToCoq.Util.Generics
+import Language.Coq.Util.Generics
 
 import Data.Set (Set)
 import qualified Data.Set as S

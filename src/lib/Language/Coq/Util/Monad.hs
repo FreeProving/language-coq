@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module HsToCoq.Util.Monad (
+module Language.Coq.Util.Monad (
   -- * Booleans
   andM, orM,
   -- * Conditionals

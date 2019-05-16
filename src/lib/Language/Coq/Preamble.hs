@@ -1,5 +1,5 @@
 {-|
-Module      : HsToCoq.Coq.Preamble
+Module      : Language.Coq.Preamble
 Description : Static preamble for all hs-to-coq output
 Copyright   : Copyright © 2017 Antal Spector-Zabusky, University of Pennsylvania
 License     : MIT
@@ -10,21 +10,21 @@ Stability   : experimental
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
 
-module HsToCoq.Coq.Preamble
+module Language.Coq.Preamble
     ( staticPreamble
     , builtInAxioms
     ) where
 
 import Data.Text (Text)
 import qualified Data.Text as T
-import HsToCoq.Coq.Gallina
-import HsToCoq.Coq.Gallina.Orphans ()
+import Language.Coq.Gallina
+import Language.Coq.Gallina.Orphans ()
 import qualified Data.Map as M
 import Data.Bifunctor
 
 staticPreamble :: Text
 staticPreamble = T.unlines
- [ "(* Default settings (from HsToCoq.Coq.Preamble) *)"
+ [ "(* Default settings (from Language.Coq.Preamble) *)"
  , ""
  , "Generalizable All Variables."
  , ""

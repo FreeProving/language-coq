@@ -7,7 +7,7 @@
 
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module HsToCoq.Coq.FreeVars (
+module Language.Coq.FreeVars (
   -- * Constraint syonyms
   FreeVars,
   -- * Main query functions
@@ -22,10 +22,10 @@ import Prelude hiding (Num)
 import Control.Lens hiding ((<|))
 
 import Data.Foldable
-import HsToCoq.Util.List
-import HsToCoq.Util.Containers
+import Language.Coq.Util.List
+import Language.Coq.Util.Containers
 
-import HsToCoq.Util.FVs
+import Language.Coq.Util.FVs
 
 import Data.List.NonEmpty (NonEmpty(), (<|))
 import Data.Set (Set)
@@ -34,7 +34,7 @@ import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
 import GHC.TypeLits
 
-import HsToCoq.Coq.Gallina
+import Language.Coq.Gallina
 
 ----------------------------------------------------------------------------------------------------
 

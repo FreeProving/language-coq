@@ -2,7 +2,7 @@
              TypeSynonymInstances, FlexibleInstances,
              OverloadedStrings, OverloadedLists #-}
 
-module HsToCoq.Coq.Subst (
+module Language.Coq.Subst (
   -- * Things that can be substituted
   Subst(..),
   ) where
@@ -11,13 +11,13 @@ import Prelude hiding (Num)
 
 
 --import Control.Monad.Variables
---import HsToCoq.Util.Function
+--import Language.Coq.Util.Function
 --import Data.List.NonEmpty (NonEmpty(), (<|))
 import Data.Map.Strict (Map)
 import Data.Maybe
 import qualified Data.Map.Strict as M
 
-import HsToCoq.Coq.Gallina
+import Language.Coq.Gallina
 
 ----------------------------------------------------------------------------------------------------
 

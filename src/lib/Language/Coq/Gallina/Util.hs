@@ -1,6 +1,6 @@
 {-# LANGUAGE PatternSynonyms, OverloadedStrings, LambdaCase, TemplateHaskell, ViewPatterns #-}
 
-module HsToCoq.Coq.Gallina.Util (
+module Language.Coq.Gallina.Util (
   -- * Common AST patterns
   pattern Var,    pattern App1,    pattern App2,    pattern App3,    appList,
   pattern VarPat, pattern App1Pat, pattern App2Pat, pattern App3Pat,
@@ -44,8 +44,8 @@ import qualified Data.Text as T
 
 import GHC.Stack
 
-import HsToCoq.Coq.Gallina
-import HsToCoq.ConvertHaskell.InfixNames
+import Language.Coq.Gallina
+import Language.Coq.Util.InfixNames
 
 pattern Var  :: Ident                        -> Term
 pattern App1 :: Term -> Term                 -> Term

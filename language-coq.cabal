@@ -19,22 +19,22 @@ source-repository head
   location: https://github.com/just95/language-coq
 
 library
-  exposed-modules:     HsToCoq.ConvertHaskell.InfixNames
-                     , HsToCoq.Coq.Gallina
-                     , HsToCoq.Coq.Gallina.Util
-                     , HsToCoq.Coq.Gallina.Orphans
-                     , HsToCoq.Coq.Gallina.Rewrite
-                     , HsToCoq.Coq.Preamble
-                     , HsToCoq.Coq.Pretty
-                     , HsToCoq.Coq.FreeVars
-                     , HsToCoq.Coq.Subst
-                     , HsToCoq.PrettyPrint
-                     , HsToCoq.Util.Containers
-                     , HsToCoq.Util.Function
-                     , HsToCoq.Util.FVs
-                     , HsToCoq.Util.Generics
-                     , HsToCoq.Util.List
-                     , HsToCoq.Util.Monad
+  exposed-modules:     Language.Coq.FreeVars
+                     , Language.Coq.Gallina
+                     , Language.Coq.Gallina.Orphans
+                     , Language.Coq.Gallina.Rewrite
+                     , Language.Coq.Gallina.Util
+                     , Language.Coq.Preamble
+                     , Language.Coq.Pretty
+                     , Language.Coq.Subst
+                     , Language.Coq.Util.Containers
+                     , Language.Coq.Util.Function
+                     , Language.Coq.Util.FVs
+                     , Language.Coq.Util.Generics
+                     , Language.Coq.Util.InfixNames
+                     , Language.Coq.Util.List
+                     , Language.Coq.Util.Monad
+                     , Language.Coq.Util.PrettyPrint
 
   build-tools:         happy == 1.19.*
 

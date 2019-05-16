@@ -1,5 +1,5 @@
 {-|
-Module      : HsToCoq.Coq.Gallina
+Module      : Language.Coq.Gallina
 Description : An AST for Gallina, the surface language of Coq
 Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
 License     : MIT
@@ -11,7 +11,7 @@ Stability   : experimental
 
 {-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell #-}
 
-module HsToCoq.Coq.Gallina (
+module Language.Coq.Gallina (
   -- * Lexical structure
   -- $Lexical
   Ident,

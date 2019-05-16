@@ -1,5 +1,5 @@
 {-|
-Module      : HsToCoq.Coq.Pretty
+Module      : Language.Coq.Pretty
 Description : An AST for Gallina, the surface language of Coq
 Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
 License     : MIT
@@ -10,7 +10,7 @@ Stability   : experimental
 
 {-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell #-}
 
-module HsToCoq.Coq.Pretty (
+module Language.Coq.Pretty (
   renderGallina,
   showP, textP,
   Gallina(..),
@@ -19,7 +19,7 @@ module HsToCoq.Coq.Pretty (
 import Prelude hiding (Num)
 
 import Data.Foldable
-import HsToCoq.Util.Function
+import Language.Coq.Util.Function
 
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -30,11 +30,11 @@ import Data.List.NonEmpty (NonEmpty(), (<|), nonEmpty)
 import Data.Typeable
 import Data.Data (Data(..))
 
-import HsToCoq.Coq.Gallina
-import HsToCoq.Coq.Gallina.Util
-import HsToCoq.Coq.FreeVars
-import HsToCoq.Coq.Gallina.Orphans ()
-import HsToCoq.PrettyPrint
+import Language.Coq.Gallina
+import Language.Coq.Gallina.Util
+import Language.Coq.FreeVars
+import Language.Coq.Gallina.Orphans ()
+import Language.Coq.Util.PrettyPrint
 
 
 -- https://coq.inria.fr/refman/Reference-Manual005.html#init-notations

@@ -1,5 +1,5 @@
 {-|
-Module      : HsToCoq.Coq.Gallina.Rewrite
+Module      : Language.Coq.Gallina.Rewrite
 Description : Rewrite rule enginge for the Gallina AST
 Copyright   : Copyright © 2018 Joachim Breitner
 License     : MIT
@@ -19,7 +19,7 @@ unsupported AST nodes) and report such errors upon parsing.
 -}
 
 {-# LANGUAGE OverloadedLists #-}
-module HsToCoq.Coq.Gallina.Rewrite (Rewrite(..), Rewrites, rewrite) where
+module Language.Coq.Gallina.Rewrite (Rewrite(..), Rewrites, rewrite) where
 
 import qualified Data.Map as M
 import qualified Data.Set as S
@@ -29,9 +29,9 @@ import Control.Monad
 import Control.Monad.Trans.Writer.Strict
 import Data.Foldable
 
-import HsToCoq.Coq.Subst
-import HsToCoq.Coq.Gallina
-import HsToCoq.Coq.Gallina.Util
+import Language.Coq.Subst
+import Language.Coq.Gallina
+import Language.Coq.Gallina.Util
 
 data Rewrite = Rewrite
     { patternVars :: [Ident]
@@ -41,7 +41,7 @@ data Rewrite = Rewrite
   deriving (Eq, Ord, Show)
 
 -- | This could be replaced by something more efficient, if needed.
--- See comments in HsToCoq.Coq.Gallina.Rewrite.
+-- See comments in Language.Coq.Gallina.Rewrite.
 type Rewrites = [Rewrite]
 
 -- | Applies all rewrite rules that match at the root of the given term.

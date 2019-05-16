@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module HsToCoq.Util.Containers (
+module Language.Coq.Util.Containers (
   -- * Sets
   setMapMaybe,
   setMapMaybeM,
@@ -23,7 +23,7 @@ module HsToCoq.Util.Containers (
 import Control.Lens
 
 import Control.Arrow
-import HsToCoq.Util.Monad
+import Language.Coq.Util.Monad
 import Control.Monad.State
 import Control.Monad.RWS
 import Data.Foldable

@@ -7,13 +7,13 @@
 -- Orphans are frowned upon in libraries, but not quite as bad in programs.
 -- We still put them in a separte module, to make it (somewhat) clear where
 -- they are used.
-module HsToCoq.Coq.Gallina.Orphans () where
+module Language.Coq.Gallina.Orphans () where
 
 import qualified Data.Text as T
 import Data.String
 
-import HsToCoq.Coq.Gallina
-import HsToCoq.Coq.Gallina.Util
+import Language.Coq.Gallina
+import Language.Coq.Gallina.Util
 
 -- For internal use only (e.g. hardcoded names)
 instance IsString Term where

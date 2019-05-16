@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeOperators, EmptyCase, TypeApplications, ScopedTypeVariables, FlexibleContexts,
              InstanceSigs, DeriveGeneric, UndecidableInstances #-}
 
-module HsToCoq.Util.Generics (
+module Language.Coq.Util.Generics (
   -- * Re-export the class
   Generic(..),
   -- * Default instances

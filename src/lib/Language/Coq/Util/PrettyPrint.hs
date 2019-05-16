@@ -1,4 +1,4 @@
-module HsToCoq.PrettyPrint (
+module Language.Coq.Util.PrettyPrint (
   -- * The base module
   module Text.PrettyPrint.Leijen.Text,
   -- * Don't use operators with existing meanings

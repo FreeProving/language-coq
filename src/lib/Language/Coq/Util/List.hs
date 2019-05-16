@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase, RankNTypes #-}
 
-module HsToCoq.Util.List (
+module Language.Coq.Util.List (
   -- * Lists
   uncons, assertUncons, unsnoc, assertUnsnoc,
   splitCommonPrefix,
@@ -24,7 +24,7 @@ import Data.Bifunctor
 import Data.Foldable
 import Control.Applicative
 
-import HsToCoq.Util.Function
+import Language.Coq.Util.Function
 import Data.Maybe
 import Data.Tuple
 
