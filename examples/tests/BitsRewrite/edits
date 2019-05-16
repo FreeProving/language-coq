@@ -1,1 +1,0 @@
-rewrite forall x y, (x BitsRewrite..&. (BitsRewrite.complement y)) = (xor x (x .&. y))

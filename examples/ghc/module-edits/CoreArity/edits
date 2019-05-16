@@ -1,9 +1,0 @@
-# This module depends strongly on Type/Coercion/TyCoRep/TyCon
-# in order to determine the arity of some of the operations
-#
-
-axiomatize module CoreArity
-
-
-
-

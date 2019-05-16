@@ -1,2 +1,0 @@
-skip module GHC.Err
-skip Guard2.Default__T

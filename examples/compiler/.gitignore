@@ -1,7 +1,0 @@
-Compiler.v
-CompilerOrig.v
-CompilerRev.v
-CompilerRevP.v
-*.h2ci
-Makefile.coq
-_CoqProject

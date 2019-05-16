@@ -1,4 +1,0 @@
-data kinds EnumSet.EnumSet Type
-
-rename value GHC.Enum.fromEnum = EnumSet.fromEnumN
-rename value GHC.Enum.toEnum = EnumSet.toEnumN

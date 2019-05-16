@@ -1,4 +1,0 @@
-* `IdScope`, `IdDetails`: rewrite rules?
-* `Type_`: `TyVarTy` has a `Var`, which has a `Type_`… is that OK?  `* :: *`,
-  but is that all?
-* 

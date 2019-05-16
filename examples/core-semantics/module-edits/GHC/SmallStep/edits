@@ -1,3 +1,0 @@
-rename type Var.Id = Core.Var
-rewrite forall con, Core.dataConRepArgTys con = nil
-
