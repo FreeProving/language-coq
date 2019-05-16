@@ -20,80 +20,22 @@ source-repository head
   location: https://github.com/antalsz/hs-to-coq
 
 library
-  exposed-modules:     HsToCoq.Util.GHC
-                     , HsToCoq.Util.GHC.Module
-                     , HsToCoq.Util.GHC.FastString
-                     , HsToCoq.Util.GHC.DynFlags
-                     , HsToCoq.Util.GHC.RdrName
-                     , HsToCoq.Util.GHC.Name
-                     , HsToCoq.Util.GHC.HsTypes
-                     , HsToCoq.Util.GHC.HsExpr
-                     , HsToCoq.Util.GHC.Exception
-                     , HsToCoq.Util.GHC.Monad
-                     , HsToCoq.Util.GHC.Deriving
-                     , HsToCoq.Util.Coerce
-                     , HsToCoq.Util.Generics
-                     , HsToCoq.Util.Function
-                     , HsToCoq.Util.Functor
-                     , HsToCoq.Util.Foldable
-                     , HsToCoq.Util.Traversable
-                     , HsToCoq.Util.Monad.ListT
-                     , HsToCoq.Util.Monad
-                     , HsToCoq.Util.List
-                     , HsToCoq.Util.Containers
-                     , HsToCoq.Util.Char
-                     , HsToCoq.Util.Parsec
-                     , HsToCoq.Util.TempFiles
-                     , HsToCoq.Util.Messages
-                     , HsToCoq.Util.FVs
-                     , Control.Monad.Trans.Activatable.Internal
-                     , Control.Monad.Trans.Activatable
-                     , Control.Monad.Activatable.Class
-                     , Control.Monad.Activatable
-                     , Control.Monad.Trans.Counter
-                     , Control.Monad.DefinedIdents
-                     , Control.Monad.Trans.Parse
-                     , Control.Monad.Trans.NewlinesParse
-                     , Control.Monad.Parse.Class
-                     , Control.Monad.Parse
-                     , HsToCoq.PrettyPrint
-                     , HsToCoq.Coq.Preamble
+  exposed-modules:     HsToCoq.ConvertHaskell.InfixNames
                      , HsToCoq.Coq.Gallina
                      , HsToCoq.Coq.Gallina.Util
                      , HsToCoq.Coq.Gallina.Orphans
                      , HsToCoq.Coq.Gallina.Rewrite
+                     , HsToCoq.Coq.Preamble
                      , HsToCoq.Coq.Pretty
                      , HsToCoq.Coq.FreeVars
                      , HsToCoq.Coq.Subst
-                     , HsToCoq.ConvertHaskell.Parameters.Edits
-                     , HsToCoq.ConvertHaskell.Parameters.Parsers
-                     , HsToCoq.ConvertHaskell.Parameters.Parsers.Lexing
-                     , HsToCoq.ConvertHaskell.BuiltIn
-                     , HsToCoq.ConvertHaskell.TypeInfo
-                     , HsToCoq.ConvertHaskell.Monad
-                     , HsToCoq.ConvertHaskell.InfixNames
-                     , HsToCoq.ConvertHaskell.Variables
-                     , HsToCoq.ConvertHaskell.Definitions
-                     , HsToCoq.ConvertHaskell.Literals
-                     , HsToCoq.ConvertHaskell.Type
-                     , HsToCoq.ConvertHaskell.Expr
-                     , HsToCoq.ConvertHaskell.Pattern
-                     , HsToCoq.ConvertHaskell.Sigs
-                     , HsToCoq.ConvertHaskell.Declarations.Notations
-                     , HsToCoq.ConvertHaskell.Declarations.TypeSynonym
-                     , HsToCoq.ConvertHaskell.Declarations.DataType
-                     , HsToCoq.ConvertHaskell.Declarations.Class
-                     , HsToCoq.ConvertHaskell.Declarations.Instances
-                     , HsToCoq.ConvertHaskell.Declarations.TyCl
-                     , HsToCoq.ConvertHaskell.Declarations.Value
-                     , HsToCoq.ConvertHaskell.Module
-                     , HsToCoq.ConvertHaskell.Axiomatize
-                     , HsToCoq.ConvertHaskell
-                     , HsToCoq.ProcessFiles
-                     , HsToCoq.CLI.FileTree
-                     , HsToCoq.CLI.FileTree.Parser
-                     , HsToCoq.CLI
-                     , HsToCoq.Plugin
+                     , HsToCoq.PrettyPrint
+                     , HsToCoq.Util.Containers
+                     , HsToCoq.Util.Function
+                     , HsToCoq.Util.FVs
+                     , HsToCoq.Util.Generics
+                     , HsToCoq.Util.List
+                     , HsToCoq.Util.Monad
 
   build-tools:         happy == 1.19.*
 
