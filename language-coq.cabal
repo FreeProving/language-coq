@@ -38,15 +38,13 @@ library
 
   build-tools:         happy == 1.19.*
 
-  -- TODO(just95) remove unused extensions
-  other-extensions:    TypeOperators, TupleSections, LambdaCase, MultiWayIf, EmptyCase, RecordWildCards, TypeApplications, ScopedTypeVariables, OverloadedLists, OverloadedStrings
-                     , RankNTypes, ConstraintKinds
-                     , MultiParamTypeClasses, FunctionalDependencies, FlexibleContexts, InstanceSigs
-                     , TypeSynonymInstances, FlexibleInstances, UndecidableInstances
-                     , DeriveGeneric, DeriveDataTypeable, StandaloneDeriving, GeneralizedNewtypeDeriving
-                     , PatternSynonyms, ViewPatterns
-                     , TemplateHaskell
-                     , CPP
+  other-extensions:    TypeOperators, LambdaCase, EmptyCase, TypeApplications
+                     , ScopedTypeVariables, OverloadedLists, OverloadedStrings
+                     , RankNTypes, ConstraintKinds , MultiParamTypeClasses
+                     , FlexibleContexts, InstanceSigs, TypeSynonymInstances
+                     , FlexibleInstances, UndecidableInstances, DeriveGeneric
+                     , DeriveDataTypeable, GeneralizedNewtypeDeriving
+                     , PatternSynonyms, ViewPatterns, TemplateHaskell
 
   -- TODO(just95) remove unused dependencies
   build-depends:       base                 ==4.11.*
