@@ -44,6 +44,7 @@ module Language.Coq.Gallina (
   OrPattern(..),
   Comment(..),
   LocalModule(..),
+  Section(..),
 
   -- * Signatures
   Signature(..),
@@ -280,6 +281,7 @@ data Sentence = AssumptionSentence       Assumption                             
               | ArgumentsSentence        Arguments                                             -- ^@/arguments/@ – extra
               | CommentSentence          Comment                                               -- ^@/comment/@ – extra
               | LocalModuleSentence      LocalModule
+              | SectionSentence          Section
               deriving (Eq, Ord, Show, Read, Typeable, Data)
 
 -- |@/assumption/ ::=@
@@ -413,6 +415,9 @@ data ArgumentExplicitness = ArgExplicit                                         
 
 data LocalModule = LocalModule Ident [Sentence]
                       deriving (Eq, Ord, Show, Read, Typeable, Data)
+
+data Section = Section Ident [Sentence]
+                  deriving (Eq, Ord, Show, Read, Typeable, Data)
 
 -- A Coq signature
 -- TODO: Move this?

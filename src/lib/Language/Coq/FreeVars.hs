@@ -132,6 +132,7 @@ instance HasBV Qualid Sentence where
   bvOf (InstanceSentence      ins)        = bvOf   ins
   bvOf (NotationSentence      not)        = bvOf   not
   bvOf (LocalModuleSentence   lmd)        = bvOf   lmd
+  bvOf (SectionSentence       sec)        = bvOf   sec
   bvOf (ArgumentsSentence     _arg)       = mempty
   bvOf (CommentSentence       com)        = fvOf'  com
 
@@ -190,6 +191,9 @@ instance HasBV Qualid NotationBinding where
 
 instance HasBV Qualid LocalModule where
   bvOf (LocalModule _name sentences) = foldTelescope bvOf sentences
+
+instance HasBV Qualid Section where
+  bvOf (Section _name sentences) = foldTelescope bvOf sentences
 
 -- TODO Not all sequences of bindings should be telescopes!
 -- bindingTelescope :: (HasBV b, Monoid d, Foldable f)

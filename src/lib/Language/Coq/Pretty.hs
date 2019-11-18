@@ -538,6 +538,7 @@ instance Gallina Sentence where
   renderGallina' p (ArgumentsSentence       arg)    = renderGallina' p arg
   renderGallina' p (CommentSentence         com)    = renderGallina' p com
   renderGallina' p (LocalModuleSentence     lmd)    = renderGallina' p lmd
+  renderGallina' p (SectionSentence         sec)    = renderGallina' p sec
 
 instance Gallina Assumption where
   renderGallina' p (Assumption kw ass) = renderGallina' p kw <+> align (renderGallina ass) <> "."
@@ -713,6 +714,12 @@ instance Gallina ArgumentSpec where
 
 instance Gallina LocalModule where
   renderGallina' _ (LocalModule name sentences) = vcat $
+    [ "Module" <+> text name <> "." ] ++
+    [ renderGallina s | s <- sentences ] ++
+    [ "End" <+> text name <> "." ]
+
+instance Gallina Section where
+  renderGallina' _ (Section name sentences) = vcat $
     [ "Module" <+> text name <> "." ] ++
     [ renderGallina s | s <- sentences ] ++
     [ "End" <+> text name <> "." ]

@@ -90,6 +90,7 @@ instance Subst Sentence where
   subst f (InstanceSentence        ins)       = InstanceSentence          (subst f ins)
   subst f (NotationSentence        not)       = NotationSentence          (subst f not)
   subst f (LocalModuleSentence     lmd)       = LocalModuleSentence       (subst f lmd)
+  subst f (SectionSentence         sec)       = SectionSentence           (subst f sec)
   subst _ s@(ExistingClassSentence  _)        = s
   subst _ s@(ArgumentsSentence  _)            = s
   subst _ s@(CommentSentence    _)            = s
@@ -133,6 +134,9 @@ instance Subst ModuleSentence where
 
 instance Subst LocalModule where
   subst f (LocalModule name sentences) = LocalModule name (map (subst f) sentences)
+
+instance Subst Section where
+  subst f (Section name sentences) = Section name (map (subst f) sentences)
 
 instance Subst ClassDefinition where
   subst _f (ClassDefinition _cl _params _osrt _fields) = error "subst"
