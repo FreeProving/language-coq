@@ -720,7 +720,7 @@ instance Gallina LocalModule where
 
 instance Gallina Section where
   renderGallina' _ (Section name sentences) = vcat $
-    [ "Module" <+> text name <> "." ] ++
+    [ "Section" <+> text name <> "." ] ++
     [ renderGallina s | s <- sentences ] ++
     [ "End" <+> text name <> "." ]
 
