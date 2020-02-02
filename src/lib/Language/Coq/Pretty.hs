@@ -341,7 +341,7 @@ instance Gallina Term where
           | otherwise                                                          = renderGallina' appPrec f
     in renderedFunction </> align (render_args' (appPrec + 1) H args)
 
-  renderGallina' _p (ExplicitApp qid args) = parensN $
+  renderGallina' p (ExplicitApp qid args) = maybeParen (p > appPrec) $
     "@" <> renderGallina qid <> softlineIf args <> render_args' (appPrec + 1) H args
 
   renderGallina' p (InScope tm scope) = maybeParen (p > scopePrec) $
