@@ -1,20 +1,16 @@
 module Language.Coq.Util.PrettyPrint
-  (
-  -- * The base module
+  ( -- * The base module
     module Text.PrettyPrint.Leijen.Text
-  ,
-  -- * Don't use operators with existing meanings
-    (<>)
+    -- * Don't use operators with existing meanings
+  , (<>)
   , (<!>)
-  ,
   -- * Lazy 'TL.Text' to strict 'Text'
-    text
+  , text
   , lazyText
   , string
   , lazyString
-  ,
   -- * '[]' -> 'Foldable'
-    encloseSep
+  , encloseSep
   , list
   , tupled
   , semiBraces
@@ -29,22 +25,19 @@ module Language.Coq.Util.PrettyPrint
   , punctuate
   , fill1Sep
   , commaList
-  ,
   -- * Utility functions
   -- ** Nicely smushing lists together
-    sepWith
+  , sepWith
   , spacedSepPre
   , spacedSepPost
-  ,
   -- ** Dealing with possibly-empty documents
-    (</?>)
+  , (</?>)
   , docIf
   , spaceIf
   , lineIf
   , softlineIf
-  ,
   -- * Rendering
-    renderOneLineT
+  , renderOneLineT
   )
 where
 

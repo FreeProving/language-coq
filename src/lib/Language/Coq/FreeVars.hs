@@ -24,7 +24,7 @@ import           Language.Coq.Util.FVs
 import           Data.List.NonEmpty             ( NonEmpty()
                                                 , (<|)
                                                 )
-import Data.List.NonEmpty.Extra (appendl)
+import           Data.List.NonEmpty.Extra       ( appendl )
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as S
 import           GHC.TypeLits

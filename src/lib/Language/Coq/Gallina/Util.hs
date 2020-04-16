@@ -1,8 +1,7 @@
 {-# LANGUAGE OverloadedStrings, LambdaCase, TemplateHaskell, ViewPatterns #-}
 
 module Language.Coq.Gallina.Util
-  (
-  -- * Common AST patterns
+  ( -- * Common AST patterns
     mkVar
   , mkApp1
   , mkApp2
@@ -18,31 +17,27 @@ module Language.Coq.Gallina.Util
   , isLetFix
   , isLetCofix
   , collectArgs
-  ,
 
-  -- * Manipulating 'Term's
-    termHead
-  ,
+    -- * Manipulating 'Term's
+  , termHead
 
-  -- * Manipulating 'FixBody's
-    fixBodyName
+    -- * Manipulating 'FixBody's
+  , fixBodyName
   , fixBodyArgs
   , fixBodyTermination
   , fixBodyResultType
   , fixBodyBody
-  ,
 
-  -- * Manipulating 'Binder's, 'Name's, and 'Qualid's
-  -- ** Optics
-    _Ident
+    -- * Manipulating 'Binder's, 'Name's, and 'Qualid's
+    -- ** Optics
+  , _Ident
   , _UnderscoreName
   , nameToIdent
   , binderNames
   , binderIdents
   , binderExplicitness
-  ,
-  -- ** Functions
-    qualidBase
+    -- ** Functions
+  , qualidBase
   , qualidModule
   , qualidMapBase
   , qualidExtendBase

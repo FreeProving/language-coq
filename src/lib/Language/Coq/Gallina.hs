@@ -13,19 +13,17 @@ Stability   : experimental
            , OverloadedLists, TemplateHaskell #-}
 
 module Language.Coq.Gallina
-  (
-  -- * Lexical structure
-  -- $Lexical
+  ( -- * Lexical structure
+    -- $Lexical
     Ident
   , ModuleIdent
   , AccessIdent
   , Num
   , Op
-  ,
 
-  -- * Terms
-  -- $Terms
-    Term(..)
+    -- * Terms
+    -- $Terms
+  , Term(..)
   , Arg(..)
   , IfStyle(..)
   , Binders
@@ -48,15 +46,13 @@ module Language.Coq.Gallina
   , Comment(..)
   , LocalModule(..)
   , Section(..)
-  ,
 
-  -- * Signatures
-    Signature(..)
-  ,
+    -- * Signatures
+  , Signature(..)
 
-  -- * The vernacular
-  -- $Vernacular
-    Sentence(..)
+    -- * The vernacular
+    -- $Vernacular
+  , Sentence(..)
   , Assumption(..)
   , AssumptionKeyword(..)
   , Assums(..)
