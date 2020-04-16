@@ -86,7 +86,7 @@ splitModule = fmap fixup . either (const Nothing) Just . parse qualid "" where
     modIdent <- T.intercalate "." <$> many1 (try (modFrag <* char '.'))
     -- since we're assuming we get a valid name
     base     <- T.pack <$> some anyChar
-    pure $ (modIdent, base)
+    pure (modIdent, base)
 
   -- When we have a module name that ends in .Z or .N then that should be
   -- considered part of the name of the function. This is a hack to make the

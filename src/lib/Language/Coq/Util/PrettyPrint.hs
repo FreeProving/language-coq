@@ -195,4 +195,4 @@ fill1Sep xs = go (reverse (toList xs))
   go (x : xs') = group (go xs' <!> x)
 
 commaList :: Foldable f => f Doc -> Doc
-commaList xs = group (align . nest (-2) $ (sepWith (<$$>) (<+>) T.comma xs))
+commaList xs = group (align . nest (-2) $ sepWith (<$$>) (<+>) T.comma xs)

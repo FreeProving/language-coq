@@ -81,10 +81,10 @@ mkApp1 :: Term -> Term -> Term
 mkApp1 f x = App f (PosArg x :| [])
 
 mkApp2 :: Term -> Term -> Term -> Term
-mkApp2 f x1 x2 = App f (PosArg x1 :| PosArg x2 : [])
+mkApp2 f x1 x2 = App f (PosArg x1 :| [PosArg x2])
 
 mkApp3 :: Term -> Term -> Term -> Term -> Term
-mkApp3 f x1 x2 x3 = App f (PosArg x1 :| PosArg x2 : PosArg x3 : [])
+mkApp3 f x1 x2 x3 = App f (PosArg x1 :| [PosArg x2, PosArg x3])
 
 appList :: Term -> [Arg] -> Term
 appList f = maybe f (App f) . nonEmpty
@@ -104,7 +104,7 @@ mkApp3Pat c x1 x2 x3 = ArgsPat c [x1, x2, x3]
 
 -- Legacy combinator, to migrate away from the Infix constructor
 mkInfix :: Term -> Qualid -> Term -> Term
-mkInfix l op r = mkApp2 (Qualid op) l r
+mkInfix = flip (mkApp2 . Qualid)
 
 maybeForall :: Foldable f => f Binder -> Term -> Term
 maybeForall = maybe id Forall . nonEmpty . toList
@@ -259,7 +259,7 @@ collectArgs (Qualid qid) = return (qid, [])
 collectArgs (App t args) = do
   (f, args1) <- collectArgs t
   args2      <- mapM fromArg (NE.toList args)
-  return $ (f, args1 ++ args2)
+  return (f, args1 ++ args2)
  where
   fromArg (PosArg arg) = return arg
   fromArg _            = fail "non-positional argument"

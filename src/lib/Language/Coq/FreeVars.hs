@@ -238,7 +238,7 @@ instance HasFV Qualid Term where
       `scopesOver` fvOf body
 
   fvOf (LetTuple xs oret val body) =
-    fvOf oret <> fvOf val <> (foldScopes bvOf xs (fvOf body))
+    fvOf oret <> fvOf val <> foldScopes bvOf xs (fvOf body)
 
   fvOf (LetTick pat def body  ) = fvOf def <> bvOf pat `scopesOver` fvOf body
 
