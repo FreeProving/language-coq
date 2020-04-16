@@ -50,7 +50,7 @@ Have a look at our [contributing guidelines][guidelines/CONTRIBUTING] for more i
 ## License
 
 The `language-coq` library is licensed under MIT License.  
-See the [LICENSE][haskell-src-transformations/LICENSE] file for details.
+See the [LICENSE][language-coq/LICENSE] file for details.
 
 [free-compiler]:
   https://github.com/FreeProving/free-compiler
@@ -63,6 +63,10 @@ See the [LICENSE][haskell-src-transformations/LICENSE] file for details.
 [hs-to-coq]:
   https://github.com/antalsz/hs-to-coq
   "hs-to-coq on GitHub"
+
+[language-coq/LICENSE]:
+  https://github.com/FreeProving/language-coq/blob/master/LICENSE
+  "haskell-src-transformations — The MIT License"
 
 [software/ghc]:
   https://www.haskell.org/ghc/
