@@ -30,9 +30,9 @@ module Language.Coq.Util.Containers
 where
 
 import           Control.Lens
+import           Control.Monad.Extra (unlessM)
 
 import           Control.Arrow
-import           Language.Coq.Util.Monad
 import           Control.Monad.State
 import           Control.Monad.RWS
 import           Data.Foldable

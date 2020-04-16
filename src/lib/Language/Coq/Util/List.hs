@@ -164,12 +164,15 @@ explainItems disp no sep conj item items stuff =
         <>  sep
         <+> conj
         <+> lastThing
-  where space = T.singleton ' '
 
+(<+>) :: Text -> Text -> Text
 s1 <+> s2 | T.null s1 = s2
           | T.null s2 = s1
           | otherwise = s1 <> space <> s2
 infixr 5 <+>
+
+space :: Text
+space = T.singleton ' '
 
 -- TODO: Differentiate arguments somehow
 explainStrItems

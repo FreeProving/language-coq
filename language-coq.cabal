@@ -28,7 +28,6 @@ library
                      , Language.Coq.Util.Generics
                      , Language.Coq.Util.InfixNames
                      , Language.Coq.Util.List
-                     , Language.Coq.Util.Monad
                      , Language.Coq.Util.PrettyPrint
 
   other-extensions:    TypeOperators, LambdaCase, EmptyCase, TypeApplications
@@ -45,6 +44,7 @@ library
                     , mtl             ==2.2.*
                     , lens            ==4.17.*
                     , containers      ==0.6.*
+                    , extra           ==1.7.*
                     , text            ==1.2.*
                     , wl-pprint-text  ==1.2.*
                     , parsec          ==3.1.*

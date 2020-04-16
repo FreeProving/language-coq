@@ -822,6 +822,7 @@ instance Gallina ModuleSentence where
       2
       (":=" </> renderModuleIdent modOld <> ".")
 
+(??) :: (a -> Doc) -> Maybe a -> Doc
 render ?? mx = maybe mempty render mx <> spaceIf mx
 infix 9 ??
 
