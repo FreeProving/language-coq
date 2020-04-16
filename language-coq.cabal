@@ -23,7 +23,6 @@ library
                      , Language.Coq.Pretty
                      , Language.Coq.Subst
                      , Language.Coq.Util.FVs
-                     , Language.Coq.Util.Generics
                      , Language.Coq.Util.InfixNames
                      , Language.Coq.Util.List
                      , Language.Coq.Util.PrettyPrint

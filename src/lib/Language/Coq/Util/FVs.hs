@@ -1,11 +1,9 @@
-{-# LANGUAGE DefaultSignatures, DeriveDataTypeable, DeriveGeneric
-           , DeriveTraversable, FlexibleInstances, GeneralizedNewtypeDeriving
+{-# LANGUAGE DefaultSignatures, DeriveDataTypeable , DeriveTraversable
+           , FlexibleInstances, GeneralizedNewtypeDeriving
            , MultiParamTypeClasses
 #-}
 
 module Language.Coq.Util.FVs where
-
-import           Language.Coq.Util.Generics
 
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as S
@@ -23,23 +21,18 @@ import           Data.Data                      ( Data )
 
 -- | Set of free variables
 newtype FVs i = FVs { getFVs :: Set i }
- deriving (Eq, Ord, Show, Read, Generic)
-
-instance Ord i => Semigroup (FVs i) where
-  (<>) = (%<>)
-instance Ord i => Monoid    (FVs i) where
-  mempty = gmempty
+ deriving (Eq, Ord, Show, Read, Semigroup, Monoid)
 
 -- | An object capable of binding something has
 --   a set of variables
 data BVs i = BVs { getBVars :: Set i -- Variables bound by this binder
                  , getBFVs  :: Set i -- Free variables of this object
                  }
-           deriving (Eq, Ord, Show, Read, Generic)
+           deriving (Eq, Ord, Show, Read)
 instance Ord i => Semigroup (BVs i) where
-  (<>) = (%<>)
+  BVs bv1 fv1 <> BVs bv2 fv2 = BVs (bv1 <> bv2) (fv1 <> fv2)
 instance Ord i => Monoid    (BVs i) where
-  mempty = gmempty
+  mempty = BVs S.empty S.empty
 
 binder :: i -> BVs i
 binder x = BVs (S.singleton x) S.empty
@@ -95,7 +88,7 @@ newtype ErrOrVars e a = ErrOrVars { getErrOrVars :: Either e a }
  deriving ( -- Stock
             Eq, Ord, Show, Read
             -- Generics
-          , Data, Generic
+          , Data
             -- Iterating
           , Foldable, Traversable
           , Bifoldable
