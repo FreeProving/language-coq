@@ -1,0 +1,119 @@
+name: CI Pipeline
+
+# The CI pipeline runs whenever a pull request that modifies the library's
+# build configuration or source code is opened, synchronized (i.e., updated
+# due to a new push to the branch that is tracked by the pull request) or
+# reopened. If just the README or documentation changes, the pipeline does
+# not have to run. It also runs when the workflow configuration changed itself.
+#
+# When such a pull request is merged the resulting `push` event on the master
+# branch triggers another run of the CI pipeline. This is necessary because
+# there could be changes to the master branch that are not compatible with the
+# pull request but don't prevent fast-forward merging.
+on:
+  pull_request:
+    paths:
+    - 'cabal.project'
+    - 'language-coq.cabal'
+    - 'src/**'
+    - '.github/workflows/ci-pipeline.yml'
+  push:
+    branches:
+    - 'master'
+    - 'contribution-guidelines'
+    paths:
+    - 'cabal.project'
+    - 'language-coq.cabal'
+    - 'src/**'
+    - '.github/workflows/ci-pipeline.yml'
+
+jobs:
+  #############################################################################
+  # Compilation                                                               #
+  #############################################################################
+
+  # Builds the library and its dependencies using Cabal.
+  #
+  # Compiled modules are cached for subsequent jobs or pipeline runs.
+  # Unfortunately, the entire code of this job that handled the setup of
+  # the cache (steps between `SETUP CACHE` and `END SETUP CACHE`) needs to
+  # be replicated to restore the caches in all jobs that use Cabal.
+  #
+  # We cache `~/.cabal/packages`, `~/.cabal/store` and `dist-newstyle`
+  # separately. The cache keys contain the hash of the `.cabal` and
+  # `cabal.project` file as well as the hash of the `01-index.cache` file
+  # from `~/.cabal/packages`.
+  #
+  #   * If the Cabal files in this repository change, a previous version
+  #     of the cache is restored and the updated dependencies are installed.
+  #     We assume this to happen only infrequently.
+  #
+  #   * Before the caches are populated, the latest Cabal package list is
+  #     downloaded. Therefore, a change of `01-index.cache` occurs frequently.
+  #     Whenever the package list is updated, a lot of dependencies have
+  #     to be rebuild. If the hash of the index wouldn't be part of the
+  #     cache keys, the rebuild would be triggered on every push until the
+  #     Cabal files are changed. By including the indexes hash, the rebuilt
+  #     dependencies are cached until the next change of the package list.
+  #
+  # The cache key for `dist-newsyle` additionally contains the hash of all
+  # Haskell files in `src`. This avoids recompilation of modules defined in
+  # this repository.
+  #
+  # We install dependencies on all supported platforms separately. The
+  # operating system is part of the cache key. Caches are never restored
+  # from other platforms.
+  cabal-build:
+    name: Cabal Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"] # "macos-latest", "windows-latest"
+    steps:
+    ### SETUP CACHE ###########################################################
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Haskell
+      uses: actions/setup-haskell@v1
+      with:
+        ghc-version: '8.6.5'
+        cabal-version: '2.4'
+    - name: Update Cabal Package List
+      id: cabal-update
+      run: |
+        cabal new-update
+        echo "::set-output name=cabal-hash::$(cat cabal.project language-coq.cabal | sha256sum | awk '{ print $1 }')"
+        echo "::set-output name=cabal-index-hash::$(cat ~/.cabal/packages/**/01-index.cache | sha256sum -b | awk '{ print $1 }')"
+        echo "::set-output name=haskell-source-hash::$(cat $(find src -name '*.hs') | sha256sum | awk '{ print $1 }')"
+    - name: Cache ~/.cabal/packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.cabal/packages
+        key: ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
+        restore-keys: |
+          ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-
+          ${{ matrix.os }}-cabal-packages-
+    - name: Cache ~/.cabal/store
+      uses: actions/cache@v1
+      with:
+        path: ~/.cabal/store
+        key: ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
+        restore-keys: |
+          ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-
+          ${{ matrix.os }}-cabal-store-
+    - name: Cache dist-newstyle
+      uses: actions/cache@v1
+      with:
+        path: dist-newstyle
+        key: ${{ matrix.os }}-dist-newstyle-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}-${{ steps.cabal-update.outputs.haskell-source-hash }}
+        restore-keys: |
+          ${{ matrix.os }}-dist-newstyle-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}-
+          ${{ matrix.os }}-dist-newstyle-${{ steps.cabal-update.outputs.cabal-hash }}-
+          ${{ matrix.os }}-dist-newstyle-
+    ### END SETUP CACHE #######################################################
+
+    # Build the package and dependencies.
+    - name: Build library dependencies
+      run: cabal new-build language-coq --dependencies-only
+    - name: Build library
+      run: cabal new-build language-coq
