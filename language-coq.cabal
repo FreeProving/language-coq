@@ -20,7 +20,6 @@ library
                      , Language.Coq.Gallina.Orphans
                      , Language.Coq.Gallina.Rewrite
                      , Language.Coq.Gallina.Util
-                     , Language.Coq.Preamble
                      , Language.Coq.Pretty
                      , Language.Coq.Subst
                      , Language.Coq.Util.Containers
