@@ -1,5 +1,6 @@
-{-# LANGUAGE TypeOperators, EmptyCase, TypeApplications, ScopedTypeVariables, FlexibleContexts,
-             InstanceSigs, DeriveGeneric, UndecidableInstances #-}
+{-# LANGUAGE DeriveGeneric, EmptyCase, FlexibleContexts, InstanceSigs
+           , ScopedTypeVariables, TypeApplications, TypeOperators
+           , UndecidableInstances #-}
 
 module Language.Coq.Util.Generics
   (
@@ -73,7 +74,9 @@ gmempty :: forall a . (Generic a, GMonoid (Rep a)) => a
 gmempty = to gmempty'
 {-# INLINE gmempty #-}
 
-newtype WithGSemigroup a = WithGSemigroup { unWithGSemigroup :: a } deriving (Generic)
+newtype WithGSemigroup a = WithGSemigroup { unWithGSemigroup :: a }
+ deriving (Generic)
+
 instance (Generic a, GSemigroup (Rep a)) => Semigroup (WithGSemigroup a) where
   (<>) = coerce @(a -> a -> a) (%<>)
   {-# INLINE (<>) #-}

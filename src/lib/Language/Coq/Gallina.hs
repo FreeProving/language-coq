@@ -9,7 +9,8 @@ Stability   : experimental
 <https://coq.inria.fr/distrib/current/refman/Reference-Manual003. Chapter 1, \"The Gallina Specification Language\", in the Coq reference manual.>
 -}
 
-{-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell #-}
+{-# LANGUAGE DeriveDataTypeable, LambdaCase, OverloadedStrings
+           , OverloadedLists, TemplateHaskell #-}
 
 module Language.Coq.Gallina
   (

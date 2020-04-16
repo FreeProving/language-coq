@@ -1,6 +1,5 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleContexts,
-             TypeSynonymInstances, FlexibleInstances,
-             OverloadedStrings, ConstraintKinds, DataKinds #-}
+{-# LANGUAGE ConstraintKinds, DataKinds, FlexibleContexts, FlexibleInstances
+           , MultiParamTypeClasses, OverloadedStrings, TypeSynonymInstances #-}
 
 -- For TypeError
 {-# LANGUAGE UndecidableInstances #-}
@@ -48,8 +47,6 @@ import qualified Data.Map.Strict               as M
 import           GHC.TypeLits
 
 import           Language.Coq.Gallina
-
-----------------------------------------------------------------------------------------------------
 
 type FreeVars = HasFV Qualid
 
@@ -99,7 +96,7 @@ instance HasBV Qualid MultPattern where
 
 -- Note [Bound variables in patterns]
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--- We cannot quite capture /all/ the free variables that occur in patterns.  The
+-- We cannot quite capture /all/ the free variables that occur in patterns. The
 -- ambiguous case is that a zero-ary constructor used unqualified looks exactly
 -- like a variable used as a binder in a pattern.  So what do we do?  The answer
 -- is that we treat is as a binder.  This is the right behavior: Coq has the
@@ -216,9 +213,14 @@ instance HasBV Qualid Section where
   bvOf (Section _name sentences) = foldTelescope bvOf sentences
 
 -- TODO Not all sequences of bindings should be telescopes!
--- bindingTelescope :: (HasBV b, Monoid d, Foldable f)
---                  => (Qualid -> d) -> f b -> Variables Qualid d a -> Variables Qualid d a
--- bindingTelescope f xs rest = foldr (bvOf) rest xs
+{-
+bindingTelescope :: (HasBV b, Monoid d, Foldable f)
+                 => (Qualid -> d)
+                 -> f b
+                 -> Variables Qualid d a
+                 -> Variables Qualid d a
+bindingTelescope f xs rest = foldr (bvOf) rest xs
+-}
 
 instance HasBV Qualid b => HasBV Qualid (Maybe b) where
   bvOf = foldMap bvOf
@@ -228,8 +230,6 @@ instance TypeError ('Text "A sequence of binders could be a telescope (use foldT
 
 instance TypeError ('Text "A sequence of binders could be a telescope (use foldTelescope or foldScopes) or not (use foldMap)") => HasBV Qualid (NonEmpty b) where
   bvOf = undefined
-
-----------------------------------------------------------------------------------------------------
 
 getFreeVars :: HasFV Qualid t => t -> Set Qualid
 getFreeVars = getFVs . fvOf

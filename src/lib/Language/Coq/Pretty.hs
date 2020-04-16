@@ -8,7 +8,8 @@ Stability   : experimental
 
 -}
 
-{-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell, ViewPatterns #-}
+{-# LANGUAGE DeriveDataTypeable, LambdaCase, OverloadedStrings, OverloadedLists
+           , TemplateHaskell, ViewPatterns #-}
 
 module Language.Coq.Pretty
   ( renderGallina
@@ -968,17 +969,3 @@ instance Gallina Section where
       $  ["Section" <+> text name <> "."]
       ++ [ renderGallina s | s <- sentences ]
       ++ ["End" <+> text name <> "."]
-
-
-{- Do we really use this?
-
--- Make all 'Gallina' types 'Pretty' types in the default way
-let abort = fail "Internal error: unexpected result from `reify'" in
-  TH.reify ''Gallina >>= \case
-    TH.ClassI _ is ->
-      forFold is $ \case
-        TH.InstanceD _ _ (TH.AppT (TH.ConT _gallina) ty) _ ->
-          [d|instance Pretty $(pure ty) where pretty = renderGallina|]
-        _ -> abort
-    _ -> abort
--}

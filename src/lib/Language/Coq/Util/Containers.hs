@@ -1,5 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts, ScopedTypeVariables #-}
 
 module Language.Coq.Util.Containers
   (
@@ -154,7 +153,10 @@ stableTopoSortByPlus names dependencies extraDependencies =
   stableTopoSortBy names $ \obj -> toList (dependencies obj)
     ++ foldMap (toList . extraDependencies) (names obj)
 
-data Reflexivity = Irreflexive | Reflexive deriving (Eq, Ord, Enum, Bounded, Show, Read)
+data Reflexivity
+  = Irreflexive
+  | Reflexive
+ deriving (Eq, Ord, Enum, Bounded, Show, Read)
 
 reachableFrom :: Ord a => Reflexivity -> Map a (Set a) -> a -> Set a
 reachableFrom refl adjacencies v0 = execState (go v0) initial where

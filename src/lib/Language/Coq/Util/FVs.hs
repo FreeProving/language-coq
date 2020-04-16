@@ -1,5 +1,7 @@
-{-# LANGUAGE MultiParamTypeClasses, DefaultSignatures, FlexibleInstances,
-             GeneralizedNewtypeDeriving, DeriveTraversable, DeriveGeneric, DeriveDataTypeable #-}
+{-# LANGUAGE DefaultSignatures, DeriveDataTypeable, DeriveGeneric
+           , DeriveTraversable, FlexibleInstances, GeneralizedNewtypeDeriving
+           , MultiParamTypeClasses
+#-}
 
 module Language.Coq.Util.FVs where
 
@@ -19,17 +21,17 @@ import           Control.Monad.Fix
 import           Control.Monad.Error.Class
 import           Data.Data                      ( Data )
 
---------------------------------------------------------------------------------
-
 -- | Set of free variables
-newtype FVs i = FVs { getFVs :: Set i } deriving (Eq, Ord, Show, Read, Generic)
+newtype FVs i = FVs { getFVs :: Set i }
+ deriving (Eq, Ord, Show, Read, Generic)
+
 instance Ord i => Semigroup (FVs i) where
   (<>) = (%<>)
 instance Ord i => Monoid    (FVs i) where
   mempty = gmempty
 
 -- | An object capable of binding something has
--- a set of variables
+--   a set of variables
 data BVs i = BVs { getBVars :: Set i -- Variables bound by this binder
                  , getBFVs  :: Set i -- Free variables of this object
                  }
@@ -83,28 +85,27 @@ instance HasBV i (BVs i) where
   bvOf = id
 
 -- | Convenient functions for things that don’t bind variables, but occur
--- as subterms in binders
+--   as subterms in binders
 fvOf' :: HasFV i a => a -> BVs i
 fvOf' x = bindsNothing (fvOf x)
 
---------------------------------------------------------------------------------
-
--- |Wraps 'HasBV' and 'HasFV' for the 'Right' values, and reports that the left
--- values contain nothing.
+-- | Wraps 'HasBV' and 'HasFV' for the 'Right' values, and reports that the
+--   left values contain nothing.
 newtype ErrOrVars e a = ErrOrVars { getErrOrVars :: Either e a }
-                      deriving ( -- Stock
-                                 Eq, Ord, Show, Read
-                                 -- Generics
-                               , Data, Generic
-                                 -- Iterating
-                               , Foldable, Traversable
-                               , Bifoldable
-                                 -- Functor, monad, etc.
-                               , Functor, Applicative, Monad
-                               , Bifunctor
-                               , Alternative, MonadPlus
-                               , MonadFix
-                               , MonadError e )
+ deriving ( -- Stock
+            Eq, Ord, Show, Read
+            -- Generics
+          , Data, Generic
+            -- Iterating
+          , Foldable, Traversable
+          , Bifoldable
+            -- Functor, monad, etc.
+          , Functor, Applicative, Monad
+          , Bifunctor
+          , Alternative, MonadPlus
+          , MonadFix
+          , MonadError e
+          )
 
 instance Bitraversable ErrOrVars where
   bitraverse l r (ErrOrVars e) = ErrOrVars <$> bitraverse l r e

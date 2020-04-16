@@ -1,6 +1,5 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleContexts,
-             TypeSynonymInstances, FlexibleInstances,
-             OverloadedStrings, OverloadedLists #-}
+{-# LANGUAGE FlexibleContexts, FlexibleInstances, MultiParamTypeClasses
+           , OverloadedStrings, OverloadedLists, TypeSynonymInstances #-}
 
 module Language.Coq.Subst
   (

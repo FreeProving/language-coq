@@ -129,8 +129,9 @@ splitCommonPrefixOf l ss =
  where
     -- The state starts empty and fills with the first head we find.  If the
     -- head of the list (first item of the pair) is the same as that head (or
-    -- the very first one), we can happily return the full object containing the
-    -- tail (second item of the pair); otherwise, this is not a common prefix.
+    -- the very first one), we can happily return the full object containing
+    -- the tail (second item of the pair); otherwise, this is not a common
+    -- prefix.
     --
     -- This is essentially a combination of `unzip` and `x:xs -> all (== x) xs`.
   trimSameHead (x, s') = Lazy.get >>= \case

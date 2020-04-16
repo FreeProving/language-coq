@@ -31,8 +31,6 @@ import           Encoding                       ( zEncodeString
 
 import           GHC.Stack
 
---------------------------------------------------------------------------------
-
 -- Lets keep this module self-contained (but use the same type synonyms)
 type Op = T.Text
 type Ident = T.Text
@@ -71,7 +69,8 @@ prefixOpToInfix px = do
 infixToCoq_ :: Op -> Ident
 infixToCoq_ name = "op_" <> T.pack (zEncodeString $ T.unpack name) <> "__"
 
--- This is code smell: Why do we return an unstructured Ident, and not a QualId?
+-- This is code smell: Why do we return an unstructured Ident, and not
+-- a QualId?
 infixToCoq :: HasCallStack => Op -> Ident
 infixToCoq op = case splitModule op of
   Just (m, op') -> m <> "." <> infixToCoq_ op'
@@ -85,13 +84,15 @@ splitModule = fmap fixup . either (const Nothing) Just . parse qualid "" where
             <$> upper
             <*> (T.pack <$> many (alphaNum <|> char '_' <|> char '\''))
     modIdent <- T.intercalate "." <$> many1 (try (modFrag <* char '.'))
-    base     <- T.pack <$> some anyChar -- since we're assuming we get a valid name
+    -- since we're assuming we get a valid name
+    base     <- T.pack <$> some anyChar
     pure $ (modIdent, base)
 
   -- When we have a module name that ends in .Z or .N then that should be
   -- considered part of the name of the function. This is a hack to make the
-  -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more convenient,
-  -- without solving the problem of handling non-filesystem-modules in general
+  -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more
+  -- convenient, without solving the problem of handling non-filesystem-modules
+  -- in general
   fixup (modIdent, name)
     | ".Z" `T.isSuffixOf` modIdent
     = (T.take (T.length modIdent - 2) modIdent, "Z." <> name)
