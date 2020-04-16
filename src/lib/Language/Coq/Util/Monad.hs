@@ -45,9 +45,8 @@ untilJustM :: Monad m => m (Maybe a) -> m a
 untilJustM act = maybe (untilJustM act) pure =<< act
 
 -- Module-local
-via_Kleisli :: (Kleisli m a a' -> Kleisli m b b' -> Kleisli m r r')
-            -> (a -> m a') -> (b -> m b') -> r -> m r'
-via_Kleisli (>><<) f g = runKleisli $ Kleisli f >><< Kleisli g
+via_Kleisli :: (Kleisli m a a' -> Kleisli m b b' -> Kleisli m r r') -> (a -> m a') -> (b -> m b') -> r -> m r'
+via_Kleisli kleisli f g = runKleisli $ Kleisli f `kleisli` Kleisli g
 
 (<***>) :: Monad m => (a -> m b) -> (a' -> m b') -> (a,a') -> m (b,b')
 (<***>) = via_Kleisli (***)

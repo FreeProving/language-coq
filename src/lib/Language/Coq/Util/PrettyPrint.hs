@@ -119,9 +119,9 @@ punctuate p = T.punctuate p . toList
 sepWith :: Foldable f
         => (Doc -> Doc -> Doc) -> (Doc -> Doc -> Doc)
         -> Doc -> f Doc -> Doc
-sepWith (<&) (&>) separator docs
+sepWith concatLeft concatRight separator docs
   | null docs = mempty
-  | otherwise = foldr1 (\doc result -> doc <& separator &> result) docs
+  | otherwise = foldr1 (\doc result -> doc `concatLeft` separator `concatRight` result) docs
 {-# INLINABLE sepWith #-}
 
 spacedSepPre :: Foldable f => Doc -> f Doc -> Doc
