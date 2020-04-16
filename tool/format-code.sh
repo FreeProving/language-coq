@@ -4,7 +4,7 @@
 # automatically. Note that this script overwrites source files. Make sure
 # to backup your files beforehand (e.g. by `git add`ing them).
 
-# Change into the compiler's root directory.
+# Change into the library's root directory.
 script=$(realpath $0)
 script_dir=$(dirname "$script")
 root_dir=$(dirname "$script_dir")
