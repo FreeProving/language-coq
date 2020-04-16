@@ -117,3 +117,18 @@ jobs:
       run: cabal new-build language-coq --dependencies-only
     - name: Build library
       run: cabal new-build language-coq
+
+#############################################################################
+# Code style                                                                #
+#############################################################################
+
+# All Haskell source files should be formatted using Brittany.
+brittany:
+  name: Run Brittany
+  runs-on: ubuntu-latest
+  container: just95/brittany:0.12.1.1
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v1
+  - name: Check code style using Brittany
+    run: ./tool/check-formatting.sh
