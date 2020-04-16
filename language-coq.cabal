@@ -24,7 +24,6 @@ library
                      , Language.Coq.Subst
                      , Language.Coq.Util.FVs
                      , Language.Coq.Util.InfixNames
-                     , Language.Coq.Util.List
                      , Language.Coq.Util.PrettyPrint
 
   other-extensions:    TypeOperators, LambdaCase, EmptyCase, TypeApplications

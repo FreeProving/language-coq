@@ -19,13 +19,12 @@ where
 
 import           Prelude                 hiding ( Num )
 
-import           Language.Coq.Util.List
-
 import           Language.Coq.Util.FVs
 
 import           Data.List.NonEmpty             ( NonEmpty()
                                                 , (<|)
                                                 )
+import Data.List.NonEmpty.Extra (appendl)
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as S
 import           GHC.TypeLits
@@ -149,15 +148,15 @@ instance HasBV Qualid Definition where
 
 instance HasBV Qualid Inductive where
   bvOf (Inductive ibs nots) =
-    scopesMutually id $ (bvOf <$> ibs) ++> (bvOf <$> nots)
+    scopesMutually id $ (bvOf <$> ibs) `appendl` (bvOf <$> nots)
   bvOf (CoInductive cbs nots) =
-    scopesMutually id $ (bvOf <$> cbs) ++> (bvOf <$> nots)
+    scopesMutually id $ (bvOf <$> cbs) `appendl` (bvOf <$> nots)
 
 instance HasBV Qualid Fixpoint where
   bvOf (Fixpoint fbs nots) =
-    scopesMutually id $ (bvOf <$> fbs) ++> (bvOf <$> nots)
+    scopesMutually id $ (bvOf <$> fbs) `appendl` (bvOf <$> nots)
   bvOf (CoFixpoint cbs nots) =
-    scopesMutually id $ (bvOf <$> cbs) ++> (bvOf <$> nots)
+    scopesMutually id $ (bvOf <$> cbs) `appendl` (bvOf <$> nots)
 
 instance HasBV Qualid Assertion where
   bvOf (Assertion _kwd name args ty) =
