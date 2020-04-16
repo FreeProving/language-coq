@@ -1,4 +1,8 @@
-module Language.Coq.Util.Function ((.:), (.*^)) where
+module Language.Coq.Util.Function
+  ( (.:)
+  , (.*^)
+  )
+where
 
 (.:) :: (c -> d) -> (a -> b -> c) -> (a -> b -> d)
 f .: g = (f .) . g

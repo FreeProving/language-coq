@@ -3,28 +3,30 @@
 
 module Language.Coq.Util.FVs where
 
-import Language.Coq.Util.Generics
+import           Language.Coq.Util.Generics
 
-import Data.Set (Set)
-import qualified Data.Set as S
-import Data.Foldable
+import           Data.Set                       ( Set )
+import qualified Data.Set                      as S
+import           Data.Foldable
 
 -- For instances
-import Control.Lens
-import Data.Bifoldable
-import Data.Bitraversable
-import Control.Applicative
-import Control.Monad
-import Control.Monad.Fix
-import Control.Monad.Error.Class
-import Data.Data (Data)
+import           Control.Lens
+import           Data.Bifoldable
+import           Data.Bitraversable
+import           Control.Applicative
+import           Control.Monad
+import           Control.Monad.Fix
+import           Control.Monad.Error.Class
+import           Data.Data                      ( Data )
 
 --------------------------------------------------------------------------------
 
 -- | Set of free variables
 newtype FVs i = FVs { getFVs :: Set i } deriving (Eq, Ord, Show, Read, Generic)
-instance Ord i => Semigroup (FVs i) where (<>)   = (%<>)
-instance Ord i => Monoid    (FVs i) where mempty = gmempty
+instance Ord i => Semigroup (FVs i) where
+  (<>) = (%<>)
+instance Ord i => Monoid    (FVs i) where
+  mempty = gmempty
 
 -- | An object capable of binding something has
 -- a set of variables
@@ -32,8 +34,10 @@ data BVs i = BVs { getBVars :: Set i -- Variables bound by this binder
                  , getBFVs  :: Set i -- Free variables of this object
                  }
            deriving (Eq, Ord, Show, Read, Generic)
-instance Ord i => Semigroup (BVs i) where (<>)   = (%<>)
-instance Ord i => Monoid    (BVs i) where mempty = gmempty
+instance Ord i => Semigroup (BVs i) where
+  (<>) = (%<>)
+instance Ord i => Monoid    (BVs i) where
+  mempty = gmempty
 
 binder :: i -> BVs i
 binder x = BVs (S.singleton x) S.empty
@@ -54,13 +58,12 @@ scopesOver :: Ord i => BVs i -> FVs i -> FVs i
 scopesOver (BVs bvs fvs1) (FVs fvs2) = FVs $ fvs1 <> (fvs2 `S.difference` bvs)
 
 scopesMutually :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> BVs i
-scopesMutually f xs =
-    binders (foldMap (getBVars . f) xs)
-       `telescope` bindsNothing (foldMap (forgetBinders . f) xs)
+scopesMutually f xs = binders (foldMap (getBVars . f) xs)
+  `telescope` bindsNothing (foldMap (forgetBinders . f) xs)
 
 telescope :: Ord i => BVs i -> BVs i -> BVs i
-telescope (BVs bvs1 fvs1) (BVs bvs2 fvs2)
-    = BVs (bvs1 <> bvs2) (fvs1 <> (fvs2 `S.difference` bvs1))
+telescope (BVs bvs1 fvs1) (BVs bvs2 fvs2) =
+  BVs (bvs1 <> bvs2) (fvs1 <> (fvs2 `S.difference` bvs1))
 
 foldTelescope :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> BVs i
 foldTelescope f = foldr (telescope . f) mempty
@@ -109,8 +112,9 @@ instance Bitraversable ErrOrVars where
 
 instance Swapped ErrOrVars where
   swapped = iso swap swap
-    where swap (ErrOrVars e) = ErrOrVars (either Right Left e)
-          {-# INLINE swap #-}
+   where
+    swap (ErrOrVars e) = ErrOrVars (either Right Left e)
+    {-# INLINE swap #-}
   {-# INLINE swapped #-}
 
 instance HasBV i a => HasBV i (ErrOrVars e a) where

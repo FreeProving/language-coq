@@ -1,47 +1,76 @@
-module Language.Coq.Util.PrettyPrint (
+module Language.Coq.Util.PrettyPrint
+  (
   -- * The base module
-  module Text.PrettyPrint.Leijen.Text,
+    module Text.PrettyPrint.Leijen.Text
+  ,
   -- * Don't use operators with existing meanings
-  (<>), (<!>),
+    (<>)
+  , (<!>)
+  ,
   -- * Lazy 'TL.Text' to strict 'Text'
-  text, lazyText, string, lazyString,
+    text
+  , lazyText
+  , string
+  , lazyString
+  ,
   -- * '[]' -> 'Foldable'
-  encloseSep,
-  list, tupled, semiBraces,
-  hsep, vsep, fillSep, sep,
-  hcat, vcat, fillCat, cat,
-  punctuate,
-  fill1Sep, commaList,
+    encloseSep
+  , list
+  , tupled
+  , semiBraces
+  , hsep
+  , vsep
+  , fillSep
+  , sep
+  , hcat
+  , vcat
+  , fillCat
+  , cat
+  , punctuate
+  , fill1Sep
+  , commaList
+  ,
   -- * Utility functions
   -- ** Nicely smushing lists together
-  sepWith, spacedSepPre, spacedSepPost,
+    sepWith
+  , spacedSepPre
+  , spacedSepPost
+  ,
   -- ** Dealing with possibly-empty documents
-  (</?>), docIf, spaceIf, lineIf, softlineIf,
+    (</?>)
+  , docIf
+  , spaceIf
+  , lineIf
+  , softlineIf
+  ,
   -- * Rendering
-  renderOneLineT
-  ) where
+    renderOneLineT
+  )
+where
 
-import Text.PrettyPrint.Leijen.Text hiding ( (<$>)
-                                           , text
-                                           , string
-                                           , encloseSep
-                                           , list
-                                           , tupled
-                                           , semiBraces
-                                           , hsep
-                                           , vsep
-                                           , fillSep
-                                           , sep
-                                           , hcat
-                                           , vcat
-                                           , fillCat
-                                           , cat
-                                           , punctuate )
-import qualified Text.PrettyPrint.Leijen.Text as T
-import Data.Text (Text)
-import qualified Data.Text.Lazy as TL
-import Data.Semigroup (Semigroup(..))
-import Data.Foldable
+import           Text.PrettyPrint.Leijen.Text
+                                         hiding ( (<$>)
+                                                , text
+                                                , string
+                                                , encloseSep
+                                                , list
+                                                , tupled
+                                                , semiBraces
+                                                , hsep
+                                                , vsep
+                                                , fillSep
+                                                , sep
+                                                , hcat
+                                                , vcat
+                                                , fillCat
+                                                , cat
+                                                , punctuate
+                                                )
+import qualified Text.PrettyPrint.Leijen.Text  as T
+import           Data.Text                      ( Text )
+import qualified Data.Text.Lazy                as TL
+import           Data.Semigroup                 ( Semigroup(..) )
+import           Data.Foldable
 
 (<!>) :: Doc -> Doc -> Doc
 (<!>) = (T.<$>)
@@ -116,12 +145,18 @@ punctuate :: Foldable f => Doc -> f Doc -> [Doc]
 punctuate p = T.punctuate p . toList
 {-# INLINABLE punctuate #-}
 
-sepWith :: Foldable f
-        => (Doc -> Doc -> Doc) -> (Doc -> Doc -> Doc)
-        -> Doc -> f Doc -> Doc
+sepWith
+  :: Foldable f
+  => (Doc -> Doc -> Doc)
+  -> (Doc -> Doc -> Doc)
+  -> Doc
+  -> f Doc
+  -> Doc
 sepWith concatLeft concatRight separator docs
   | null docs = mempty
-  | otherwise = foldr1 (\doc result -> doc `concatLeft` separator `concatRight` result) docs
+  | otherwise = foldr1
+    (\doc result -> doc `concatLeft` separator `concatRight` result)
+    docs
 {-# INLINABLE sepWith #-}
 
 spacedSepPre :: Foldable f => Doc -> f Doc -> Doc
@@ -162,9 +197,9 @@ renderOneLineT = TL.toStrict . displayT . renderOneLine
 -- rest on individual lines
 fill1Sep :: Foldable f => f Doc -> Doc
 fill1Sep xs = go (reverse (toList xs))
-  where
-    go [] = empty
-    go (x : xs') = group (go xs' <!> x)
+ where
+  go []        = empty
+  go (x : xs') = group (go xs' <!> x)
 
 commaList :: Foldable f => f Doc -> Doc
 commaList xs = group (align . nest (-2) $ (sepWith (<$$>) (<+>) T.comma xs))

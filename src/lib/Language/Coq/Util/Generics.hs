@@ -1,18 +1,25 @@
 {-# LANGUAGE TypeOperators, EmptyCase, TypeApplications, ScopedTypeVariables, FlexibleContexts,
              InstanceSigs, DeriveGeneric, UndecidableInstances #-}
 
-module Language.Coq.Util.Generics (
+module Language.Coq.Util.Generics
+  (
   -- * Re-export the class
-  Generic(..),
+    Generic(..)
+  ,
   -- * Default instances
-  GSemigroup(..), (%<>),
-  GMonoid(..), gmempty,
+    GSemigroup(..)
+  , (%<>)
+  , GMonoid(..)
+  , gmempty
+  ,
   -- * Generic instance wrappers
-  WithGSemigroup(..), WithGMonoid(..)
-) where
+    WithGSemigroup(..)
+  , WithGMonoid(..)
+  )
+where
 
-import GHC.Generics
-import Data.Coerce
+import           GHC.Generics
+import           Data.Coerce
 
 class GSemigroup f where
   (%<>%) :: f p -> f p -> f p
@@ -26,7 +33,8 @@ instance GSemigroup U1 where
   {-# INLINE (%<>%) #-}
 
 instance (GSemigroup f, GSemigroup g) => GSemigroup (f :*: g) where
-  (%<>%) = \(fst1 :*: snd1) (fst2 :*: snd2) -> (fst1 %<>% fst2) :*: (snd1 %<>% snd2)
+  (%<>%) =
+    \(fst1 :*: snd1) (fst2 :*: snd2) -> (fst1 %<>% fst2) :*: (snd1 %<>% snd2)
   {-# INLINE (%<>%) #-}
 
 instance Semigroup c => GSemigroup (K1 i c) where
@@ -34,7 +42,7 @@ instance Semigroup c => GSemigroup (K1 i c) where
   {-# INLINE (%<>%) #-}
 
 instance GSemigroup f => GSemigroup (M1 i t f) where
-  (%<>%) :: forall p. M1 i t f p -> M1 i t f p -> M1 i t f p
+  (%<>%) :: forall p . M1 i t f p -> M1 i t f p -> M1 i t f p
   (%<>%) = coerce @(f p -> f p -> f p) (%<>%)
   {-# INLINE (%<>%) #-}
 
@@ -61,15 +69,15 @@ instance GMonoid f => GMonoid (M1 i t f) where
   gmempty' = M1 gmempty'
   {-# INLINE gmempty' #-}
 
-gmempty :: forall a. (Generic a, GMonoid (Rep a)) => a
+gmempty :: forall a . (Generic a, GMonoid (Rep a)) => a
 gmempty = to gmempty'
 {-# INLINE gmempty #-}
-  
+
 newtype WithGSemigroup a = WithGSemigroup { unWithGSemigroup :: a } deriving (Generic)
 instance (Generic a, GSemigroup (Rep a)) => Semigroup (WithGSemigroup a) where
   (<>) = coerce @(a -> a -> a) (%<>)
   {-# INLINE (<>) #-}
-  
+
 newtype WithGMonoid a = WithGMonoid { unWithGMonoid :: a } deriving (Generic)
 instance (Generic a, GSemigroup (Rep a)) => Semigroup (WithGMonoid a) where
   (<>) = coerce @(a -> a -> a) (%<>)

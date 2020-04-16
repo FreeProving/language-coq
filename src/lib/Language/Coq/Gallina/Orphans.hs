@@ -7,18 +7,20 @@
 -- Orphans are frowned upon in libraries, but not quite as bad in programs.
 -- We still put them in a separte module, to make it (somewhat) clear where
 -- they are used.
-module Language.Coq.Gallina.Orphans () where
+module Language.Coq.Gallina.Orphans
+  ()
+where
 
-import qualified Data.Text as T
-import Data.String
+import qualified Data.Text                     as T
+import           Data.String
 
-import Language.Coq.Gallina
-import Language.Coq.Gallina.Util
+import           Language.Coq.Gallina
+import           Language.Coq.Gallina.Util
 
 -- For internal use only (e.g. hardcoded names)
 instance IsString Term where
-    fromString x = Qualid (unsafeIdentToQualid (T.pack x))
+  fromString x = Qualid (unsafeIdentToQualid (T.pack x))
 instance IsString Qualid where
-    fromString x = unsafeIdentToQualid (T.pack x)
+  fromString x = unsafeIdentToQualid (T.pack x)
 instance IsString Binder where
-    fromString x = Inferred Explicit (Ident (unsafeIdentToQualid (T.pack x)))
+  fromString x = Inferred Explicit (Ident (unsafeIdentToQualid (T.pack x)))

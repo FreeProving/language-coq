@@ -11,82 +11,87 @@ Stability   : experimental
 
 {-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell #-}
 
-module Language.Coq.Gallina (
+module Language.Coq.Gallina
+  (
   -- * Lexical structure
   -- $Lexical
-  Ident,
-  ModuleIdent,
-  AccessIdent,
-  Num,
-  Op,
+    Ident
+  , ModuleIdent
+  , AccessIdent
+  , Num
+  , Op
+  ,
 
   -- * Terms
   -- $Terms
-  Term(..),
-  Arg(..),
-  IfStyle(..),
-  Binders,
-  Generalizability(..),
-  Explicitness(..),
-  Binder(..),
-  Name(..),
-  Qualid(..),
-  Sort(..),
-  FixBodies(..),
-  FixBody(..),
-  Order(..),
-  MatchItem(..),
-  DepRetType(..),
-  ReturnType(..),
-  Equation(..),
-  MultPattern(..),
-  Pattern(..),
-  OrPattern(..),
-  Comment(..),
-  LocalModule(..),
-  Section(..),
+    Term(..)
+  , Arg(..)
+  , IfStyle(..)
+  , Binders
+  , Generalizability(..)
+  , Explicitness(..)
+  , Binder(..)
+  , Name(..)
+  , Qualid(..)
+  , Sort(..)
+  , FixBodies(..)
+  , FixBody(..)
+  , Order(..)
+  , MatchItem(..)
+  , DepRetType(..)
+  , ReturnType(..)
+  , Equation(..)
+  , MultPattern(..)
+  , Pattern(..)
+  , OrPattern(..)
+  , Comment(..)
+  , LocalModule(..)
+  , Section(..)
+  ,
 
   -- * Signatures
-  Signature(..),
+    Signature(..)
+  ,
 
   -- * The vernacular
   -- $Vernacular
-  Sentence(..),
-  Assumption(..),
-  AssumptionKeyword(..),
-  Assums(..),
-  Locality(..),
-  Definition(..),
-  Inductive(..),
-  IndBody(..),
-  Fixpoint(..),
-  Assertion(..),
-  AssertionKeyword(..),
-  Tactics,
-  Proof(..),
-  ImportExport(..),
-  ModuleSentence(..),
-  ClassDefinition(..),
-  RecordDefinition(..),
-  InstanceDefinition(..),
-  Associativity(..),
-  Level(..),
-  Notation(..),
-  NotationBinding(..),
-  Arguments(..),
-  ArgumentSpec(..),
-  ArgumentExplicitness(..),
-  ) where
+    Sentence(..)
+  , Assumption(..)
+  , AssumptionKeyword(..)
+  , Assums(..)
+  , Locality(..)
+  , Definition(..)
+  , Inductive(..)
+  , IndBody(..)
+  , Fixpoint(..)
+  , Assertion(..)
+  , AssertionKeyword(..)
+  , Tactics
+  , Proof(..)
+  , ImportExport(..)
+  , ModuleSentence(..)
+  , ClassDefinition(..)
+  , RecordDefinition(..)
+  , InstanceDefinition(..)
+  , Associativity(..)
+  , Level(..)
+  , Notation(..)
+  , NotationBinding(..)
+  , Arguments(..)
+  , ArgumentSpec(..)
+  , ArgumentExplicitness(..)
+  )
+where
 
-import Prelude hiding (Num)
+import           Prelude                 hiding ( Num )
 
-import Data.Text (Text)
-import Numeric.Natural
+import           Data.Text                      ( Text )
+import           Numeric.Natural
 
-import Data.List.NonEmpty (NonEmpty())
+import           Data.List.NonEmpty             ( NonEmpty() )
 
-import Data.Typeable
-import Data.Data (Data(..))
+import           Data.Typeable
+import           Data.Data                      ( Data(..) )
 
 -- $Lexical
 -- <https://coq.inria.fr/distrib/current/refman/Reference-Manual003.html#lexical §1.1, \"Lexical conventions\", in the Coq reference manual.>
@@ -95,16 +100,16 @@ import Data.Data (Data(..))
 -- or what have you.
 
 -- |@/ident/ ::= /first_letter/ [/subsequent_letter/ … /subsequent_letter/]@
-type Ident       = Text
+type Ident = Text
 -- |@/module_ident/ ::= /ident/ . /ident/ . …@
 type ModuleIdent = Text
 -- |@/access_ident/ ::= . /ident/@
 type AccessIdent = Ident
 -- |@/num/ ::= /digit/ … /digit/@
-type Num         = Natural
+type Num = Natural
 
 -- |@/op/ ::= /symbol/ [/symbol/ … /symbol/]@ /(extra)/
-type Op          = Text
+type Op = Text
 
 -- $Terms
 -- <https://coq.inria.fr/distrib/current/refman/Reference-Manual003.html#term §1.2, \"Terms\", in the Coq reference manual.>

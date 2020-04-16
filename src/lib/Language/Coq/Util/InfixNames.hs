@@ -1,27 +1,35 @@
 {-# LANGUAGE LambdaCase, OverloadedStrings #-}
 
-module Language.Coq.Util.InfixNames (
-  identIsVariable,
-  infixToPrefix, toPrefix, toLocalPrefix,
-  prefixOpToInfix,
-  infixToCoq,
-  identIsOp, identToOp,
-  splitModule -- a bit out of place here. oh well.
-  ) where
+module Language.Coq.Util.InfixNames
+  ( identIsVariable
+  , infixToPrefix
+  , toPrefix
+  , toLocalPrefix
+  , prefixOpToInfix
+  , infixToCoq
+  , identIsOp
+  , identToOp
+  , splitModule -- a bit out of place here. oh well.
+  )
+where
 
-import Control.Lens hiding (op)
+import           Control.Lens            hiding ( op )
 
-import Control.Applicative
-import Control.Monad
-import Data.Semigroup (Semigroup(..))
-import Data.Char
-import Data.Text (Text)
-import qualified Data.Text as T
-import Text.Parsec hiding ((<|>), many)
+import           Control.Applicative
+import           Control.Monad
+import           Data.Semigroup                 ( Semigroup(..) )
+import           Data.Char
+import           Data.Text                      ( Text )
+import qualified Data.Text                     as T
+import           Text.Parsec             hiding ( (<|>)
+                                                , many
+                                                )
 
-import Encoding (zEncodeString, zDecodeString)
+import           Encoding                       ( zEncodeString
+                                                , zDecodeString
+                                                )
 
-import GHC.Stack
+import           GHC.Stack
 
 --------------------------------------------------------------------------------
 
@@ -33,8 +41,10 @@ type AccessIdent = T.Text
 
 identIsVariable_ :: Text -> Bool
 identIsVariable_ = T.uncons <&> \case
-  Just (h,t) -> (isAlpha h || h == '_') && T.all (\c -> isAlphaNum c || c == '_' || c == '\'') t
-  Nothing    -> False
+  Just (h, t) ->
+    (isAlpha h || h == '_')
+      && T.all (\c -> isAlphaNum c || c == '_' || c == '\'') t
+  Nothing -> False
 
 identIsVariable :: Text -> Bool
 identIsVariable = all identIsVariable_ . T.splitOn "."
@@ -64,15 +74,18 @@ infixToCoq_ name = "op_" <> T.pack (zEncodeString $ T.unpack name) <> "__"
 -- This is code smell: Why do we return an unstructured Ident, and not a QualId?
 infixToCoq :: HasCallStack => Op -> Ident
 infixToCoq op = case splitModule op of
-    Just (m,op') -> m <> "." <> infixToCoq_ op'
-    Nothing      -> infixToCoq_ op
+  Just (m, op') -> m <> "." <> infixToCoq_ op'
+  Nothing       -> infixToCoq_ op
 
 splitModule :: Ident -> Maybe (ModuleIdent, AccessIdent)
 splitModule = fmap fixup . either (const Nothing) Just . parse qualid "" where
   qualid = do
-    let modFrag = T.cons <$> upper <*> (T.pack <$> many (alphaNum <|> char '_' <|> char '\''))
+    let modFrag =
+          T.cons
+            <$> upper
+            <*> (T.pack <$> many (alphaNum <|> char '_' <|> char '\''))
     modIdent <- T.intercalate "." <$> many1 (try (modFrag <* char '.'))
-    base <- T.pack <$> some anyChar -- since we're assuming we get a valid name
+    base     <- T.pack <$> some anyChar -- since we're assuming we get a valid name
     pure $ (modIdent, base)
 
   -- When we have a module name that ends in .Z or .N then that should be
@@ -80,18 +93,27 @@ splitModule = fmap fixup . either (const Nothing) Just . parse qualid "" where
   -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more convenient,
   -- without solving the problem of handling non-filesystem-modules in general
   fixup (modIdent, name)
-    | ".Z" `T.isSuffixOf` modIdent = (T.take (T.length modIdent - 2) modIdent, "Z." <> name)
-    | ".N" `T.isSuffixOf` modIdent = (T.take (T.length modIdent - 2) modIdent, "N." <> name)
-    | otherwise                    = (modIdent, name)
+    | ".Z" `T.isSuffixOf` modIdent
+    = (T.take (T.length modIdent - 2) modIdent, "Z." <> name)
+    | ".N" `T.isSuffixOf` modIdent
+    = (T.take (T.length modIdent - 2) modIdent, "N." <> name)
+    | otherwise
+    = (modIdent, name)
 
 identIsOp :: Ident -> Bool
-identIsOp t = "op_" `T.isPrefixOf` t && "__" `T.isSuffixOf` t
+identIsOp t =
+  "op_"
+    `T.isPrefixOf` t
+    &&             "__"
+    `T.isSuffixOf` t
     -- the next clause is a work-around as long as the dict accessors are named
     -- op_...____ – these do not have notations
-    && not ("____" `T.isSuffixOf` t)
-    && T.length t > 5
+    &&             not ("____" `T.isSuffixOf` t)
+    &&             T.length t
+    >              5
 
 identToOp :: Ident -> Maybe Op
 identToOp t
-   | identIsOp t = Just $ T.pack (zDecodeString (T.unpack (T.drop 3 (T.dropEnd 2 t))))
-   | otherwise   = Nothing
+  | identIsOp t = Just
+  $ T.pack (zDecodeString (T.unpack (T.drop 3 (T.dropEnd 2 t))))
+  | otherwise = Nothing

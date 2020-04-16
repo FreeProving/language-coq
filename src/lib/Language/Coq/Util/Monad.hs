@@ -1,21 +1,34 @@
-module Language.Coq.Util.Monad (
+module Language.Coq.Util.Monad
+  (
   -- * Booleans
-  andM, orM,
+    andM
+  , orM
+  ,
   -- * Conditionals
-  ifM, whenM, unlessM,
+    ifM
+  , whenM
+  , unlessM
+  ,
   -- * Lists
-  spanM,
+    spanM
+  ,
   -- * Looping
-  untilJustM,
+    untilJustM
+  ,
   -- * Kleisli arrow combinators
-  (<***>), (<&&&>), (<+++>), (<|||>),
+    (<***>)
+  , (<&&&>)
+  , (<+++>)
+  , (<|||>)
+  ,
   -- * Errors
-  exceptEither
-  ) where
+    exceptEither
+  )
+where
 
-import Control.Arrow
-import Control.Monad.Except
-import Data.Bool
+import           Control.Arrow
+import           Control.Monad.Except
+import           Data.Bool
 
 andM :: Monad m => m Bool -> m Bool -> m Bool
 andM b1 b2 = bool (pure False) b2 =<< b1
@@ -32,21 +45,26 @@ whenM c t = ifM c t (pure ())
 unlessM :: Monad m => m Bool -> m () -> m ()
 unlessM c f = ifM c (pure ()) f
 
-spanM :: Monad m => (a -> m Bool) -> [a] -> m ([a],[a])
+spanM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
 spanM p = go where
-  go []         = pure ([], [])
-  go xxs@(x:xs) = p x >>= \px -> case px of
-                    True  -> first (x:) <$> go xs
-                    False -> pure ([], xxs)
+  go []           = pure ([], [])
+  go xxs@(x : xs) = p x >>= \px -> case px of
+    True  -> first (x :) <$> go xs
+    False -> pure ([], xxs)
 
 untilJustM :: Monad m => m (Maybe a) -> m a
 untilJustM act = maybe (untilJustM act) pure =<< act
 
 -- Module-local
-via_Kleisli :: (Kleisli m a a' -> Kleisli m b b' -> Kleisli m r r') -> (a -> m a') -> (b -> m b') -> r -> m r'
+via_Kleisli
+  :: (Kleisli m a a' -> Kleisli m b b' -> Kleisli m r r')
+  -> (a -> m a')
+  -> (b -> m b')
+  -> r
+  -> m r'
 via_Kleisli kleisli f g = runKleisli $ Kleisli f `kleisli` Kleisli g
 
-(<***>) :: Monad m => (a -> m b) -> (a' -> m b') -> (a,a') -> m (b,b')
+(<***>) :: Monad m => (a -> m b) -> (a' -> m b') -> (a, a') -> m (b, b')
 (<***>) = via_Kleisli (***)
 infixr 3 <***>
 
@@ -54,7 +72,8 @@ infixr 3 <***>
 (<&&&>) = via_Kleisli (&&&)
 infixr 3 <&&&>
 
-(<+++>) :: Monad m => (a -> m b) -> (a' -> m b') -> Either a a' -> m (Either b b')
+(<+++>)
+  :: Monad m => (a -> m b) -> (a' -> m b') -> Either a a' -> m (Either b b')
 (<+++>) = via_Kleisli (+++)
 infixr 2 <+++>
 
