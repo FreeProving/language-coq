@@ -122,6 +122,19 @@ jobs:
 # Code style                                                                #
 #############################################################################
 
+# All HLint suggestions should be followed or explicitly ignored
+# in `.hlint.yaml`.
+hlint:
+  name: Run HLint
+  runs-on: ubuntu-latest
+  env:
+    HLINT_URL: https://raw.github.com/ndmitchell/hlint/v2.2.11/misc/run.sh
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v1
+  - name: Check code style using HLint
+    run: curl -sSL "$HLINT_URL" | sh -s src
+
 # All Haskell source files should be formatted using Brittany.
 brittany:
   name: Run Brittany
