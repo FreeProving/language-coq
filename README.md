@@ -1,5 +1,9 @@
 # language-coq
 
+<!-- Badges -->
+![CI Pipeline](https://github.com/FreeProving/language-coq/workflows/CI%20Pipeline/badge.svg)
+
+<!-- Short description -->
 This repository contains an AST and pretty-printer for Coq.
 The code in this repository has originally been developed as part of the [hs-to-coq][] compiler but has been extracted for use in the [free-compiler][]
 
