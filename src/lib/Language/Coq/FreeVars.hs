@@ -19,7 +19,7 @@ module Language.Coq.FreeVars (
 
 import Prelude hiding (Num)
 
-import Control.Lens hiding ((<|))
+import Control.Lens hiding (op, (<|))
 
 import Data.Foldable
 import Language.Coq.Util.List
@@ -56,12 +56,12 @@ instance HasBV Qualid FixBodies where
 
 
 instance HasBV Qualid IndBody where
-  bvOf (IndBody tyName params indicesUniverse cons) =
+  bvOf (IndBody tyName params indicesUniverse consDecls) =
     binder tyName `telescope`
     (bindsNothing (foldScopes bvOf params $ fvOf indicesUniverse) <>
      mconcat [ binder conName <>
                bindsNothing (foldScopes bvOf params $ foldScopes bvOf args $ fvOf oty)
-             | (conName, args, oty) <- cons])
+             | (conName, args, oty) <- consDecls])
 
 instance HasBV Qualid Name where
   bvOf (Ident x)      = binder x
@@ -130,7 +130,7 @@ instance HasBV Qualid Sentence where
   bvOf (ExistingClassSentence name)       = fvOf'  name
   bvOf (RecordSentence        rcd)        = bvOf   rcd
   bvOf (InstanceSentence      ins)        = bvOf   ins
-  bvOf (NotationSentence      not)        = bvOf   not
+  bvOf (NotationSentence      notation)   = bvOf   notation
   bvOf (LocalModuleSentence   lmd)        = bvOf   lmd
   bvOf (SectionSentence       sec)        = bvOf   sec
   bvOf (ArgumentsSentence     _arg)       = mempty

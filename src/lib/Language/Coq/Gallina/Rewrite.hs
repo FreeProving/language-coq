@@ -34,9 +34,9 @@ import Language.Coq.Gallina
 import Language.Coq.Gallina.Util
 
 data Rewrite = Rewrite
-    { patternVars :: [Ident]
-    , lhs :: Term
-    , rhs :: Term
+    { rewritePatternVars :: [Ident]
+    , rewriteLhs :: Term
+    , rewriteRhs :: Term
     }
   deriving (Eq, Ord, Show)
 
@@ -68,7 +68,7 @@ match patVars lhs term = execWriterT (go lhs term)
     isPatVar = (`S.member` S.fromList patVars)
 
     go :: Term -> Term -> WriterT (M.Map Qualid Term) Maybe ()
-    go lhs term = go' (norm lhs) (norm term)
+    go lhs' term' = go' (norm lhs') (norm term')
 
     go' :: Term -> Term -> WriterT (M.Map Qualid Term) Maybe ()
     go' (String s1) (String s2) = guard (s1 == s2)
@@ -89,8 +89,8 @@ match patVars lhs term = execWriterT (go lhs term)
 
     goA :: Arg -> Arg -> WriterT (M.Map Qualid Term) Maybe ()
     goA (PosArg pt) (PosArg p) = go pt p
-    goA (NamedArg pi pt) (NamedArg i p) = do
-        guard (pi == i)
+    goA (NamedArg argIdent pt) (NamedArg argIdent' p) = do
+        guard (argIdent == argIdent')
         go pt p
     goA _lhs _term = mzero
 
@@ -137,7 +137,7 @@ match patVars lhs term = execWriterT (go lhs term)
 
     patToTerm (ArgsPat con args)         = appList (Qualid con) <$> traverse (fmap PosArg . patToTerm) args
     patToTerm (ExplicitArgsPat con args) = ExplicitApp con . toList <$> traverse patToTerm args
-    patToTerm (InfixPat lhs op rhs)      = App2 (Qualid $ Bare op) <$> patToTerm lhs <*> patToTerm rhs
+    patToTerm (InfixPat lhs' op rhs')    = App2 (Qualid $ Bare op) <$> patToTerm lhs' <*> patToTerm rhs'
     patToTerm (InScopePat p scope)       = InScope <$> patToTerm p <*> pure scope
     patToTerm (QualidPat qid)            = Just $ Qualid qid
     patToTerm (NumPat n)                 = Just $ Num n
@@ -145,9 +145,9 @@ match patVars lhs term = execWriterT (go lhs term)
     patToTerm (AsPat _ _)                = Nothing
     patToTerm UnderscorePat              = Nothing
     patToTerm (OrPats _)                 = Nothing
-              
-    goPQid lhs@(Bare v) rhs | isPatVar v = tell $ M.singleton lhs (Qualid rhs)
-    goPQid lhs          rhs              = guard $ lhs == rhs
+
+    goPQid lhs'@(Bare v) rhs' | isPatVar v = tell $ M.singleton lhs' (Qualid rhs')
+    goPQid lhs'          rhs'              = guard $ lhs' == rhs'
 
     goOP (OrPattern pats1) (OrPattern pats2) = zipWithSameLengthM_ goP pats1 pats2
 

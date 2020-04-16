@@ -236,7 +236,7 @@ render_mutual_def def bodies notations =
       <>  maybe mempty (((line <> "where") <+>) . lineSep "and  ") (nonEmpty notations)
       <> "."
   where
-    lineSep sep = foldr1 (\body doc -> body <!> sep <+> doc) . fmap renderGallina
+    lineSep seperator = foldr1 (\body doc -> body <!> seperator <+> doc) . fmap renderGallina
 
 -- TODO: Precedence!
 instance Gallina Term where
@@ -251,8 +251,8 @@ instance Gallina Term where
       group $ "fun" <+> hcat (fmap (("'"<>) . parens . renderGallina) pats)
                     <+> nest 2 ("=>" <!> renderGallina' funPrec body)
     where fvs = getFreeVars body
-          check (Inferred Explicit (Ident name) : vars) (MatchItem (Qualid v) Nothing Nothing:ss)
-              = v `S.notMember` fvs  && name == v  && check vars ss
+          check (Inferred Explicit (Ident name) : vars') (MatchItem (Qualid v) Nothing Nothing:ss)
+              = v `S.notMember` fvs  && name == v  && check vars' ss
           check [] [] = True
           check _ _ = False
 
@@ -529,12 +529,12 @@ instance Gallina Sentence where
   renderGallina' p (FixpointSentence        fix)    = renderGallina' p fix
   renderGallina' p (ProgramSentence         sen pf) = "Program" <+> renderGallina' p sen <!> renderObligation pf
   renderGallina' p (AssertionSentence       ass pf) = renderGallina' p ass <!> renderGallina' p pf
-  renderGallina' p (ModuleSentence          mod)    = renderGallina' p mod
+  renderGallina' p (ModuleSentence          localModule) = renderGallina' p localModule
   renderGallina' p (ClassSentence           cls)    = renderGallina' p cls
   renderGallina' _ (ExistingClassSentence   qid)  = "Existing Class" <+> renderGallina qid <> "."
   renderGallina' p (RecordSentence          rcd)    = renderGallina' p rcd
   renderGallina' p (InstanceSentence        ins)    = renderGallina' p ins
-  renderGallina' p (NotationSentence        not)    = renderGallina' p not
+  renderGallina' p (NotationSentence        notation) = renderGallina' p notation
   renderGallina' p (ArgumentsSentence       arg)    = renderGallina' p arg
   renderGallina' p (CommentSentence         com)    = renderGallina' p com
   renderGallina' p (LocalModuleSentence     lmd)    = renderGallina' p lmd
@@ -555,9 +555,7 @@ instance Gallina AssumptionKeyword where
   renderGallina' _ Hypotheses = "Hypotheses"
 
 instance Gallina Assums where
-  renderGallina' _ (Assums ids ty) = renderAss ids ty
-    where
-      renderAss ids ty = fillSep (renderGallina <$> ids) <> nest 2 (render_type ty)
+  renderGallina' _ (Assums ids ty) = fillSep (renderGallina <$> ids) <> nest 2 (render_type ty)
 
 instance Gallina Locality where
   renderGallina' _ Global = "(*Global*)"
@@ -592,7 +590,7 @@ instance Gallina IndBody where
                        <!> renderCons cons
     where
       renderCons []         = ":="
-      renderCons (con:cons) = align $ foldl' (<!>) (renderCon ":=" con) (renderCon "| " <$> cons)
+      renderCons (conDecl:conDecls) = align $ foldl' (<!>) (renderCon ":=" conDecl) (renderCon "| " <$> conDecls)
 
       renderCon delim (cname, cargs, coty) =
         delim <+> renderGallina cname <> spaceIf cargs <> render_args_oty H cargs coty
@@ -692,8 +690,8 @@ instance Gallina Notation where
     "Notation" <+> renderGallina nb <> "."
   renderGallina' _ (InfixDefinition op def oassoc level) =
     "Infix" <+> dquotes (renderOp op) <+> ":="
-      </> nest 2 (parensN (renderGallina def) </> parensN (assoc <> renderGallina level) <> ".")
-    where assoc = maybe mempty (\assoc -> renderGallina assoc <+> "associativity," <> softline) oassoc
+      </> nest 2 (parensN (renderGallina def) </> parensN (prettyAssoc <> renderGallina level) <> ".")
+    where prettyAssoc = maybe mempty (\assoc -> renderGallina assoc <+> "associativity," <> softline) oassoc
 
 instance Gallina NotationBinding where
   renderGallina' _ (NotationIdentBinding x def) =

@@ -65,7 +65,7 @@ lazyString = T.string
 {-# INLINABLE lazyString #-}
 
 encloseSep :: Foldable f => Doc -> Doc -> Doc -> f Doc -> Doc
-encloseSep left right sep = T.encloseSep left right sep . toList
+encloseSep left right seperator = T.encloseSep left right seperator . toList
 {-# INLINABLE encloseSep #-}
 
 list :: Foldable f => f Doc -> Doc
@@ -119,11 +119,11 @@ punctuate p = T.punctuate p . toList
 sepWith :: Foldable f
         => (Doc -> Doc -> Doc) -> (Doc -> Doc -> Doc)
         -> Doc -> f Doc -> Doc
-sepWith (<&) (&>) sep docs
+sepWith (<&) (&>) separator docs
   | null docs = mempty
-  | otherwise = foldr1 (\doc result -> doc <& sep &> result) docs
+  | otherwise = foldr1 (\doc result -> doc <& separator &> result) docs
 {-# INLINABLE sepWith #-}
-                
+
 spacedSepPre :: Foldable f => Doc -> f Doc -> Doc
 spacedSepPre = sepWith (</>) (<+>)
 {-# INLINABLE spacedSepPre #-}
@@ -141,7 +141,7 @@ docIf :: Foldable f => Doc -> f a -> Doc
 docIf d x | null x    = empty
           | otherwise = d
 {-# INLINABLE docIf #-}
-  
+
 spaceIf :: Foldable f => f a -> Doc
 spaceIf = docIf space
 {-# INLINABLE spaceIf #-}
@@ -164,8 +164,7 @@ fill1Sep :: Foldable f => f Doc -> Doc
 fill1Sep xs = go (reverse (toList xs))
   where
     go [] = empty
-    go (x:xs) = group (go xs <!> x)
+    go (x : xs') = group (go xs' <!> x)
 
 commaList :: Foldable f => f Doc -> Doc
 commaList xs = group (align . nest (-2) $ (sepWith (<$$>) (<+>) T.comma xs))
-

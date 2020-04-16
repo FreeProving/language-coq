@@ -32,7 +32,7 @@ module Language.Coq.Gallina.Util (
   binderArgs
   ) where
 
-import Control.Lens
+import Control.Lens hiding (op)
 
 import Data.Semigroup ((<>))
 import Data.Foldable
@@ -203,8 +203,8 @@ qualidToPrefix qid = infixToPrefix <$> qualidToOp qid
 -- This doesn't handle all malformed 'Ident's
 identToQualid :: HasCallStack => Ident -> Maybe Qualid
 identToQualid x = case splitModule x of
-    Just (mod, ident) -> Just (Qualified mod (toPrefix ident))
-    _                 -> Just (Bare (toPrefix x))
+    Just (modIdent, ident) -> Just (Qualified modIdent (toPrefix ident))
+    _                      -> Just (Bare (toPrefix x))
 
 identToBase :: Ident -> Ident
 identToBase x = maybe x qualidBase $ identToQualid x
@@ -232,12 +232,11 @@ collectArgs (App t args) = do
     args2 <- mapM fromArg (NE.toList args)
     return $ (f, args1 ++ args2)
   where
-    fromArg (PosArg t) = return t
-    fromArg _          = fail "non-positional argument"
+    fromArg (PosArg arg) = return arg
+    fromArg _            = fail "non-positional argument"
 collectArgs (Arrow a1 a2) = return (arrow_qid, [a1, a2])
   where arrow_qid = Qualified "GHC.Prim" "arrow"
 collectArgs (Parens t)    = collectArgs t
 collectArgs (InScope t _) = collectArgs t
 collectArgs (HasType t _) = collectArgs t
 collectArgs t             = fail $ "collectArgs: " ++ show t
-

@@ -9,7 +9,7 @@ module Language.Coq.Util.InfixNames (
   splitModule -- a bit out of place here. oh well.
   ) where
 
-import Control.Lens
+import Control.Lens hiding (op)
 
 import Control.Applicative
 import Control.Monad
@@ -64,25 +64,25 @@ infixToCoq_ name = "op_" <> T.pack (zEncodeString $ T.unpack name) <> "__"
 -- This is code smell: Why do we return an unstructured Ident, and not a QualId?
 infixToCoq :: HasCallStack => Op -> Ident
 infixToCoq op = case splitModule op of
-    Just (m,op) -> m <> "." <> infixToCoq_ op
-    Nothing     -> infixToCoq_ op
+    Just (m,op') -> m <> "." <> infixToCoq_ op'
+    Nothing      -> infixToCoq_ op
 
 splitModule :: Ident -> Maybe (ModuleIdent, AccessIdent)
 splitModule = fmap fixup . either (const Nothing) Just . parse qualid "" where
   qualid = do
     let modFrag = T.cons <$> upper <*> (T.pack <$> many (alphaNum <|> char '_' <|> char '\''))
-    mod <- T.intercalate "." <$> many1 (try (modFrag <* char '.'))
+    modIdent <- T.intercalate "." <$> many1 (try (modFrag <* char '.'))
     base <- T.pack <$> some anyChar -- since we're assuming we get a valid name
-    pure $ (mod, base)
+    pure $ (modIdent, base)
 
   -- When we have a module name that ends in .Z or .N then that should be
   -- considered part of the name of the function. This is a hack to make the
   -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more convenient,
   -- without solving the problem of handling non-filesystem-modules in general
-  fixup (mod, name)
-    | ".Z" `T.isSuffixOf` mod = (T.take (T.length mod - 2) mod, "Z." <> name)
-    | ".N" `T.isSuffixOf` mod = (T.take (T.length mod - 2) mod, "N." <> name)
-    | otherwise               = (mod, name)
+  fixup (modIdent, name)
+    | ".Z" `T.isSuffixOf` modIdent = (T.take (T.length modIdent - 2) modIdent, "Z." <> name)
+    | ".N" `T.isSuffixOf` modIdent = (T.take (T.length modIdent - 2) modIdent, "N." <> name)
+    | otherwise                    = (modIdent, name)
 
 identIsOp :: Ident -> Bool
 identIsOp t = "op_" `T.isPrefixOf` t && "__" `T.isSuffixOf` t

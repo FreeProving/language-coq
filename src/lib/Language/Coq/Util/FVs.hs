@@ -63,10 +63,10 @@ telescope (BVs bvs1 fvs1) (BVs bvs2 fvs2)
     = BVs (bvs1 <> bvs2) (fvs1 <> (fvs2 `S.difference` bvs1))
 
 foldTelescope :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> BVs i
-foldTelescope f = foldr (\x -> (f x `telescope`)) mempty
+foldTelescope f = foldr (telescope . f) mempty
 
 foldScopes :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> FVs i -> FVs i
-foldScopes f xs x = foldr (\x -> (f x `scopesOver`)) x xs
+foldScopes f xs x = foldr (scopesOver . f) x xs
 
 class HasBV i a where
   bvOf :: a -> BVs i

@@ -52,9 +52,9 @@ invertMap m = M.unionsWith S.union [M.fromSet (const $ S.singleton k) vs | (k,vs
 
 connectedComponents :: Ord key => [(node, key, [key])] -> [SCC node]
 connectedComponents graph =
-  let edges = M.unionWith S.union <*> invertMap $
+  let edgeMap = M.unionWith S.union <*> invertMap $
                 M.fromList [(k, S.fromList vs) | (_, k, vs) <- graph]
-  in stronglyConnComp [(n, k, S.toList $ edges ! k) | (n,k,_) <- graph]
+  in stronglyConnComp [(n, k, S.toList $ edgeMap ! k) | (n,k,_) <- graph]
 
 -- Module-local
 nonEmpty_SCC :: SCC a -> NonEmpty a
@@ -105,7 +105,7 @@ stableTopoSortBy names dependencies objs =
     idsByName = M.fromList $ [ (name, oid)
                              | (oid, obj) <- M.assocs objsById
                              , name <- toList $ names obj ]
-    
+
     visit oid = unlessM (use $ contains oid) $ do
                   contains oid .= True
                   let obj = objsById M.! oid
@@ -130,7 +130,7 @@ reachableFrom :: Ord a => Reflexivity -> Map a (Set a) -> a -> Set a
 reachableFrom refl adjacencies v0 = execState (go v0) initial where
   go v = for_ (M.findWithDefault mempty v adjacencies) $ \v' ->
            unlessM (gets (v' `elem`)) $ modify (S.insert v') *> go v'
-  
+
   initial = case refl of
     Irreflexive -> S.empty
     Reflexive   -> S.singleton v0

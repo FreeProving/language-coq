@@ -19,8 +19,6 @@ import qualified Data.Map.Strict as M
 
 import Language.Coq.Gallina
 
-----------------------------------------------------------------------------------------------------
-
 -- Note: this is not capture avoiding substitution (yet!)
 --
 -- When it comes across an operator, it searches for its 'infixToCoq' name
@@ -30,13 +28,11 @@ import Language.Coq.Gallina
 class Subst t where
   subst :: Map Qualid Term -> t -> t
 
-
-
 instance Subst IndBody where
   subst f (IndBody tyName params indicesUnivers cons) =
-    IndBody tyName params indicesUnivers (map (substCon f) cons)
-       where substCon f (qid,binders, Nothing) = (qid, map (subst f) binders, Nothing)
-             substCon f (qid,binders, Just t)  = (qid, map (subst f) binders, Just (subst f t))
+    IndBody tyName params indicesUnivers (map substCon cons)
+       where substCon (qid,binders, Nothing) = (qid, map (subst f) binders, Nothing)
+             substCon (qid,binders, Just t)  = (qid, map (subst f) binders, Just (subst f t))
 
 instance Subst Binder where
   subst _f b@(Inferred _ex _x)    = b
@@ -76,7 +72,6 @@ instance Subst OrPattern where
   subst f (OrPattern pats) = OrPattern (subst f pats)
 -}
 
-
 instance Subst Sentence where
   subst f (AssumptionSentence      assum)     = AssumptionSentence        (subst f assum)
   subst f (DefinitionSentence      def)       = DefinitionSentence        (subst f def)
@@ -84,11 +79,11 @@ instance Subst Sentence where
   subst f (FixpointSentence        fix)       = FixpointSentence          (subst f fix)
   subst f (ProgramSentence         sen pf)    = ProgramSentence           (subst f sen) pf
   subst f (AssertionSentence       assert pf) = AssertionSentence         (subst f assert) pf
-  subst f (ModuleSentence          mod)       = ModuleSentence            (subst f mod)
+  subst f (ModuleSentence          localModule) = ModuleSentence          (subst f localModule)
   subst f (ClassSentence           cls)       = ClassSentence             (subst f cls)
   subst f (RecordSentence          rcd)       = RecordSentence            (subst f rcd)
   subst f (InstanceSentence        ins)       = InstanceSentence          (subst f ins)
-  subst f (NotationSentence        not)       = NotationSentence          (subst f not)
+  subst f (NotationSentence        notation)  = NotationSentence          (subst f notation)
   subst f (LocalModuleSentence     lmd)       = LocalModuleSentence       (subst f lmd)
   subst f (SectionSentence         sec)       = SectionSentence           (subst f sec)
   subst _ s@(ExistingClassSentence  _)        = s
@@ -110,8 +105,6 @@ instance Subst Definition where
   subst f (DefinitionDef isL x args oty def) =
     DefinitionDef isL x (subst f args) (subst f oty) (subst f def)
 
-
-
 instance Subst Inductive where
   subst _f (Inductive   _ibs _nots) = error "subst"
   subst _f (CoInductive _cbs _nots) = error "subst"
@@ -130,7 +123,7 @@ instance Subst Assertion where
   subst f (Assertion kwd name args ty) = Assertion kwd name (subst f args) (subst f ty)
 
 instance Subst ModuleSentence where
-  subst _ mod = mod
+  subst _ localModule = localModule
 
 instance Subst LocalModule where
   subst f (LocalModule name sentences) = LocalModule name (map (subst f) sentences)
