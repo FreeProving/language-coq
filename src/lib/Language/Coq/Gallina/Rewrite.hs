@@ -137,7 +137,7 @@ match patVars lhs term = execWriterT (go lhs term)
 
     patToTerm (ArgsPat con args)         = appList (Qualid con) <$> traverse (fmap PosArg . patToTerm) args
     patToTerm (ExplicitArgsPat con args) = ExplicitApp con . toList <$> traverse patToTerm args
-    patToTerm (InfixPat lhs' op rhs')    = App2 (Qualid $ Bare op) <$> patToTerm lhs' <*> patToTerm rhs'
+    patToTerm (InfixPat lhs' op rhs')    = mkApp2 (Qualid $ Bare op) <$> patToTerm lhs' <*> patToTerm rhs'
     patToTerm (InScopePat p scope)       = InScope <$> patToTerm p <*> pure scope
     patToTerm (QualidPat qid)            = Just $ Qualid qid
     patToTerm (NumPat n)                 = Just $ Num n

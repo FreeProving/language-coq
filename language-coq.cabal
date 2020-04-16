@@ -37,7 +37,7 @@ library
                      , FlexibleContexts, InstanceSigs, TypeSynonymInstances
                      , FlexibleInstances, UndecidableInstances, DeriveGeneric
                      , DeriveDataTypeable, GeneralizedNewtypeDeriving
-                     , PatternSynonyms, ViewPatterns, TemplateHaskell
+                     , ViewPatterns, TemplateHaskell
 
   build-depends:      base            ==4.12.*
                     , ghc             ==8.6.*

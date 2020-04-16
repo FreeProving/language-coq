@@ -8,7 +8,7 @@ Stability   : experimental
 
 -}
 
-{-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell #-}
+{-# LANGUAGE DeriveDataTypeable, OverloadedStrings, OverloadedLists, LambdaCase, TemplateHaskell, ViewPatterns #-}
 
 module Language.Coq.Pretty (
   renderGallina,
@@ -25,7 +25,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Set as S
 
-import Data.List.NonEmpty (NonEmpty(), (<|), nonEmpty)
+import Data.List.NonEmpty (NonEmpty(..), (<|), nonEmpty)
 
 import Data.Typeable
 import Data.Data (Data(..))
@@ -265,11 +265,11 @@ instance Gallina Term where
   renderGallina' p (Cofix fbs) = group $ maybeParen (p > fixPrec) $
     "cofix" <+> renderGallina fbs
 
-  -- the following are pattern synonyms and need to preceed the general Let case.
-  renderGallina' p (LetFix def body) = group $ maybeParen (p > letPrec) $
+  -- The following are view patterns and need to precede the general Let case.
+  renderGallina' p (isLetFix -> Just (def, body)) = group $ maybeParen (p > letPrec) $
     "let fix" <+> renderGallina def <+> "in" <!> align (renderGallina body)
 
-  renderGallina' p (LetCofix def body) = group $ maybeParen (p > letPrec) $
+  renderGallina' p (isLetCofix -> Just (def, body)) = group $ maybeParen (p > letPrec) $
     "let cofix" <+> renderGallina def <+> "in" <!> align (renderGallina body)
 
   renderGallina' p (Let var args oty val body) = group $ maybeParen (p > letPrec) $
@@ -313,12 +313,12 @@ instance Gallina Term where
     renderGallina' (arrowPrec + 1) ty1 <+> "->" <!> renderGallina' arrowPrec ty2
 
   -- Special notation for GHC.Num.fromInteger
-  renderGallina' _ (App1 "GHC.Num.fromInteger" (Num num)) =
+  renderGallina' _ (App "GHC.Num.fromInteger" (PosArg (Num num) :| [])) =
     char '#' <> renderNum num
 
   -- Special notation for somehting that looks like an operator an
   -- is applied to two arguments
-  renderGallina' p (App2 (Qualid op) l r) | qualidIsOp op =
+  renderGallina' p (App (Qualid op) (PosArg l :| [PosArg r])) | qualidIsOp op =
     case lookup op precTable of
       Just (n, LeftAssociativity)  ->
         maybeParen (n < p) $ group $

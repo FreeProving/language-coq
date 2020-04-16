@@ -1,5 +1,3 @@
-{-# LANGUAGE LambdaCase #-}
-
 module Language.Coq.Util.Monad (
   -- * Booleans
   andM, orM,
@@ -37,7 +35,7 @@ unlessM c f = ifM c (pure ()) f
 spanM :: Monad m => (a -> m Bool) -> [a] -> m ([a],[a])
 spanM p = go where
   go []         = pure ([], [])
-  go xxs@(x:xs) = p x >>= \case
+  go xxs@(x:xs) = p x >>= \px -> case px of
                     True  -> first (x:) <$> go xs
                     False -> pure ([], xxs)
 

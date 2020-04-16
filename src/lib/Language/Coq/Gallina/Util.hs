@@ -1,15 +1,13 @@
-{-# LANGUAGE PatternSynonyms, OverloadedStrings, LambdaCase, TemplateHaskell, ViewPatterns #-}
+{-# LANGUAGE OverloadedStrings, LambdaCase, TemplateHaskell, ViewPatterns #-}
 
 module Language.Coq.Gallina.Util (
   -- * Common AST patterns
-  pattern Var,    pattern App1,    pattern App2,    pattern App3,    appList,
-  pattern VarPat, pattern App1Pat, pattern App2Pat, pattern App3Pat,
-  pattern BName,
+  mkVar,    mkApp1,    mkApp2,    mkApp3,    appList,
+  mkVarPat, mkApp1Pat, mkApp2Pat, mkApp3Pat,
   mkInfix,
   maybeForall,
   maybeFun,
-  pattern IfBool, pattern IfCase,
-  pattern LetFix, pattern LetCofix,
+  isLetFix, isLetCofix,
   collectArgs,
 
   -- * Manipulating 'Term's
@@ -47,34 +45,38 @@ import GHC.Stack
 import Language.Coq.Gallina
 import Language.Coq.Util.InfixNames
 
-pattern Var  :: Ident                        -> Term
-pattern App1 :: Term -> Term                 -> Term
-pattern App2 :: Term -> Term -> Term         -> Term
-pattern App3 :: Term -> Term -> Term -> Term -> Term
-appList      :: Term -> [Arg]                -> Term
 
-pattern Var  x          = Qualid (Bare x)
-pattern App1 f x        = App f (PosArg x :| [])
-pattern App2 f x1 x2    = App f (PosArg x1 :| PosArg x2 : [])
-pattern App3 f x1 x2 x3 = App f (PosArg x1 :| PosArg x2 : PosArg x3 : [])
+mkVar  :: Ident                        -> Term
+mkVar  x          = Qualid (Bare x)
+
+mkApp1 :: Term -> Term                 -> Term
+mkApp1 f x        = App f (PosArg x :| [])
+
+mkApp2 :: Term -> Term -> Term         -> Term
+mkApp2 f x1 x2    = App f (PosArg x1 :| PosArg x2 : [])
+
+mkApp3 :: Term -> Term -> Term -> Term -> Term
+mkApp3 f x1 x2 x3 = App f (PosArg x1 :| PosArg x2 : PosArg x3 : [])
+
+appList      :: Term -> [Arg]                -> Term
 appList      f          = maybe f (App f) . nonEmpty
 
-pattern VarPat  :: Ident                                   -> Pattern
-pattern App1Pat :: Qualid -> Pattern                       -> Pattern
-pattern App2Pat :: Qualid -> Pattern -> Pattern            -> Pattern
-pattern App3Pat :: Qualid -> Pattern -> Pattern -> Pattern -> Pattern
 
-pattern VarPat  x          = QualidPat (Bare x)
-pattern App1Pat c x        = ArgsPat c [x]
-pattern App2Pat c x1 x2    = ArgsPat c [x1, x2]
-pattern App3Pat c x1 x2 x3 = ArgsPat c [x1, x2, x3]
+mkVarPat  :: Ident                                   -> Pattern
+mkVarPat  x          = QualidPat (Bare x)
 
-pattern BName :: Ident -> Name
-pattern BName  x          = Ident (Bare x)
+mkApp1Pat c x        = ArgsPat c [x]
+mkApp1Pat :: Qualid -> Pattern                       -> Pattern
+
+mkApp2Pat :: Qualid -> Pattern -> Pattern            -> Pattern
+mkApp2Pat c x1 x2    = ArgsPat c [x1, x2]
+
+mkApp3Pat :: Qualid -> Pattern -> Pattern -> Pattern -> Pattern
+mkApp3Pat c x1 x2 x3 = ArgsPat c [x1, x2, x3]
 
 -- Legacy combinator, to migrate away from the Infix constructor
 mkInfix :: Term -> Qualid -> Term -> Term
-mkInfix l op r = App2 (Qualid op) l r
+mkInfix l op r = mkApp2 (Qualid op) l r
 
 maybeForall :: Foldable f => f Binder -> Term -> Term
 maybeForall = maybe id Forall . nonEmpty . toList
@@ -88,30 +90,15 @@ maybeFun = maybe id Fun . nonEmpty . toList
 {-# SPECIALIZE maybeFun :: [Binder]        -> Term -> Term #-}
 {-# SPECIALIZE maybeFun :: NonEmpty Binder -> Term -> Term #-}
 
--- Two possible desugarings of if-then-else
-pattern IfBool :: IfStyle -> Term -> Term -> Term -> Term
-pattern IfBool is c t e = If is (HasType c (Var "bool")) Nothing t e
-
-pattern IfCase :: IfStyle -> Term -> Term -> Term -> Term
-pattern IfCase is c t e = If is (App1 (Var "Bool.Sumbool.sumbool_of_bool") c) Nothing t e
-
 isLetFix :: Term -> Maybe (FixBody, Term)
 isLetFix (Let f [] Nothing (Fix (FixOne fb@(FixBody f' _ _ _ _))) body)
     | f == f'   = Just (fb, body)
 isLetFix _ = Nothing
 
-pattern LetFix :: FixBody -> Term -> Term
-pattern LetFix fb body <- (isLetFix -> Just (fb, body))
-  where LetFix fb@(FixBody f _ _ _ _) body = Let f [] Nothing (Fix (FixOne fb)) body
-
 isLetCofix :: Term -> Maybe (FixBody, Term)
 isLetCofix (Let f [] Nothing (Cofix (FixOne fb@(FixBody f' _ _ _ _))) body)
     | f == f'   = Just (fb, body)
 isLetCofix _ = Nothing
-
-pattern LetCofix :: FixBody -> Term -> Term
-pattern LetCofix fb body <- (isLetCofix -> Just (fb, body))
-  where LetCofix fb@(FixBody f _ _ _ _) body = Let f [] Nothing (Cofix (FixOne fb)) body
 
 termHead :: Term -> Maybe Qualid
 termHead (Forall _ t)         = termHead t
