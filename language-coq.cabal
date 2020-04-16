@@ -26,13 +26,17 @@ library
                      , Language.Coq.Util.InfixNames
                      , Language.Coq.Util.PrettyPrint
 
-  other-extensions:    TypeOperators, LambdaCase, EmptyCase, TypeApplications
-                     , ScopedTypeVariables, OverloadedLists, OverloadedStrings
-                     , RankNTypes, ConstraintKinds , MultiParamTypeClasses
-                     , FlexibleContexts, InstanceSigs, TypeSynonymInstances
-                     , FlexibleInstances, UndecidableInstances, DeriveGeneric
-                     , DeriveDataTypeable, GeneralizedNewtypeDeriving
-                     , ViewPatterns, TemplateHaskell
+  other-extensions:    ConstraintKinds
+                     , FlexibleContexts
+                     , FlexibleInstances
+                     , GeneralizedNewtypeDeriving
+                     , LambdaCase
+                     , MultiParamTypeClasses
+                     , OverloadedLists
+                     , OverloadedStrings
+                     , TemplateHaskell
+                     , UndecidableInstances
+                     , ViewPatterns
 
   build-depends:      base            ==4.12.*
                     , ghc             ==8.6.*

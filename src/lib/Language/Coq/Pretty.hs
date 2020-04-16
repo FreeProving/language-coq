@@ -8,8 +8,7 @@ Stability   : experimental
 
 -}
 
-{-# LANGUAGE DeriveDataTypeable, LambdaCase, OverloadedStrings, OverloadedLists
-           , TemplateHaskell, ViewPatterns #-}
+{-# LANGUAGE LambdaCase, OverloadedStrings, OverloadedLists, ViewPatterns #-}
 
 module Language.Coq.Pretty
   ( renderGallina
@@ -32,9 +31,6 @@ import           Data.List.NonEmpty             ( NonEmpty(..)
                                                 , (<|)
                                                 , nonEmpty
                                                 )
-
-import           Data.Typeable
-import           Data.Data                      ( Data(..) )
 
 import           Language.Coq.Gallina
 import           Language.Coq.Gallina.Util
@@ -211,7 +207,7 @@ render_in_annot (Just (qid, pats)) =
 
 -- Module-local
 data Orientation = H | V
-                 deriving (Eq, Ord, Show, Read, Enum, Bounded, Typeable, Data)
+ deriving (Eq, Ord, Show, Read, Enum, Bounded)
 
 -- Module-local
 ocat :: Foldable f => Orientation -> f Doc -> Doc

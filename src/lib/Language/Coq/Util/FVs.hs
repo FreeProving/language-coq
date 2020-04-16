@@ -1,7 +1,5 @@
-{-# LANGUAGE DefaultSignatures, DeriveDataTypeable , DeriveTraversable
-           , FlexibleInstances, GeneralizedNewtypeDeriving
-           , MultiParamTypeClasses
-#-}
+{-# LANGUAGE DefaultSignatures, DeriveTraversable, FlexibleInstances
+           , GeneralizedNewtypeDeriving, MultiParamTypeClasses #-}
 
 module Language.Coq.Util.FVs where
 
@@ -17,7 +15,6 @@ import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.Fix
 import           Control.Monad.Error.Class
-import           Data.Data                      ( Data )
 
 -- | Set of free variables
 newtype FVs i = FVs { getFVs :: Set i }
@@ -87,8 +84,6 @@ fvOf' x = bindsNothing (fvOf x)
 newtype ErrOrVars e a = ErrOrVars { getErrOrVars :: Either e a }
  deriving ( -- Stock
             Eq, Ord, Show, Read
-            -- Generics
-          , Data
             -- Iterating
           , Foldable, Traversable
           , Bifoldable

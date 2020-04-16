@@ -1,5 +1,5 @@
 {-# LANGUAGE ConstraintKinds, DataKinds, FlexibleContexts, FlexibleInstances
-           , MultiParamTypeClasses, OverloadedStrings, TypeSynonymInstances #-}
+           , MultiParamTypeClasses #-}
 
 -- For TypeError
 {-# LANGUAGE UndecidableInstances #-}
