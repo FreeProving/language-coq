@@ -20,8 +20,6 @@ module Language.Coq.FreeVars
   -- * Utility methods
     topoSortEnvironment
   , topoSortEnvironmentWith
-  , topoSortByVariablesBy
-  , topoSortByVariables
   )
 where
 
@@ -359,17 +357,3 @@ topoSortEnvironmentWith fvs =
 -- 'stronglyConnComp'' returns its outputs in topologically sorted order.
 topoSortEnvironment :: HasFV Qualid t => Map Qualid t -> [NonEmpty Qualid]
 topoSortEnvironment = topoSortEnvironmentWith getFreeVars
-
-type ExtraFreeVars = Map Qualid (Set Qualid)
-
--- | Sort 'Sentence's or similar based on their free variables and the extra
--- edges provided. Tries to keep sentences in order otherwise.
-topoSortByVariablesBy
-  :: HasBV Qualid b => (a -> b) -> ExtraFreeVars -> [a] -> [a]
-topoSortByVariablesBy toBV extraFVs = stableTopoSortByPlus
-  (definedBy . toBV)
-  (getFreeVars' . toBV)
-  (M.findWithDefault S.empty ?? extraFVs)
-
-topoSortByVariables :: HasBV Qualid a => ExtraFreeVars -> [a] -> [a]
-topoSortByVariables = topoSortByVariablesBy id
