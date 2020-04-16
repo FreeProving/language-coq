@@ -38,11 +38,11 @@ import           Language.Coq.Gallina
 import           Language.Coq.Gallina.Util
 
 data Rewrite = Rewrite
-    { rewritePatternVars :: [Ident]
-    , rewriteLhs :: Term
-    , rewriteRhs :: Term
-    }
-  deriving (Eq, Ord, Show)
+  { rewritePatternVars :: [Ident]
+  , rewriteLhs :: Term
+  , rewriteRhs :: Term
+  }
+ deriving (Eq, Ord, Show)
 
 -- | This could be replaced by something more efficient, if needed.
 -- See comments in Language.Coq.Gallina.Rewrite.

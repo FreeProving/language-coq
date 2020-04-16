@@ -16,18 +16,20 @@ import           Control.Monad
 import           Control.Monad.Fix
 import           Control.Monad.Error.Class
 
--- | Set of free variables
+-- | Set of free variables.
 newtype FVs i = FVs { getFVs :: Set i }
  deriving (Eq, Ord, Show, Read, Semigroup, Monoid)
 
--- | An object capable of binding something has
---   a set of variables
-data BVs i = BVs { getBVars :: Set i -- Variables bound by this binder
-                 , getBFVs  :: Set i -- Free variables of this object
-                 }
-           deriving (Eq, Ord, Show, Read)
+-- | An object capable of binding something has a set of variables.
+data BVs i = BVs
+  { getBVars :: Set i -- ^ Variables bound by this binder.
+  , getBFVs  :: Set i -- ^ Free variables of this object.
+  }
+ deriving (Eq, Ord, Show, Read)
+
 instance Ord i => Semigroup (BVs i) where
   BVs bv1 fv1 <> BVs bv2 fv2 = BVs (bv1 <> bv2) (fv1 <> fv2)
+
 instance Ord i => Monoid    (BVs i) where
   mempty = BVs S.empty S.empty
 
