@@ -14,10 +14,6 @@ category:            Language
 build-type:          Simple
 cabal-version:       >=1.10
 
-source-repository head
-  type:     git
-  location: https://github.com/just95/language-coq
-
 library
   exposed-modules:     Language.Coq.FreeVars
                      , Language.Coq.Gallina
@@ -35,8 +31,6 @@ library
                      , Language.Coq.Util.List
                      , Language.Coq.Util.Monad
                      , Language.Coq.Util.PrettyPrint
-
-  build-tools:         happy == 1.19.*
 
   other-extensions:    TypeOperators, LambdaCase, EmptyCase, TypeApplications
                      , ScopedTypeVariables, OverloadedLists, OverloadedStrings
