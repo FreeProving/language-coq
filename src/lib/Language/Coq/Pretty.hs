@@ -22,7 +22,7 @@ where
 import           Prelude                 hiding ( Num )
 
 import           Data.Foldable
-import           Language.Coq.Util.Function
+import           Data.Composition               ( (.:) )
 
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as T

@@ -48,7 +48,7 @@ import           Data.Bifunctor
 import           Data.Foldable
 import           Control.Applicative
 
-import           Language.Coq.Util.Function
+import           Data.Composition               ( (.:) )
 import           Data.Maybe
 import           Data.Tuple
 

@@ -7,31 +7,19 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Language.Coq.FreeVars
-  (
-  -- * Constraint syonyms
+  ( -- * Constraint syonyms
     FreeVars
-  ,
-  -- * Main query functions
-    getFreeVars
+    -- * Main query functions
+  , getFreeVars
   , getFreeVars'
   , definedBy
   , NoBinding(..)
-  ,
-  -- * Utility methods
-    topoSortEnvironment
-  , topoSortEnvironmentWith
   )
 where
 
 import           Prelude                 hiding ( Num )
 
-import           Control.Lens            hiding ( op
-                                                , (<|)
-                                                )
-
-import           Data.Foldable
 import           Language.Coq.Util.List
-import           Language.Coq.Util.Containers
 
 import           Language.Coq.Util.FVs
 
@@ -40,8 +28,6 @@ import           Data.List.NonEmpty             ( NonEmpty()
                                                 )
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as S
-import           Data.Map.Strict                ( Map )
-import qualified Data.Map.Strict               as M
 import           GHC.TypeLits
 
 import           Language.Coq.Gallina
@@ -345,15 +331,3 @@ newtype NoBinding a = NoBinding a
 
 instance HasBV i a => HasFV i (NoBinding a) where
   fvOf (NoBinding x) = forgetBinders (bvOf x)
-
--- The order is correct – later identifiers refer only to previous ones – since
--- 'stronglyConnComp'' returns its outputs in topologically sorted order.
-topoSortEnvironmentWith
-  :: Foldable f => (a -> f Qualid) -> Map Qualid a -> [NonEmpty Qualid]
-topoSortEnvironmentWith fvs =
-  stronglyConnComp' . M.toList . fmap (toList . fvs)
-
--- The order is correct – later identifiers refer only to previous ones – since
--- 'stronglyConnComp'' returns its outputs in topologically sorted order.
-topoSortEnvironment :: HasFV Qualid t => Map Qualid t -> [NonEmpty Qualid]
-topoSortEnvironment = topoSortEnvironmentWith getFreeVars

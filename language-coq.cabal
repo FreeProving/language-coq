@@ -22,7 +22,6 @@ library
                      , Language.Coq.Gallina.Util
                      , Language.Coq.Pretty
                      , Language.Coq.Subst
-                     , Language.Coq.Util.Function
                      , Language.Coq.Util.FVs
                      , Language.Coq.Util.Generics
                      , Language.Coq.Util.InfixNames
@@ -43,6 +42,7 @@ library
                     , mtl             ==2.2.*
                     , lens            ==4.17.*
                     , containers      ==0.6.*
+                    , composition     ==1.0.*
                     , extra           ==1.7.*
                     , text            ==1.2.*
                     , wl-pprint-text  ==1.2.*
