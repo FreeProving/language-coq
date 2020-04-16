@@ -112,7 +112,7 @@ instance HasBV Qualid Pattern where
 instance HasBV Qualid OrPattern where
   bvOf (OrPattern pats) = foldMap bvOf pats
 
--- An @in@-annotation, as found in 'LetTickDep' or 'MatchItem'.
+-- An @in@-annotation, as found in 'MatchItem'.
 instance HasBV Qualid (Qualid, [Pattern]) where
   bvOf (con, pats) = fvOf' con <> foldMap bvOf pats
 

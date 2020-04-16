@@ -120,7 +120,7 @@ type Op = Text
 --    instead of simply @[in /term/]@, just as for @/match_item/@.
 --
 -- I have thus implemented this change in the AST that follows (the 'LetTick'
--- and 'LetTickDep' cases).
+-- case).
 --
 -- @/term/ ::=@
 data Term = Forall Binders Term                                                                -- ^@forall /binders/, /term/@
