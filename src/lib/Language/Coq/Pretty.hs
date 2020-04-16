@@ -236,7 +236,8 @@ renderArgsWithOptionalType
   -> f a
   -> Maybe Term
   -> Doc
-renderArgsWithOptionalType o args ot = group $ renderArgs o args <$$> renderOptionalType ot
+renderArgsWithOptionalType o args ot =
+  group $ renderArgs o args <$$> renderOptionalType ot
 
 -- Module-local
 renderMutualDef :: Gallina a => Doc -> NonEmpty a -> [NotationBinding] -> Doc
@@ -534,9 +535,8 @@ ifExplicit Implicit = const braces
 -- Module-local
 -- The 'Bool' is 'True' if parentheses are always necessary and 'False' otherwise.
 decorateBinder :: Generalizability -> Explicitness -> Bool -> Doc -> Doc
-decorateBinder Ungeneralizable ex b =
-  ifExplicit ex (if b then parensN else id)
-decorateBinder Generalizable ex _ = ("`" <>) . ifExplicit ex parensN
+decorateBinder Ungeneralizable ex b = ifExplicit ex (if b then parensN else id)
+decorateBinder Generalizable   ex _ = ("`" <>) . ifExplicit ex parensN
 
 instance Gallina Binder where
   renderGallina' _ (Inferred ex name) =
@@ -633,11 +633,11 @@ instance Gallina Pattern where
 
   renderGallina' _p (QualidPat qid) = renderGallina qid
 
-  renderGallina' _  UnderscorePat = char '_'
+  renderGallina' _  UnderscorePat   = char '_'
 
-  renderGallina' _  (NumPat    n  ) = renderNum n
+  renderGallina' _  (NumPat    n)   = renderNum n
 
-  renderGallina' _  (StringPat s  ) = renderString s
+  renderGallina' _  (StringPat s)   = renderString s
 
   renderGallina' _ (OrPats orPats) =
     parensN . align . group $ sepWith (<>) (</>) "," (renderGallina <$> orPats)
