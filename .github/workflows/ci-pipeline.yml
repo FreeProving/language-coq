@@ -20,7 +20,6 @@ on:
   push:
     branches:
     - 'master'
-    - 'contribution-guidelines'
     paths:
     - 'cabal.project'
     - 'language-coq.cabal'
