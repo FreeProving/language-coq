@@ -4,7 +4,7 @@
 module Language.Coq.Util.FVs where
 
 import           Data.Set                       ( Set )
-import qualified Data.Set                      as S
+import qualified Data.Set                      as Set
 import           Data.Foldable
 
 -- For instances
@@ -31,25 +31,26 @@ instance Ord i => Semigroup (BVs i) where
   BVs bv1 fv1 <> BVs bv2 fv2 = BVs (bv1 <> bv2) (fv1 <> fv2)
 
 instance Ord i => Monoid    (BVs i) where
-  mempty = BVs S.empty S.empty
+  mempty = BVs Set.empty Set.empty
 
 binder :: i -> BVs i
-binder x = BVs (S.singleton x) S.empty
+binder x = BVs (Set.singleton x) Set.empty
 
 binders :: (Ord i, Foldable f) => f i -> BVs i
-binders s = BVs (S.fromList (toList s)) S.empty
+binders s = BVs (Set.fromList (toList s)) Set.empty
 
 occurrence :: i -> FVs i
-occurrence x = FVs (S.singleton x)
+occurrence x = FVs (Set.singleton x)
 
 bindsNothing :: FVs i -> BVs i
-bindsNothing (FVs fvs) = BVs S.empty fvs
+bindsNothing (FVs fvs) = BVs Set.empty fvs
 
 forgetBinders :: BVs i -> FVs i
 forgetBinders bv = FVs (getBFVs bv)
 
 scopesOver :: Ord i => BVs i -> FVs i -> FVs i
-scopesOver (BVs bvs fvs1) (FVs fvs2) = FVs $ fvs1 <> (fvs2 `S.difference` bvs)
+scopesOver (BVs bvs fvs1) (FVs fvs2) =
+  FVs $ fvs1 <> (fvs2 `Set.difference` bvs)
 
 scopesMutually :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> BVs i
 scopesMutually f xs = binders (foldMap (getBVars . f) xs)
@@ -57,7 +58,7 @@ scopesMutually f xs = binders (foldMap (getBVars . f) xs)
 
 telescope :: Ord i => BVs i -> BVs i -> BVs i
 telescope (BVs bvs1 fvs1) (BVs bvs2 fvs2) =
-  BVs (bvs1 <> bvs2) (fvs1 <> (fvs2 `S.difference` bvs1))
+  BVs (bvs1 <> bvs2) (fvs1 <> (fvs2 `Set.difference` bvs1))
 
 foldTelescope :: (Ord i, Foldable f) => (a -> BVs i) -> f a -> BVs i
 foldTelescope f = foldr (telescope . f) mempty
@@ -109,7 +110,7 @@ instance Swapped ErrOrVars where
   {-# INLINE swapped #-}
 
 instance HasBV i a => HasBV i (ErrOrVars e a) where
-  bvOf = either (const $ BVs S.empty S.empty) bvOf . getErrOrVars
+  bvOf = either (const $ BVs Set.empty Set.empty) bvOf . getErrOrVars
 
 instance HasFV i a => HasFV i (ErrOrVars e a) where
-  fvOf = either (const $ FVs S.empty) fvOf . getErrOrVars
+  fvOf = either (const $ FVs Set.empty) fvOf . getErrOrVars

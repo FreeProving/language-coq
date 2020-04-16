@@ -24,8 +24,8 @@ import           Data.Foldable
 import           Data.Composition               ( (.:) )
 
 import           Data.Text                      ( Text )
-import qualified Data.Text                     as T
-import qualified Data.Set                      as S
+import qualified Data.Text                     as Text
+import qualified Data.Set                      as Set
 
 import           Data.List.NonEmpty             ( NonEmpty(..)
                                                 , (<|)
@@ -147,7 +147,7 @@ textP :: Gallina a => a -> Text
 textP = displayTStrict . renderOneLine . renderGallina
 
 showP :: Gallina a => a -> String
-showP = T.unpack . textP
+showP = Text.unpack . textP
 
 renderGallina :: Gallina a => a -> Doc
 renderGallina = renderGallina' 0
@@ -156,7 +156,7 @@ renderIdent :: Ident -> Doc
 renderIdent = text
 
 renderAccessIdent :: AccessIdent -> Doc
-renderAccessIdent = text . T.cons '.'
+renderAccessIdent = text . Text.cons '.'
 
 renderModuleIdent :: ModuleIdent -> Doc
 renderModuleIdent = text
@@ -165,12 +165,12 @@ renderNum :: Num -> Doc
 renderNum = integer . toInteger
 
 renderString :: Text -> Doc
-renderString = dquotes . string .: T.concatMap $ \case
+renderString = dquotes . string .: Text.concatMap $ \case
   '"' -> "\"\""
-  c   -> T.singleton c
+  c   -> Text.singleton c
 
 renderOp :: Op -> Doc
-renderOp o = text $ o <> (if "." `T.isSuffixOf` o then "(**)" else "")
+renderOp o = text $ o <> (if "." `Text.isSuffixOf` o then "(**)" else "")
   -- [x .&. y] would be illegal, so print [x .&.(**) y]
 
 renderQOp :: Qualid -> Doc
@@ -279,7 +279,7 @@ instance Gallina Term where
    where
     fvs = getFreeVars body
     check (Inferred Explicit (Ident name) : vars') (MatchItem (Qualid v) Nothing Nothing : ss)
-      = v `S.notMember` fvs && name == v && check vars' ss
+      = v `Set.notMember` fvs && name == v && check vars' ss
     check [] [] = True
     check _  _  = False
 
@@ -498,10 +498,10 @@ instance Gallina Term where
     where hs_stringQI = Qualified "GHC.Base" "hs_string__"
 
   renderGallina' p (HsChar str) =
-    -- string "&#" <> renderString (T.singleton str)
+    -- string "&#" <> renderString (Text.singleton str)
                                   renderGallina'
     p
-    (App (Qualid hs_charQI) [PosArg (String (T.singleton str))])
+    (App (Qualid hs_charQI) [PosArg (String (Text.singleton str))])
     where hs_charQI = Qualified "GHC.Char" "hs_char__"
 
   renderGallina' _ Underscore = char '_'
@@ -649,7 +649,7 @@ instance Gallina OrPattern where
 instance Gallina Comment where
   renderGallina' _ (Comment com) =
     "(* "
-      <> align (fillSep . map (text . T.replace "*)" "* )") $ T.words com)
+      <> align (fillSep . map (text . Text.replace "*)" "* )") $ Text.words com)
       <> " *)"
 
 renderObligation :: Maybe Tactics -> Doc

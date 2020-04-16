@@ -63,10 +63,10 @@ import           Data.Maybe
 import           Data.List.NonEmpty             ( NonEmpty(..)
                                                 , nonEmpty
                                                 )
-import qualified Data.List.NonEmpty            as NE
+import qualified Data.List.NonEmpty            as NonEmpty
                                                 ( toList )
 
-import qualified Data.Text                     as T
+import           Data.Text                      ( Text )
 
 import           GHC.Stack
 
@@ -207,7 +207,7 @@ qualidMapBase :: (Ident -> Ident) -> Qualid -> Qualid
 qualidMapBase f (Bare base            ) = Bare $ f base
 qualidMapBase f (Qualified prefix base) = Qualified prefix $ f base
 
-qualidExtendBase :: T.Text -> Qualid -> Qualid
+qualidExtendBase :: Text -> Qualid -> Qualid
 qualidExtendBase suffix = qualidMapBase (<> suffix)
 
 qualidToIdent :: Qualid -> Ident
@@ -258,7 +258,7 @@ collectArgs :: Monad m => Term -> m (Qualid, [Term])
 collectArgs (Qualid qid) = return (qid, [])
 collectArgs (App t args) = do
   (f, args1) <- collectArgs t
-  args2      <- mapM fromArg (NE.toList args)
+  args2      <- mapM fromArg (NonEmpty.toList args)
   return (f, args1 ++ args2)
  where
   fromArg (PosArg arg) = return arg

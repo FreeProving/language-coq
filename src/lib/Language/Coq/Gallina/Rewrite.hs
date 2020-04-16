@@ -25,8 +25,8 @@ module Language.Coq.Gallina.Rewrite
   )
 where
 
-import qualified Data.Map                      as M
-import qualified Data.Set                      as S
+import qualified Data.Map                      as Map
+import qualified Data.Set                      as Set
 
 import           Control.Applicative
 import           Control.Monad
@@ -64,19 +64,19 @@ norm (HsString s) = String s
 norm t | Just (f, args) <- collectArgs t = appList (Qualid f) (map PosArg args)
 norm t            = t
 
-match :: [Ident] -> Term -> Term -> Maybe (M.Map Qualid Term)
+match :: [Ident] -> Term -> Term -> Maybe (Map.Map Qualid Term)
 match patVars lhs term = execWriterT (go lhs term)
  where
-  isPatVar = (`S.member` S.fromList patVars)
+  isPatVar = (`Set.member` Set.fromList patVars)
 
-  go :: Term -> Term -> WriterT (M.Map Qualid Term) Maybe ()
+  go :: Term -> Term -> WriterT (Map.Map Qualid Term) Maybe ()
   go lhs' term' = go' (norm lhs') (norm term')
 
-  go' :: Term -> Term -> WriterT (M.Map Qualid Term) Maybe ()
+  go' :: Term -> Term -> WriterT (Map.Map Qualid Term) Maybe ()
   go' (String s1) (String s2)              = guard (s1 == s2)
   go' (Num    n1) (Num    n2)              = guard (n1 == n2)
   go' (Qualid qid@(Bare v)) t | isPatVar v = do
-    tell (M.singleton qid t)
+    tell (Map.singleton qid t)
     return ()
   go' (Qualid pqid) (Qualid qid) = guard (pqid == qid)
   go' (App pf pa  ) (App f a   ) = do
@@ -89,7 +89,7 @@ match patVars lhs term = execWriterT (go lhs term)
     zipWithSameLengthM_ goE  eqs1    eqs2
   go' _lhs _term = mzero
 
-  goA :: Arg -> Arg -> WriterT (M.Map Qualid Term) Maybe ()
+  goA :: Arg -> Arg -> WriterT (Map.Map Qualid Term) Maybe ()
   goA (PosArg pt           ) (PosArg p            ) = go pt p
   goA (NamedArg argIdent pt) (NamedArg argIdent' p) = do
     guard (argIdent == argIdent')
@@ -129,7 +129,7 @@ match patVars lhs term = execWriterT (go lhs term)
     goPQid var1 var2
     goP pat1 pat2
   goP (QualidPat qid1@(Bare v)) p | isPatVar v, Just t <- patToTerm p =
-    tell $ M.singleton qid1 t
+    tell $ Map.singleton qid1 t
   goP (QualidPat qid1 ) (QualidPat qid2 ) = guard $ qid1 == qid2
   goP (OrPats    pats1) (OrPats    pats2) = zipWithSameLengthM_ goOP pats1 pats2
   goP _                 _                 = mzero
@@ -148,8 +148,9 @@ match patVars lhs term = execWriterT (go lhs term)
   patToTerm UnderscorePat        = Nothing
   patToTerm (OrPats _)           = Nothing
 
-  goPQid lhs'@(Bare v) rhs' | isPatVar v = tell $ M.singleton lhs' (Qualid rhs')
-  goPQid lhs' rhs'                       = guard $ lhs' == rhs'
+  goPQid lhs'@(Bare v) rhs' | isPatVar v =
+    tell $ Map.singleton lhs' (Qualid rhs')
+  goPQid lhs' rhs' = guard $ lhs' == rhs'
 
   goOP (OrPattern pats1) (OrPattern pats2) =
     zipWithSameLengthM_ goP pats1 pats2

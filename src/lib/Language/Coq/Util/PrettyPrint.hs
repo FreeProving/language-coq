@@ -4,7 +4,7 @@ module Language.Coq.Util.PrettyPrint
     -- * Don't use operators with existing meanings
   , (<>)
   , (<!>)
-  -- * Lazy 'TL.Text' to strict 'Text'
+  -- * Lazy 'LazyText.Text' to strict 'Text'
   , text
   , lazyText
   , string
@@ -59,83 +59,84 @@ import           Text.PrettyPrint.Leijen.Text
                                                 , cat
                                                 , punctuate
                                                 )
-import qualified Text.PrettyPrint.Leijen.Text  as T
+import qualified Text.PrettyPrint.Leijen.Text  as Leijen
 import           Data.Text                      ( Text )
-import qualified Data.Text.Lazy                as TL
+import qualified Data.Text.Lazy                as LazyText
 import           Data.Semigroup                 ( Semigroup(..) )
 import           Data.Foldable
 
 (<!>) :: Doc -> Doc -> Doc
-(<!>) = (T.<$>)
+(<!>) = (Leijen.<$>)
 infixr 5 <!>
 {-# INLINABLE (<!>) #-}
 
 text :: Text -> Doc
-text = T.text . TL.fromStrict
+text = Leijen.text . LazyText.fromStrict
 {-# INLINABLE text #-}
 
-lazyText :: TL.Text -> Doc
-lazyText = T.text
+lazyText :: LazyText.Text -> Doc
+lazyText = Leijen.text
 {-# INLINABLE lazyText #-}
 
 string :: Text -> Doc
-string = T.string . TL.fromStrict
+string = Leijen.string . LazyText.fromStrict
 {-# INLINABLE string #-}
 
-lazyString :: TL.Text -> Doc
-lazyString = T.string
+lazyString :: LazyText.Text -> Doc
+lazyString = Leijen.string
 {-# INLINABLE lazyString #-}
 
 encloseSep :: Foldable f => Doc -> Doc -> Doc -> f Doc -> Doc
-encloseSep left right seperator = T.encloseSep left right seperator . toList
+encloseSep left right seperator =
+  Leijen.encloseSep left right seperator . toList
 {-# INLINABLE encloseSep #-}
 
 list :: Foldable f => f Doc -> Doc
-list = T.list . toList
+list = Leijen.list . toList
 {-# INLINABLE list #-}
 
 tupled :: Foldable f => f Doc -> Doc
-tupled = T.tupled . toList
+tupled = Leijen.tupled . toList
 {-# INLINABLE tupled #-}
 
 semiBraces :: Foldable f => f Doc -> Doc
-semiBraces = T.semiBraces . toList
+semiBraces = Leijen.semiBraces . toList
 {-# INLINABLE semiBraces #-}
 
 hsep :: Foldable f => f Doc -> Doc
-hsep = T.hsep . toList
+hsep = Leijen.hsep . toList
 {-# INLINABLE hsep #-}
 
 vsep :: Foldable f => f Doc -> Doc
-vsep = T.vsep . toList
+vsep = Leijen.vsep . toList
 {-# INLINABLE vsep #-}
 
 fillSep :: Foldable f => f Doc -> Doc
-fillSep = T.fillSep . toList
+fillSep = Leijen.fillSep . toList
 {-# INLINABLE fillSep #-}
 
 sep :: Foldable f => f Doc -> Doc
-sep = T.sep . toList
+sep = Leijen.sep . toList
 {-# INLINABLE sep #-}
 
 hcat :: Foldable f => f Doc -> Doc
-hcat = T.hcat . toList
+hcat = Leijen.hcat . toList
 {-# INLINABLE hcat #-}
 
 vcat :: Foldable f => f Doc -> Doc
-vcat = T.vcat . toList
+vcat = Leijen.vcat . toList
 {-# INLINABLE vcat #-}
 
 fillCat :: Foldable f => f Doc -> Doc
-fillCat = T.fillCat . toList
+fillCat = Leijen.fillCat . toList
 {-# INLINABLE fillCat #-}
 
 cat :: Foldable f => f Doc -> Doc
-cat = T.cat . toList
+cat = Leijen.cat . toList
 {-# INLINABLE cat #-}
 
 punctuate :: Foldable f => Doc -> f Doc -> [Doc]
-punctuate p = T.punctuate p . toList
+punctuate p = Leijen.punctuate p . toList
 {-# INLINABLE punctuate #-}
 
 sepWith
@@ -183,7 +184,7 @@ softlineIf = docIf softline
 {-# INLINABLE softlineIf #-}
 
 renderOneLineT :: Doc -> Text
-renderOneLineT = TL.toStrict . displayT . renderOneLine
+renderOneLineT = LazyText.toStrict . displayT . renderOneLine
 {-# INLINABLE renderOneLineT #-}
 
 -- Puts everything on a line as long as it fits, and the
@@ -195,4 +196,4 @@ fill1Sep xs = go (reverse (toList xs))
   go (x : xs') = group (go xs' <!> x)
 
 commaList :: Foldable f => f Doc -> Doc
-commaList xs = group (align . nest (-2) $ sepWith (<$$>) (<+>) T.comma xs)
+commaList xs = group (align . nest (-2) $ sepWith (<$$>) (<+>) Leijen.comma xs)

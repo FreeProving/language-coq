@@ -11,7 +11,7 @@ import           Prelude                 hiding ( Num )
 
 import           Data.Map.Strict                ( Map )
 import           Data.Maybe
-import qualified Data.Map.Strict               as M
+import qualified Data.Map.Strict               as Map
 
 import           Language.Coq.Gallina
 
@@ -211,9 +211,9 @@ instance Subst Term where
   subst f (Match items oret eqns) =
     Match (subst f items) (subst f oret) (subst f eqns)
 
-  subst f  x@(Qualid    qid  ) = fromMaybe x (M.lookup qid f)
+  subst f  x@(Qualid    qid  ) = fromMaybe x (Map.lookup qid f)
 
-  subst f  x@(RawQualid qid  ) = fromMaybe x (M.lookup qid f)
+  subst f  x@(RawQualid qid  ) = fromMaybe x (Map.lookup qid f)
 
   subst _f x@(Sort      _sort) = x
 

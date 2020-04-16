@@ -26,7 +26,7 @@ import           Data.List.NonEmpty             ( NonEmpty()
                                                 )
 import           Data.List.NonEmpty.Extra       ( appendl )
 import           Data.Set                       ( Set )
-import qualified Data.Set                      as S
+import qualified Data.Set                      as Set
 import           GHC.TypeLits
 
 import           Language.Coq.Gallina
@@ -222,7 +222,7 @@ getFreeVars' = getFVs . forgetBinders . bvOf
 
 
 definedBy :: HasBV Qualid x => x -> [Qualid]
-definedBy = S.toList . getBVars . bvOf
+definedBy = Set.toList . getBVars . bvOf
 
 instance HasFV Qualid Qualid where
   fvOf = occurrence

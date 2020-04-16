@@ -11,7 +11,7 @@ module Language.Coq.Gallina.Orphans
   ()
 where
 
-import qualified Data.Text                     as T
+import qualified Data.Text                     as Text
 import           Data.String
 
 import           Language.Coq.Gallina
@@ -19,8 +19,8 @@ import           Language.Coq.Gallina.Util
 
 -- For internal use only (e.g. hardcoded names)
 instance IsString Term where
-  fromString x = Qualid (unsafeIdentToQualid (T.pack x))
+  fromString x = Qualid (unsafeIdentToQualid (Text.pack x))
 instance IsString Qualid where
-  fromString x = unsafeIdentToQualid (T.pack x)
+  fromString x = unsafeIdentToQualid (Text.pack x)
 instance IsString Binder where
-  fromString x = Inferred Explicit (Ident (unsafeIdentToQualid (T.pack x)))
+  fromString x = Inferred Explicit (Ident (unsafeIdentToQualid (Text.pack x)))
