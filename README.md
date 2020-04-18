@@ -10,9 +10,9 @@ The code in this repository has originally been developed as part of the [hs-to-
 ## Table of Contents
 
 1. [Directory Structure](#directory-structure)
-3. [Getting Started](#getting-started)
-5. [Get Involved](#get-involved)
-6. [License](#license)
+2. [Getting Started](#getting-started)
+3. [Get Involved](#get-involved)
+4. [License](#license)
 
 ## Directory Structure
 
