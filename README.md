@@ -24,6 +24,8 @@ This repository is structured as follows.
     + The AST is located in `Language.Coq.Gallina`.
     + The pretty-printer can be found in `Language.Coq.Pretty`.
 
+ - `tool` contains Bash scripts that are used during development and for testing.
+
 ## Getting Stated
 
 ### Required Software
@@ -42,7 +44,7 @@ In order to use this package in your own project, include the following stanza i
 ```cabal
 source-repository-package
   type: git
-  location: git://github.com/FreeProving/haskell-src-transformations.git
+  location: git://github.com/FreeProving/language-coq.git
   tag: v0.1.0.0
 ```
 
