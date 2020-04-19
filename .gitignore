@@ -1,41 +1,15 @@
-# Stack
-.stack-work
-
-# cabal
-dist-newstyle
+### Haskell ###
 dist
-cabal.project.local
-.ghc.environment.*
-
-# Coq
-*.vo
-*.glob
-.*.aux
-*.v.d
-.coqdeps.d
-Makefile.coq.conf
-Makefile.bak
-Makefile.conf
-.lia.cache
-
-# Haskell
+dist-*
+cabal-dev
 *.o
 *.hi
-*.o-boot
-*.hi-boot
-*.tix
+.cabal-sandbox/
+cabal.sandbox.config
 *.prof
-
-# emacs autosaves
-\#*
-.\#*
-
-# Scratch work files
-Example.hs
-example.v
-
-# links to ghc
-ghc-8.0.2
-ghc-8.4.1
-ghc-head
-/result
+*.aux
+*.hp
+.stack-work/
+cabal.project.local
+.ghc.environment.*
+.hspec-failure-report

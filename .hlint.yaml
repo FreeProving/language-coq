@@ -1,0 +1,15 @@
+# HLint configuration file
+# https://github.com/ndmitchell/hlint
+##########################
+
+# Fixity for the `NonEmpty` list constructor.
+- fixity: "infixr 5 :|"
+
+# Aliases for qualified imports.
+- modules:
+  - {name: [ Data.List.NonEmpty ], as: NonEmpty}
+  - {name: [ Data.Map.Strict ], as: Map}
+  - {name: [ Data.Set ], as: Set}
+  - {name: [ Data.Text ], as: Text}
+  - {name: [ Data.Text.Lazy ], as: LazyText}
+  - {name: [ Text.PrettyPrint.Leijen.Text ], as: Leijen}
