@@ -64,7 +64,7 @@ See the [LICENSE][language-coq/LICENSE] file for details.
 
 [guidelines/CONTRIBUTING]:
   https://github.com/FreeProving/guidelines/blob/master/CONTRIBUTING.md
-  "Free Compiler — Contribution Guidelines"
+  "Contributing Guidelines of the FreeProving project"
 
 [hs-to-coq]:
   https://github.com/antalsz/hs-to-coq
