@@ -10,8 +10,8 @@ module Language.Coq.Gallina.Orphans
   ()
 where
 
-import qualified Data.Text                     as Text
 import           Data.String
+import qualified Data.Text                     as Text
 
 import           Language.Coq.Gallina
 import           Language.Coq.Gallina.Util

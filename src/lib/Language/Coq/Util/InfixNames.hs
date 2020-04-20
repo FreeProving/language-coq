@@ -13,23 +13,20 @@ module Language.Coq.Util.InfixNames
   )
 where
 
-import           Control.Lens            hiding ( op )
-
 import           Control.Applicative
+import           Control.Lens            hiding ( op )
 import           Control.Monad
-import           Data.Semigroup                 ( Semigroup(..) )
 import           Data.Char
+import           Data.Semigroup                 ( Semigroup(..) )
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
-import           Text.Parsec             hiding ( (<|>)
-                                                , many
-                                                )
-
 import           Encoding                       ( zEncodeString
                                                 , zDecodeString
                                                 )
-
 import           GHC.Stack
+import           Text.Parsec             hiding ( (<|>)
+                                                , many
+                                                )
 
 -- Lets keep this module self-contained (but use the same type synonyms)
 type Op = Text

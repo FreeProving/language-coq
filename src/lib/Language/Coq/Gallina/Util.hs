@@ -56,18 +56,14 @@ module Language.Coq.Gallina.Util
 where
 
 import           Control.Lens            hiding ( op )
-
-import           Data.Semigroup                 ( (<>) )
 import           Data.Foldable
-import           Data.Maybe
 import           Data.List.NonEmpty             ( NonEmpty(..)
                                                 , nonEmpty
                                                 )
 import qualified Data.List.NonEmpty            as NonEmpty
-                                                ( toList )
-
+import           Data.Maybe
+import           Data.Semigroup                 ( (<>) )
 import           Data.Text                      ( Text )
-
 import           GHC.Stack
 
 import           Language.Coq.Gallina

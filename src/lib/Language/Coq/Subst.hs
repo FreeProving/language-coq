@@ -10,8 +10,8 @@ where
 import           Prelude                 hiding ( Num )
 
 import           Data.Map.Strict                ( Map )
-import           Data.Maybe
 import qualified Data.Map.Strict               as Map
+import           Data.Maybe
 
 import           Language.Coq.Gallina
 

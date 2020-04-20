@@ -3,18 +3,16 @@
 
 module Language.Coq.Util.FVs where
 
-import           Data.Set                       ( Set )
-import qualified Data.Set                      as Set
-import           Data.Foldable
-
--- For instances
-import           Control.Lens
-import           Data.Bifoldable
-import           Data.Bitraversable
 import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.Fix
 import           Control.Monad.Error.Class
+import           Control.Lens
+import           Data.Bifoldable
+import           Data.Bitraversable
+import           Data.Set                       ( Set )
+import qualified Data.Set                      as Set
+import           Data.Foldable
 
 -- | Set of free variables.
 newtype FVs i = FVs { getFVs :: Set i }

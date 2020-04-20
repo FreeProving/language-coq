@@ -77,10 +77,9 @@ where
 
 import           Prelude                 hiding ( Num )
 
+import           Data.List.NonEmpty             ( NonEmpty() )
 import           Data.Text                      ( Text )
 import           Numeric.Natural
-
-import           Data.List.NonEmpty             ( NonEmpty() )
 
 -- $Lexical
 -- <https://coq.inria.fr/distrib/current/refman/Reference-Manual003.html#lexical §1.1, \"Lexical conventions\", in the Coq reference manual.>

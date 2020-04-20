@@ -19,7 +19,6 @@ where
 
 import           Prelude                 hiding ( Num )
 
-import           Language.Coq.Util.FVs
 
 import           Data.List.NonEmpty             ( NonEmpty()
                                                 , (<|)
@@ -30,6 +29,7 @@ import qualified Data.Set                      as Set
 import           GHC.TypeLits
 
 import           Language.Coq.Gallina
+import           Language.Coq.Util.FVs
 
 type FreeVars = HasFV Qualid
 

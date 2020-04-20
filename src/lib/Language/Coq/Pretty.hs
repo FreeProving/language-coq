@@ -1,9 +1,9 @@
 -- | Module      : Language.Coq.Pretty
-     Description : An AST for Gallina, the surface language of Coq
-     Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
-     License     : MIT
-     Maintainer  : antal.b.sz@gmail.com
-     Stability   : experimental
+--   Description : An AST for Gallina, the surface language of Coq
+--   Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
+--   License     : MIT
+--   Maintainer  : antal.b.sz@gmail.com
+--   Stability   : experimental
 
 {-# LANGUAGE LambdaCase, OverloadedStrings, OverloadedLists, ViewPatterns #-}
 
@@ -17,24 +17,21 @@ where
 
 import           Prelude                 hiding ( Num )
 
-import           Data.Foldable
 import           Data.Composition               ( (.:) )
-
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as Text
-import qualified Data.Set                      as Set
-
+import           Data.Foldable
 import           Data.List.NonEmpty             ( NonEmpty(..)
                                                 , (<|)
                                                 , nonEmpty
                                                 )
+import           Data.Text                      ( Text )
+import qualified Data.Text                     as Text
+import qualified Data.Set                      as Set
 
-import           Language.Coq.Gallina
-import           Language.Coq.Gallina.Util
 import           Language.Coq.FreeVars
+import           Language.Coq.Gallina
 import           Language.Coq.Gallina.Orphans   ( )
+import           Language.Coq.Gallina.Util
 import           Language.Coq.Util.PrettyPrint
-
 
 -- https://coq.inria.fr/refman/Reference-Manual005.html#init-notations
 -- todo: make PP monadic and update this table with new declarations?

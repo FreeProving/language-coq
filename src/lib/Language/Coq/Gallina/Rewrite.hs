@@ -24,13 +24,12 @@ module Language.Coq.Gallina.Rewrite
   )
 where
 
-import qualified Data.Map                      as Map
-import qualified Data.Set                      as Set
-
 import           Control.Applicative
 import           Control.Monad
 import           Control.Monad.Trans.Writer.Strict
 import           Data.Foldable
+import qualified Data.Map                      as Map
+import qualified Data.Set                      as Set
 
 import           Language.Coq.Subst
 import           Language.Coq.Gallina

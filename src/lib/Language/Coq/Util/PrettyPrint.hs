@@ -41,6 +41,10 @@ module Language.Coq.Util.PrettyPrint
   )
 where
 
+import           Data.Foldable
+import           Data.Semigroup                 ( Semigroup(..) )
+import           Data.Text                      ( Text )
+import qualified Data.Text.Lazy                as LazyText
 import           Text.PrettyPrint.Leijen.Text
                                          hiding ( (<$>)
                                                 , text
@@ -60,10 +64,6 @@ import           Text.PrettyPrint.Leijen.Text
                                                 , punctuate
                                                 )
 import qualified Text.PrettyPrint.Leijen.Text  as Leijen
-import           Data.Text                      ( Text )
-import qualified Data.Text.Lazy                as LazyText
-import           Data.Semigroup                 ( Semigroup(..) )
-import           Data.Foldable
 
 (<!>) :: Doc -> Doc -> Doc
 (<!>) = (Leijen.<$>)
