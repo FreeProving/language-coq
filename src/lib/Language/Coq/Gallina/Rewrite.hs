@@ -1,22 +1,21 @@
-{-|
-Module      : Language.Coq.Gallina.Rewrite
-Description : Rewrite rule enginge for the Gallina AST
-Copyright   : Copyright © 2018 Joachim Breitner
-License     : MIT
-Maintainer  : antal.b.sz@gmail.com
-Stability   : experimental
-
-This module implements rewrite rules. So far, this is straight forward and
-not very efficiently.
-
-Efficiency of finding a rewrite rule (candidate) could be greatly improved by
- * sorting the rewrite rules into a map, based on the outermost functions.
- * implementing an actual trie
-This can be relevant when the numer of rewrite rules increases.
-
-Another improvemet would be to detect bad patterns (non-linear ones,
-unsupported AST nodes) and report such errors upon parsing.
--}
+-- | Module      : Language.Coq.Gallina.Rewrite
+--   Description : Rewrite rule enginge for the Gallina AST
+--   Copyright   : Copyright © 2018 Joachim Breitner
+--   License     : MIT
+--   Maintainer  : antal.b.sz@gmail.com
+--   Stability   : experimental
+--
+--   This module implements rewrite rules. So far, this is straight forward and
+--   not very efficiently.
+--
+--   Efficiency of finding a rewrite rule (candidate) could be greatly improved
+--   by
+--    * sorting the rewrite rules into a map, based on the outermost functions.
+--    * implementing an actual trie
+--   This can be relevant when the number of rewrite rules increases.
+--
+--   Another improvement would be to detect bad patterns (non-linear ones,
+--   unsupported AST nodes) and report such errors upon parsing.
 
 module Language.Coq.Gallina.Rewrite
   ( Rewrite(..)
@@ -45,7 +44,8 @@ data Rewrite = Rewrite
  deriving (Eq, Ord, Show)
 
 -- | This could be replaced by something more efficient, if needed.
--- See comments in Language.Coq.Gallina.Rewrite.
+--
+--   See comments in "Language.Coq.Gallina.Rewrite".
 type Rewrites = [Rewrite]
 
 -- | Applies all rewrite rules that match at the root of the given term.
@@ -58,7 +58,6 @@ rewrite1 (Rewrite patVars lhs rhs) term
   | otherwise                        = term
 
 -- | Normalizes the outermost constructor
--- (Maybe we should drop InFix completely)
 norm :: Term -> Term
 norm (HsString s) = String s
 norm t | Just (f, args) <- collectArgs t = appList (Qualid f) (map PosArg args)

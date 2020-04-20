@@ -1,12 +1,11 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
--- |
--- This module contains orphan instancs to use string literatls to refer to
--- variables in terms, which is convenient when building expressions in the
--- Haskell code (e.g. in Monad.hs).
+-- | This module contains orphan instances to use string literals to refer to
+--   variables in terms, which is convenient when building expressions in the
+--   Haskell code.
 --
--- Orphans are frowned upon in libraries, but not quite as bad in programs.
--- We still put them in a separte module, to make it (somewhat) clear where
--- they are used.
+--   Orphans are frowned upon in libraries, but not quite as bad in programs.
+--   We still put them in a separate module, to make it (somewhat) clear where
+--   they are used.
 module Language.Coq.Gallina.Orphans
   ()
 where

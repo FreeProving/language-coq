@@ -1,13 +1,11 @@
-{-|
-Module      : Language.Coq.Gallina
-Description : An AST for Gallina, the surface language of Coq
-Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
-License     : MIT
-Maintainer  : antal.b.sz@gmail.com
-Stability   : experimental
-
-<https://coq.inria.fr/distrib/current/refman/Reference-Manual003. Chapter 1, \"The Gallina Specification Language\", in the Coq reference manual.>
--}
+-- | Module      : Language.Coq.Gallina
+--   Description : An AST for Gallina, the surface language of Coq
+--   Copyright   : Copyright © 2016 Antal Spector-Zabusky, University of Pennsylvania
+--   License     : MIT
+--   Maintainer  : antal.b.sz@gmail.com
+--   Stability   : experimental
+--
+--   <https://coq.inria.fr/distrib/current/refman/Reference-Manual003. Chapter 1, \"The Gallina Specification Language\", in the Coq reference manual.>
 
 module Language.Coq.Gallina
   ( -- * Lexical structure
