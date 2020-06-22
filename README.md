@@ -63,7 +63,7 @@ See the [LICENSE][language-coq/LICENSE] file for details.
   "Free Compiler on GitHub"
 
 [guidelines/CONTRIBUTING]:
-  https://github.com/FreeProving/guidelines/blob/master/CONTRIBUTING.md
+  https://github.com/FreeProving/guidelines/blob/main/CONTRIBUTING.md
   "Contributing Guidelines of the FreeProving project"
 
 [hs-to-coq]:
@@ -71,7 +71,7 @@ See the [LICENSE][language-coq/LICENSE] file for details.
   "hs-to-coq on GitHub"
 
 [language-coq/LICENSE]:
-  https://github.com/FreeProving/language-coq/blob/master/LICENSE
+  https://github.com/FreeProving/language-coq/blob/main/LICENSE
   "haskell-src-transformations — The MIT License"
 
 [software/ghc]:
