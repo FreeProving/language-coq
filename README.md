@@ -55,7 +55,7 @@ Have a look at our [contributing guidelines][guidelines/CONTRIBUTING] for more i
 
 ## License
 
-The `language-coq` library is licensed under MIT License.  
+The `language-coq` library is licensed under the MIT License.  
 See the [LICENSE][language-coq/LICENSE] file for details.
 
 [free-compiler]:
