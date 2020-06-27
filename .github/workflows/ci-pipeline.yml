@@ -6,9 +6,9 @@ name: CI Pipeline
 # reopened. If just the README or documentation changes, the pipeline does
 # not have to run. It also runs when the workflow configuration changed itself.
 #
-# When such a pull request is merged the resulting `push` event on the master
+# When such a pull request is merged the resulting `push` event on the main
 # branch triggers another run of the CI pipeline. This is necessary because
-# there could be changes to the master branch that are not compatible with the
+# there could be changes to the main branch that are not compatible with the
 # pull request but don't prevent fast-forward merging.
 on:
   pull_request:
@@ -19,7 +19,7 @@ on:
     - '.github/workflows/ci-pipeline.yml'
   push:
     branches:
-    - 'master'
+    - 'main'
     paths:
     - 'cabal.project'
     - 'language-coq.cabal'
