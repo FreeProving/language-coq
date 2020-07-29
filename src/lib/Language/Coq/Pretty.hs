@@ -907,11 +907,41 @@ instance Gallina Associativity where
 instance Gallina Level where
   renderGallina' _ (Level n) = "at level" <+> renderNum n
 
+instance Gallina SyntaxModifier where
+  renderGallina' _ (SModLevel lvl) = renderGallina lvl
+  renderGallina' _ (SModIdentLevel ids lvl) =
+    commaList (renderIdent <$> ids) <+> renderGallina lvl
+  renderGallina' _ (SModAssociativity assoc) =
+    renderGallina assoc <+> "associativity"
+  renderGallina' _ SModOnlyParsing  = "only parsing"
+  renderGallina' _ SModOnlyPrinting = "only printing"
+
+instance Gallina NotationToken where
+  renderGallina' _ (NSymbol sym) = squotes $ text sym
+  renderGallina' _ (NIdent  nid) = renderIdent nid
+
 instance Gallina Notation where
   renderGallina' _ (ReservedNotationIdent x) =
     "Reserved" <+> "Notation" <+> dquotes (squotes $ renderIdent x) <> "."
   renderGallina' _ (NotationBinding nb) =
     "Notation" <+> renderGallina nb <> "."
+  renderGallina' _ (NotationDefinition ts def mods) = nest
+    2
+    (lhs <+> ":=" </> rhs)
+   where
+    lhs =
+      "Notation" <+> dquotes (foldr (\t' r -> renderGallina t' <+> r) "" ts)
+    rhs =
+      let term = parens (renderGallina def)
+      in  case length mods of
+            0 -> term <> "."
+            1 -> term </> parens (renderGallina $ head mods) <> "."
+            _ ->
+              term
+                <> line
+                <> parens
+                     (enclose space space $ commaList $ renderGallina <$> mods)
+                <> "."
   renderGallina' _ (InfixDefinition op def oassoc level) =
     "Infix" <+> dquotes (renderOp op) <+> ":=" </> nest
       2
