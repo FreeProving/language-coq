@@ -67,6 +67,8 @@ module Language.Coq.Gallina
   , InstanceDefinition(..)
   , Associativity(..)
   , Level(..)
+  , SyntaxModifier(..)
+  , NotationToken(..)
   , Notation(..)
   , NotationBinding(..)
   , Arguments(..)
@@ -527,12 +529,32 @@ data Associativity
 newtype Level = Level Num -- ^ @at level /num/@
  deriving (Eq, Ord, Show, Read)
 
+-- | @/syntax_modifier/ ::=@ /(extra)/
+data SyntaxModifier
+  = SModLevel Level                       -- ^ @/level/@
+  | SModIdentLevel (NonEmpty Ident) Level -- ^ @/ident/ , … , /ident/ /level/@
+  | SModAssociativity Associativity       -- ^ @/associativity/ associativity@
+  | SModOnlyParsing                       -- ^ @only parsing@
+  | SModOnlyPrinting                      -- ^ @only printing@
+ deriving (Eq, Ord, Show, Read)
+
+-- | @/notation_token/ ::=@ /(extra)/
+data NotationToken
+  = NSymbol Text -- ^ @'/text/'@
+  | NIdent Ident -- ^ @/ident/@
+ deriving (Eq, Ord, Show, Read)
+
 -- | @/notation/ ::=@ /(extra)/
 data Notation
   = ReservedNotationIdent Ident
     -- ^ @Reserved Notation "'/ident/'" .@
   | NotationBinding NotationBinding
     -- ^ @Notation /notation_binding/ .@
+  | NotationDefinition (NonEmpty NotationToken) Term [SyntaxModifier]
+    -- ^ @
+    --   Notation "/notation_token/ … /notation_token/" := ( /term/ )
+    --     [ ( /syntax_modifier/ , … , /syntax_modifier/ ) ].
+    --   
   | InfixDefinition Op Term (Maybe Associativity) Level
     -- ^ @
     --   Infix "/op/" := ( /term/ )
