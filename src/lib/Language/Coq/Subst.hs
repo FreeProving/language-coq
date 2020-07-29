@@ -146,6 +146,7 @@ instance Subst InstanceDefinition where
 instance Subst Notation where
   subst _f (ReservedNotationIdent _x                ) = error "subst"
   subst _f (NotationBinding       _nb               ) = error "subst"
+  subst _f (NotationDefinition _ts _def _mods       ) = error "subst"
   subst _f (InfixDefinition _op _defn _oassoc _level) = error "subst"
 
 instance Subst NotationBinding where
