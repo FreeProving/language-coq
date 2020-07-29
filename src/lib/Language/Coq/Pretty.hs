@@ -907,6 +907,11 @@ instance Gallina Associativity where
 instance Gallina Level where
   renderGallina' _ (Level n) = "at level" <+> renderNum n
 
+instance Gallina LevelExplicitOrNext where
+  renderGallina' _ (ExplicitLevel lvl) = renderGallina lvl
+  renderGallina' _ NextLevel           = "at next level"
+
+
 instance Gallina SyntaxModifier where
   renderGallina' _ (SModLevel lvl) = renderGallina lvl
   renderGallina' _ (SModIdentLevel ids lvl) =

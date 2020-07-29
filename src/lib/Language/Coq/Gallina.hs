@@ -67,6 +67,7 @@ module Language.Coq.Gallina
   , InstanceDefinition(..)
   , Associativity(..)
   , Level(..)
+  , LevelExplicitOrNext(..)
   , SyntaxModifier(..)
   , NotationToken(..)
   , Notation(..)
@@ -529,13 +530,24 @@ data Associativity
 newtype Level = Level Num -- ^ @at level /num/@
  deriving (Eq, Ord, Show, Read)
 
+-- | @/level_explicit_or_next/ ::=@ /(extra)/
+data LevelExplicitOrNext
+  = ExplicitLevel Level -- ^ @/level/@
+  | NextLevel           -- ^ @at next level@
+ deriving (Eq, Ord, Show, Read)
+
 -- | @/syntax_modifier/ ::=@ /(extra)/
 data SyntaxModifier
-  = SModLevel Level                       -- ^ @/level/@
-  | SModIdentLevel (NonEmpty Ident) Level -- ^ @/ident/ , … , /ident/ /level/@
-  | SModAssociativity Associativity       -- ^ @/associativity/ associativity@
-  | SModOnlyParsing                       -- ^ @only parsing@
-  | SModOnlyPrinting                      -- ^ @only printing@
+  = SModLevel Level
+    -- ^ @/level/@
+  | SModIdentLevel (NonEmpty Ident) LevelExplicitOrNext
+    -- ^ @/ident/ , … , /ident/ /level_explicit_or_next/@
+  | SModAssociativity Associativity
+    -- ^ @/associativity/ associativity@
+  | SModOnlyParsing
+    -- ^ @only parsing@
+  | SModOnlyPrinting
+    -- ^ @only printing@
  deriving (Eq, Ord, Show, Read)
 
 -- | @/notation_token/ ::=@ /(extra)/
