@@ -34,7 +34,7 @@ The library is written in Haskell and uses Cabal to manage the dependencies.
 The library has been tested with the following versions of the GHC and Cabal.
 
  - [GHC][software/ghc], version  8.6.5
- - [Cabal][software/cabal], version 2.4.1.0
+ - [Cabal][software/cabal], version 3.2.0.0
 
 ### Installation
 
