@@ -566,7 +566,7 @@ data Notation
     -- ^ @
     --   Notation "/notation_token/ … /notation_token/" := ( /term/ )
     --     [ ( /syntax_modifier/ , … , /syntax_modifier/ ) ].
-    --   
+    --   @
   | InfixDefinition Op Term (Maybe Associativity) Level
     -- ^ @
     --   Infix "/op/" := ( /term/ )
