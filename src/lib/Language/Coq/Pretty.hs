@@ -937,9 +937,9 @@ instance Gallina Notation where
       "Notation" <+> dquotes (foldr (\t' r -> renderGallina t' <+> r) "" ts)
     rhs =
       let term = nest 2 $ parens (renderGallina def)
-      in  case length mods of
-            0 -> term <> "."
-            1 -> term </> parens (renderGallina $ head mods) <> "."
+      in  case mods of
+            []    -> term <> "."
+            [mod] -> term </> parens (renderGallina mod) <> "."
             _ ->
               term
                 <> line
