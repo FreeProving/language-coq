@@ -938,8 +938,8 @@ instance Gallina Notation where
     rhs =
       let term = nest 2 $ parens (renderGallina def)
       in  case mods of
-            []    -> term <> "."
-            [mod] -> term </> parens (renderGallina mod) <> "."
+            []     -> term <> "."
+            [smod] -> term </> parens (renderGallina smod) <> "."
             _ ->
               term
                 <> line
