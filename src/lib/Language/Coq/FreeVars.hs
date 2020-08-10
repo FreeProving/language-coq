@@ -22,6 +22,7 @@ import           Prelude                 hiding ( Num )
 
 import           Data.List.NonEmpty             ( NonEmpty()
                                                 , (<|)
+                                                , partition
                                                 )
 import           Data.List.NonEmpty.Extra       ( appendl )
 import           Data.Set                       ( Set )
@@ -181,9 +182,19 @@ instance HasBV Qualid InstanceDefinition where
   bvOf (InstanceTerm inst params cl term _mpf) =
     binder inst <> bindsNothing (foldScopes bvOf params $ fvOf cl <> fvOf term)
 
+instance HasBV Qualid NotationToken where
+  bvOf (NSymbol sym) = binder (Bare sym)
+  bvOf (NIdent  nid) = binder (Bare nid)
+
 instance HasBV Qualid Notation where
-  bvOf (ReservedNotationIdent _    ) = mempty
-  bvOf (NotationBinding       nb   ) = bvOf nb
+  bvOf (ReservedNotationIdent _ ) = mempty
+  bvOf (NotationBinding       nb) = bvOf nb
+  bvOf (NotationDefinition ts def mods) =
+    let isSymbol (NSymbol _) = True
+        isSymbol (NIdent  _) = False
+        (symbols, vars) = partition isSymbol ts
+        freeVars        = foldScopes bvOf vars $ fvOf def <> foldMap fvOf mods
+    in  foldMap bvOf symbols <> bindsNothing freeVars
   bvOf (InfixDefinition op defn _ _) = binder (Bare op) <> fvOf' defn
 
 instance HasBV Qualid NotationBinding where
@@ -312,6 +323,14 @@ instance HasFV Qualid AssertionKeyword where
   fvOf Proposition = mempty
   fvOf Definition  = mempty
   fvOf Example     = mempty
+
+instance HasFV Qualid SyntaxModifier where
+  fvOf (SModLevel _         ) = mempty
+  fvOf (SModIdentLevel ids _) = foldMap (occurrence . Bare) ids
+  fvOf (SModAssociativity _ ) = mempty
+  fvOf SModOnlyParsing        = mempty
+  fvOf SModOnlyPrinting       = mempty
+
 
 instance HasFV Qualid t => HasFV Qualid (Maybe t) where
   fvOf = foldMap fvOf
