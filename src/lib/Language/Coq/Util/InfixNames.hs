@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase, OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts, LambdaCase, OverloadedStrings #-}
 
 module Language.Coq.Util.InfixNames
   ( identIsVariable

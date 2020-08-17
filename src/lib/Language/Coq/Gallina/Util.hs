@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, LambdaCase, TemplateHaskell #-}
+{-# LANGUAGE FlexibleContexts, OverloadedStrings, LambdaCase, TemplateHaskell #-}
 
 module Language.Coq.Gallina.Util
   ( -- * Common AST patterns
