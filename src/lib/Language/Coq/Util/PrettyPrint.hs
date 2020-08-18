@@ -125,8 +125,12 @@ punctuate :: Foldable f => Doc -> f Doc -> [Doc]
 punctuate p = Leijen.punctuate p . toList
 
 {-# INLINABLE sepWith #-}
-sepWith :: Foldable f => (Doc -> Doc -> Doc) -> (Doc -> Doc -> Doc)
-        -> Doc -> f Doc -> Doc
+sepWith :: Foldable f
+        => (Doc -> Doc -> Doc)
+        -> (Doc -> Doc -> Doc)
+        -> Doc
+        -> f Doc
+        -> Doc
 sepWith concatLeft concatRight separator docs
   | null docs = mempty
   | otherwise = foldr1

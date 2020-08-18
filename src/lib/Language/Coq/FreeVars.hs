@@ -210,14 +210,12 @@ instance HasBV Qualid b => HasBV Qualid (Maybe b) where
   bvOf = foldMap bvOf
 
 instance TypeError
-  ('Text
-   "A sequence of binders could be a telescope (use foldTelescope or foldScopes) or not (use foldMap)")
+  ('Text "A sequence of binders could be a telescope (use foldTelescope or foldScopes) or not (use foldMap)")
   => HasBV Qualid [b] where
   bvOf = undefined
 
 instance TypeError
-  ('Text
-   "A sequence of binders could be a telescope (use foldTelescope or foldScopes) or not (use foldMap)")
+  ('Text "A sequence of binders could be a telescope (use foldTelescope or foldScopes) or not (use foldMap)")
   => HasBV Qualid (NonEmpty b) where
   bvOf = undefined
 

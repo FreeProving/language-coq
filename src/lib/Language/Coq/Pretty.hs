@@ -217,8 +217,12 @@ renderArgsWithType
 renderArgsWithType o args t = group $ renderArgs o args <$$> renderType t
 
 -- Module-local
-renderArgsWithOptionalType :: (Functor f, Foldable f, Gallina a)
-                           => Orientation -> f a -> Maybe Term -> Doc
+renderArgsWithOptionalType
+  :: (Functor f, Foldable f, Gallina a)
+  => Orientation
+  -> f a
+  -> Maybe Term
+  -> Doc
 renderArgsWithOptionalType o args ot
   = group $ renderArgs o args <$$> renderOptionalType ot
 

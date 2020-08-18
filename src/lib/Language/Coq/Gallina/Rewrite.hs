@@ -149,7 +149,10 @@ match patVars lhs term = execWriterT (go lhs term)
      = zipWithSameLengthM_ goP pats1 pats2
 
    zipWithSameLengthM_ :: (Alternative f, Foldable g, Foldable h)
-                       => (a -> b -> f c) -> g a -> h b -> f ()
+                       => (a -> b -> f c)
+                       -> g a
+                       -> h b
+                       -> f ()
    zipWithSameLengthM_ f as0 bs0
      = let zipGo (a : as) (b : bs) = f a b *> zipGo as bs
            zipGo [] [] = pure ()
