@@ -749,13 +749,15 @@ instance Gallina Notation where
     lhs = "Notation"
       <+> dquotes (foldr (\t' r -> renderGallina t' <+> r) "" ts)
 
-    rhs = let term = nest 2 $ parens (renderGallina def) in case mods of
-      []     -> term <> "."
-      [smod] -> term </> parens (renderGallina smod) <> "."
-      _      -> term
-        <> line
-        <> parens (enclose space space $ commaList $ renderGallina <$> mods)
-        <> "."
+    rhs = let term = nest 2 $ parens (renderGallina def)
+          in case mods of
+               []     -> term <> "."
+               [smod] -> term </> parens (renderGallina smod) <> "."
+               _      -> term
+                 <> line
+                 <> parens
+                 (enclose space space $ commaList $ renderGallina <$> mods)
+                 <> "."
   renderGallina' _ (InfixDefinition op def oassoc level) = "Infix"
     <+> dquotes (renderOp op)
     <+> ":="
