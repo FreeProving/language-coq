@@ -378,9 +378,8 @@ instance Gallina Term where
                             <> "| "
                             <> sepWith (<!>) (<+>) "|" (renderGallina <$> eqns))
                        <> line) <> "end"
-  renderGallina' p (Qualid qid)
-    | qualidIsOp qid = renderQPrefix qid
-    | otherwise = renderGallina' p qid
+  renderGallina' p (Qualid qid) | qualidIsOp qid = renderQPrefix qid
+                                | otherwise = renderGallina' p qid
   renderGallina' p (RawQualid qid) = renderGallina' p qid
   renderGallina' p (Sort sort) = renderGallina' p sort
   renderGallina' _ (Num num) = renderNum num

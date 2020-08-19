@@ -48,14 +48,12 @@ infixToPrefix :: Op -> Ident
 infixToPrefix = ("_" <>) . (<> "_")
 
 toPrefix :: Ident -> Ident
-toPrefix x
-  | identIsVariable x = x
-  | otherwise = infixToCoq x
+toPrefix x | identIsVariable x = x
+           | otherwise = infixToCoq x
 
 toLocalPrefix :: Ident -> Ident
-toLocalPrefix x
-  | identIsVariable x = x
-  | otherwise = "l" <> infixToCoq x
+toLocalPrefix x | identIsVariable x = x
+                | otherwise = "l" <> infixToCoq x
 
 prefixOpToInfix :: Ident -> Maybe Op
 prefixOpToInfix px = do

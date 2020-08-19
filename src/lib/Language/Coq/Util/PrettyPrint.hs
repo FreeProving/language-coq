@@ -152,9 +152,8 @@ infixl 5 </?>
 
 {-# INLINABLE docIf #-}
 docIf :: Foldable f => Doc -> f a -> Doc
-docIf d x
-  | null x = empty
-  | otherwise = d
+docIf d x | null x = empty
+          | otherwise = d
 
 {-# INLINABLE spaceIf #-}
 spaceIf :: Foldable f => f a -> Doc

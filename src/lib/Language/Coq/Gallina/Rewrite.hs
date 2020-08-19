@@ -52,8 +52,7 @@ rewrite1 (Rewrite patVars lhs rhs) term
 -- | Normalizes the outermost constructor
 norm :: Term -> Term
 norm (HsString s) = String s
-norm t
-  | Just (f, args) <- collectArgs t = appList (Qualid f) (map PosArg args)
+norm t | Just (f, args) <- collectArgs t = appList (Qualid f) (map PosArg args)
 norm t = t
 
 match :: [Ident] -> Term -> Term -> Maybe (Map.Map Qualid Term)
@@ -67,10 +66,9 @@ match patVars lhs term = execWriterT (go lhs term)
   go' :: Term -> Term -> WriterT (Map.Map Qualid Term) Maybe ()
   go' (String s1) (String s2) = guard (s1 == s2)
   go' (Num n1) (Num n2) = guard (n1 == n2)
-  go' (Qualid qid@(Bare v)) t
-    | isPatVar v = do
-      tell (Map.singleton qid t)
-      return ()
+  go' (Qualid qid@(Bare v)) t | isPatVar v = do
+                                tell (Map.singleton qid t)
+                                return ()
   go' (Qualid pqid) (Qualid qid) = guard (pqid == qid)
   go' (App pf pa) (App f a) = do
     go pf f
