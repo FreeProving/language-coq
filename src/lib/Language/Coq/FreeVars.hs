@@ -18,12 +18,12 @@ module Language.Coq.FreeVars
   , NoBinding(..)
   ) where
 
-import           Prelude hiding ( Num )
+import           Prelude                  hiding ( Num )
 
-import           Data.List.NonEmpty ( (<|), NonEmpty(), partition )
+import           Data.List.NonEmpty       ( (<|), NonEmpty(), partition )
 import           Data.List.NonEmpty.Extra ( appendl )
-import           Data.Set ( Set )
-import qualified Data.Set as Set
+import           Data.Set                 ( Set )
+import qualified Data.Set                 as Set
 import           GHC.TypeLits
 
 import           Language.Coq.Gallina

@@ -11,18 +11,18 @@
 
 module Language.Coq.Pretty ( renderGallina, showP, textP, Gallina(..) ) where
 
-import           Prelude hiding ( Num )
+import           Prelude                       hiding ( Num )
 
-import           Data.Composition ( (.:) )
+import           Data.Composition              ( (.:) )
 import           Data.Foldable
-import           Data.List.NonEmpty ( (<|), NonEmpty(..), nonEmpty )
-import qualified Data.Set as Set
-import           Data.Text ( Text )
-import qualified Data.Text as Text
+import           Data.List.NonEmpty            ( (<|), NonEmpty(..), nonEmpty )
+import qualified Data.Set                      as Set
+import           Data.Text                     ( Text )
+import qualified Data.Text                     as Text
 
 import           Language.Coq.FreeVars
 import           Language.Coq.Gallina
-import           Language.Coq.Gallina.Orphans ()
+import           Language.Coq.Gallina.Orphans  ()
 import           Language.Coq.Gallina.Util
 import           Language.Coq.Util.PrettyPrint
 
@@ -49,7 +49,7 @@ precTable
     , mkPrecEntry "^" 30 RightAssociativity
     ]
  where
-   mkPrecEntry sym level assoc = (sym, (fromCoqLevel level, assoc))
+  mkPrecEntry sym level assoc = (sym, (fromCoqLevel level, assoc))
 
 -- precedence for various other expression forms
 arrowPrec :: Int
@@ -152,10 +152,9 @@ renderNum :: Num -> Doc
 renderNum = integer . toInteger
 
 renderString :: Text -> Doc
-renderString = dquotes . string .: Text.concatMap
-  $ \case
-    '"' -> "\"\""
-    c   -> Text.singleton c
+renderString = dquotes . string .: Text.concatMap $ \case
+  '"' -> "\"\""
+  c   -> Text.singleton c
 
 renderOp :: Op -> Doc
 renderOp o =
@@ -235,8 +234,8 @@ renderMutualDef def bodies notations = def
   (nonEmpty notations)
   <> "."
  where
-   lineSep seperator = foldr1 (\body doc -> body <!> seperator <+> doc)
-     . fmap renderGallina
+  lineSep seperator = foldr1 (\body doc -> body <!> seperator <+> doc)
+    . fmap renderGallina
 
 -- TODO: Precedence!
 instance Gallina Term where
@@ -254,13 +253,13 @@ instance Gallina Term where
       <+> hcat (fmap (("'" <>) . parens . renderGallina) pats)
       <+> nest 2 ("=>" <!> renderGallina' funPrec body)
    where
-     fvs = getFreeVars body
+    fvs = getFreeVars body
 
-     check (Inferred Explicit (Ident name) : vars')
-       (MatchItem (Qualid v) Nothing Nothing : ss)
-       = v `Set.notMember` fvs && name == v && check vars' ss
-     check [] [] = True
-     check _ _ = False
+    check (Inferred Explicit (Ident name) : vars')
+      (MatchItem (Qualid v) Nothing Nothing : ss)
+      = v `Set.notMember` fvs && name == v && check vars' ss
+    check [] [] = True
+    check _ _ = False
   renderGallina' p (Fun vars body) = maybeParen (p > funPrec)
     $ group
     $ "fun"
@@ -345,16 +344,16 @@ instance Gallina Term where
   renderGallina' p (App f args) = maybeParen (p > appPrec)
     $ renderedFunction </> align (renderArgs' (appPrec + 1) H args)
    where
-     -- If we're providing a named argument, it turns out we can't use a
-     -- notation, so we avoid doing that for operator names in that case.
-     renderedFunction :: Doc
-     renderedFunction
-       | Qualid qf <- f, any isNamedArg args = renderGallina' appPrec qf
-       | otherwise = renderGallina' appPrec f
+    -- If we're providing a named argument, it turns out we can't use a
+    -- notation, so we avoid doing that for operator names in that case.
+    renderedFunction :: Doc
+    renderedFunction
+      | Qualid qf <- f, any isNamedArg args = renderGallina' appPrec qf
+      | otherwise = renderGallina' appPrec f
 
-     isNamedArg :: Arg -> Bool
-     isNamedArg (NamedArg _ _) = True
-     isNamedArg _ = False
+    isNamedArg :: Arg -> Bool
+    isNamedArg (NamedArg _ _) = True
+    isNamedArg _ = False
   renderGallina' p (ExplicitApp qid args) = maybeParen (p > appPrec)
     $ "@"
     <> renderGallina qid
@@ -373,13 +372,12 @@ instance Gallina Term where
     $ "match"
     <+> align (commaList (renderGallina <$> discriminees)
                <> maybe mempty (\rty -> line <> renderGallina rty) orty)
-    <+> "with"
-    <> (case eqns of
-          [] -> space
-          _  ->
-            (line <> "| " <> sepWith (<!>) (<+>) "|" (renderGallina <$> eqns))
-            <> line)
-    <> "end"
+    <+> "with" <> (case eqns of
+                     [] -> space
+                     _  -> (line
+                            <> "| "
+                            <> sepWith (<!>) (<+>) "|" (renderGallina <$> eqns))
+                       <> line) <> "end"
   renderGallina' p (Qualid qid)
     | qualidIsOp qid = renderQPrefix qid
     | otherwise = renderGallina' p qid
@@ -391,13 +389,13 @@ instance Gallina Term where
     -- char '&' <> renderString str
     renderGallina' p (App (Qualid hs_stringQI) [PosArg (String str)])
    where
-     hs_stringQI = Qualified "GHC.Base" "hs_string__"
+    hs_stringQI = Qualified "GHC.Base" "hs_string__"
   renderGallina' p (HsChar str) =
     -- string "&#" <> renderString (Text.singleton str)
     renderGallina' p
     (App (Qualid hs_charQI) [PosArg (String (Text.singleton str))])
    where
-     hs_charQI = Qualified "GHC.Char" "hs_char__"
+    hs_charQI = Qualified "GHC.Char" "hs_char__"
   renderGallina' _ Underscore = char '_'
   renderGallina' _ (Parens t) = parensN $ renderGallina t
   renderGallina' _ (Bang t) = char '!' <> renderGallina t
@@ -579,14 +577,14 @@ instance Gallina Definition where
       (renderLocality loc <> "Definition") name args oty body
     LetDef name args oty body -> renderDef "Let" name args oty body
    where
-     renderDef def name args oty body = hang 2
-       ((def
-         <+> renderGallina name
-         <> spaceIf args
-         <> renderArgsWithOptionalType H args oty
-         <+> ":=")
-        <$$> renderGallina body
-        <> ".")
+    renderDef def name args oty body = hang 2
+      ((def
+        <+> renderGallina name
+        <> spaceIf args
+        <> renderArgsWithOptionalType H args oty
+        <+> ":=")
+       <$$> renderGallina body
+       <> ".")
 
 instance Gallina Inductive where
   renderGallina' _ (Inductive bodies nots)
@@ -601,14 +599,14 @@ instance Gallina IndBody where
     <> spaceIf params
     <> renderArgsWithType H params ty <!> renderCons cons
    where
-     renderCons [] = ":="
-     renderCons (conDecl : conDecls) = align
-       $ foldl' (<!>) (renderCon ":=" conDecl) (renderCon "| " <$> conDecls)
+    renderCons [] = ":="
+    renderCons (conDecl : conDecls) = align
+      $ foldl' (<!>) (renderCon ":=" conDecl) (renderCon "| " <$> conDecls)
 
-     renderCon delim (cname, cargs, coty) = delim
-       <+> renderGallina cname
-       <> spaceIf cargs
-       <> renderArgsWithOptionalType H cargs coty
+    renderCon delim (cname, cargs, coty) = delim
+      <+> renderGallina cname
+      <> spaceIf cargs
+      <> renderArgsWithOptionalType H cargs coty
 
 instance Gallina Fixpoint where
   renderGallina' _ (Fixpoint bodies nots)
@@ -647,7 +645,7 @@ instance Gallina Proof where
     ProofDefined body  -> renderProof "Defined" body
     ProofAdmitted body -> renderProof "Admitted" body
    where
-     renderProof end body = "Proof." <!> string body <!> end <> "."
+    renderProof end body = "Proof." <!> string body <!> end <> "."
 
 instance Gallina ImportExport where
   renderGallina' _ Import = "Import"
@@ -748,18 +746,16 @@ instance Gallina Notation where
   renderGallina' _ (NotationDefinition ts def mods) = nest 2
     (lhs <+> ":=" </> rhs)
    where
-     lhs = "Notation"
-       <+> dquotes (foldr (\t' r -> renderGallina t' <+> r) "" ts)
+    lhs = "Notation"
+      <+> dquotes (foldr (\t' r -> renderGallina t' <+> r) "" ts)
 
-     rhs = let term = nest 2 $ parens (renderGallina def)
-           in case mods of
-                []     -> term <> "."
-                [smod] -> term </> parens (renderGallina smod) <> "."
-                _      -> term
-                  <> line
-                  <> parens
-                  (enclose space space $ commaList $ renderGallina <$> mods)
-                  <> "."
+    rhs = let term = nest 2 $ parens (renderGallina def) in case mods of
+      []     -> term <> "."
+      [smod] -> term </> parens (renderGallina smod) <> "."
+      _      -> term
+        <> line
+        <> parens (enclose space space $ commaList $ renderGallina <$> mods)
+        <> "."
   renderGallina' _ (InfixDefinition op def oassoc level) = "Infix"
     <+> dquotes (renderOp op)
     <+> ":="
@@ -767,8 +763,8 @@ instance Gallina Notation where
                 </> parensN (prettyAssoc <> renderGallina level)
                 <> ".")
    where
-     prettyAssoc = maybe mempty
-       (\assoc -> renderGallina assoc <+> "associativity," <> softline) oassoc
+    prettyAssoc = maybe mempty
+      (\assoc -> renderGallina assoc <+> "associativity," <> softline) oassoc
 
 instance Gallina NotationBinding where
   renderGallina' _ (NotationIdentBinding x def) = dquotes

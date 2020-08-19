@@ -15,15 +15,15 @@ module Language.Coq.Util.InfixNames
   ) where
 
 import           Control.Applicative
-import           Control.Lens hiding ( op )
+import           Control.Lens        hiding ( op )
 import           Control.Monad
 import           Data.Char
-import           Data.Semigroup ( Semigroup(..) )
-import           Data.Text ( Text )
-import qualified Data.Text as Text
-import           Encoding ( zDecodeString, zEncodeString )
+import           Data.Semigroup      ( Semigroup(..) )
+import           Data.Text           ( Text )
+import qualified Data.Text           as Text
+import           Encoding            ( zDecodeString, zEncodeString )
 import           GHC.Stack
-import           Text.Parsec hiding ( (<|>), many )
+import           Text.Parsec         hiding ( (<|>), many )
 
 -- Lets keep this module self-contained (but use the same type synonyms)
 type Op = Text
@@ -35,11 +35,10 @@ type ModuleIdent = Text
 type AccessIdent = Text
 
 identIsVariable_ :: Text -> Bool
-identIsVariable_ = Text.uncons
-  <&> \case
-    Just (h, t) -> (isAlpha h || h == '_')
-      && Text.all (\c -> isAlphaNum c || c == '_' || c == '\'') t
-    Nothing     -> False
+identIsVariable_ = Text.uncons <&> \case
+  Just (h, t) -> (isAlpha h || h == '_')
+    && Text.all (\c -> isAlphaNum c || c == '_' || c == '\'') t
+  Nothing     -> False
 
 identIsVariable :: Text -> Bool
 identIsVariable = all identIsVariable_ . Text.splitOn "."
@@ -79,25 +78,25 @@ infixToCoq op = case splitModule op of
 splitModule :: Ident -> Maybe (ModuleIdent, AccessIdent)
 splitModule = fmap fixup . either (const Nothing) Just . parse qualid ""
  where
-   qualid = do
-     let modFrag = Text.cons <$> upper
-           <*> (Text.pack <$> many (alphaNum <|> char '_' <|> char '\''))
-     modIdent <- Text.intercalate "." <$> many1 (try (modFrag <* char '.'))
-     -- since we're assuming we get a valid name
-     base <- Text.pack <$> some anyChar
-     pure (modIdent, base)
+  qualid = do
+    let modFrag = Text.cons <$> upper
+          <*> (Text.pack <$> many (alphaNum <|> char '_' <|> char '\''))
+    modIdent <- Text.intercalate "." <$> many1 (try (modFrag <* char '.'))
+    -- since we're assuming we get a valid name
+    base <- Text.pack <$> some anyChar
+    pure (modIdent, base)
 
-   -- When we have a module name that ends in .Z or .N then that should be
-   -- considered part of the name of the function. This is a hack to make the
-   -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more
-   -- convenient, without solving the problem of handling non-filesystem-modules
-   -- in general
-   fixup (modIdent, name)
-     | ".Z" `Text.isSuffixOf` modIdent
-       = (Text.take (Text.length modIdent - 2) modIdent, "Z." <> name)
-     | ".N" `Text.isSuffixOf` modIdent
-       = (Text.take (Text.length modIdent - 2) modIdent, "N." <> name)
-     | otherwise = (modIdent, name)
+  -- When we have a module name that ends in .Z or .N then that should be
+  -- considered part of the name of the function. This is a hack to make the
+  -- common case of working with names like Coq.ZArith.BinInt.Z.eqb more
+  -- convenient, without solving the problem of handling non-filesystem-modules
+  -- in general
+  fixup (modIdent, name)
+    | ".Z" `Text.isSuffixOf` modIdent
+      = (Text.take (Text.length modIdent - 2) modIdent, "Z." <> name)
+    | ".N" `Text.isSuffixOf` modIdent
+      = (Text.take (Text.length modIdent - 2) modIdent, "N." <> name)
+    | otherwise = (modIdent, name)
 
 identIsOp :: Ident -> Bool
 identIsOp t = "op_" `Text.isPrefixOf` t

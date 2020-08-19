@@ -73,10 +73,10 @@ module Language.Coq.Gallina
   , ArgumentExplicitness(..)
   ) where
 
-import           Prelude hiding ( Num )
+import           Prelude            hiding ( Num )
 
 import           Data.List.NonEmpty ( NonEmpty() )
-import           Data.Text ( Text )
+import           Data.Text          ( Text )
 import           Numeric.Natural
 
 -- $Lexical

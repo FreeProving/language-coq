@@ -40,7 +40,7 @@
       "multi-if": "indent-by 2",
       "deriving": 1,
       "where": 1,
-      "where-binds": "indent-by 2",
+      "where-binds": "indent-by 1",
       "typesig": "align",
       "app": "indent-by 2",
       "onside": 2
@@ -49,7 +49,7 @@
       "case": true,
       "class": true,
       "import-module": true,
-      "import-spec": false,
+      "import-spec": true,
       "let-binds": true,
       "matches": true,
       "record-fields": true,
@@ -106,7 +106,7 @@
     "options": {
       "align-sum-type-decl": true,
       "decl-no-blank-lines": [],
-      "flexible-oneline": false,
+      "flexible-oneline": true,
       "preserve-vertical-space": false,
       "sort-import-lists": true,
       "sort-pragmas": true,

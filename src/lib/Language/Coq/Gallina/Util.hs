@@ -54,13 +54,13 @@ module Language.Coq.Gallina.Util
   , binderArgs
   ) where
 
-import           Control.Lens hiding ( op )
+import           Control.Lens                 hiding ( op )
 import           Data.Foldable
-import           Data.List.NonEmpty ( NonEmpty(..), nonEmpty )
-import qualified Data.List.NonEmpty as NonEmpty
+import           Data.List.NonEmpty           ( NonEmpty(..), nonEmpty )
+import qualified Data.List.NonEmpty           as NonEmpty
 import           Data.Maybe
-import           Data.Semigroup ( (<>) )
-import           Data.Text ( Text )
+import           Data.Semigroup               ( (<>) )
+import           Data.Text                    ( Text )
 import           GHC.Stack
 
 import           Language.Coq.Gallina
@@ -242,11 +242,11 @@ collectArgs (App t args) = do
   args2 <- mapM fromArg (NonEmpty.toList args)
   return (f, args1 ++ args2)
  where
-   fromArg (PosArg arg) = return arg
-   fromArg _ = fail "non-positional argument"
+  fromArg (PosArg arg) = return arg
+  fromArg _ = fail "non-positional argument"
 collectArgs (Arrow a1 a2) = return (arrow_qid, [a1, a2])
  where
-   arrow_qid = Qualified "GHC.Prim" "arrow"
+  arrow_qid = Qualified "GHC.Prim" "arrow"
 collectArgs (Parens t) = collectArgs t
 collectArgs (InScope t _) = collectArgs t
 collectArgs (HasType t _) = collectArgs t

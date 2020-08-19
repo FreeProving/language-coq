@@ -41,9 +41,9 @@ module Language.Coq.Util.PrettyPrint
   ) where
 
 import           Data.Foldable
-import           Data.Semigroup ( Semigroup(..) )
-import           Data.Text ( Text )
-import qualified Data.Text.Lazy as LazyText
+import           Data.Semigroup               ( Semigroup(..) )
+import           Data.Text                    ( Text )
+import qualified Data.Text.Lazy               as LazyText
 import           Text.PrettyPrint.Leijen.Text
   hiding ( (<$>), cat, encloseSep, fillCat, fillSep, hcat, hsep, list, punctuate
          , semiBraces, sep, string, text, tupled, vcat, vsep )
@@ -177,8 +177,8 @@ renderOneLineT = LazyText.toStrict . displayT . renderOneLine
 fill1Sep :: Foldable f => f Doc -> Doc
 fill1Sep xs = go (reverse (toList xs))
  where
-   go []        = empty
-   go (x : xs') = group (go xs' <!> x)
+  go []        = empty
+  go (x : xs') = group (go xs' <!> x)
 
 commaList :: Foldable f => f Doc -> Doc
 commaList xs = group (align . nest (-2) $ sepWith (<$$>) (<+>) Leijen.comma xs)

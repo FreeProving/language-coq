@@ -14,8 +14,8 @@ import           Control.Monad.Fix
 import           Data.Bifoldable
 import           Data.Bitraversable
 import           Data.Foldable
-import           Data.Set ( Set )
-import qualified Data.Set as Set
+import           Data.Set                  ( Set )
+import qualified Data.Set                  as Set
 
 -- | Set of free variables.
 newtype FVs i = FVs { getFVs :: Set i }
@@ -102,9 +102,9 @@ instance Bitraversable ErrOrVars where
 instance Swapped ErrOrVars where
   swapped = iso swap swap
    where
-     swap (ErrOrVars e) = ErrOrVars (either Right Left e)
+    swap (ErrOrVars e) = ErrOrVars (either Right Left e)
 
-     {-# INLINE swap #-}
+    {-# INLINE swap #-}
 
   {-# INLINE swapped #-}
 

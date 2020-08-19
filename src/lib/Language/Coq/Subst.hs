@@ -5,10 +5,10 @@ module Language.Coq.Subst
     Subst(..)
   ) where
 
-import           Prelude hiding ( Num )
+import           Prelude              hiding ( Num )
 
-import           Data.Map.Strict ( Map )
-import qualified Data.Map.Strict as Map
+import           Data.Map.Strict      ( Map )
+import qualified Data.Map.Strict      as Map
 import           Data.Maybe
 
 import           Language.Coq.Gallina
@@ -25,9 +25,9 @@ instance Subst IndBody where
   subst f (IndBody tyName params indicesUnivers cons) = IndBody tyName params
     indicesUnivers (map substCon cons)
    where
-     substCon (qid, binders, Nothing) = (qid, map (subst f) binders, Nothing)
-     substCon (qid, binders, Just t)
-       = (qid, map (subst f) binders, Just (subst f t))
+    substCon (qid, binders, Nothing) = (qid, map (subst f) binders, Nothing)
+    substCon (qid, binders, Just t)
+      = (qid, map (subst f) binders, Just (subst f t))
 
 instance Subst Binder where
   subst _f b@(Inferred _ex _x) = b
