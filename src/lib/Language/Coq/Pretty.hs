@@ -324,7 +324,7 @@ instance Gallina Term where
   -- Special notation for GHC.Num.fromInteger
   renderGallina' _ (App "GHC.Num.fromInteger" (PosArg (Num num) :| []))
     = char '#' <> renderNum num
-  -- Special notation for somehting that looks like an operator an
+  -- Special notation for something that looks like an operator an
   -- is applied to two arguments
   renderGallina' p (App (Qualid op) (PosArg l :| [PosArg r]))
     | qualidIsOp op = case lookup op precTable of
@@ -343,14 +343,18 @@ instance Gallina Term where
         $ renderGallina' (defaultOpPrec + 1) l </> renderQOp op
         <!> renderGallina' (defaultOpPrec + 1) r
   renderGallina' p (App f args) = maybeParen (p > appPrec)
-    $     -- If we're providing a named argument, it turns out we can't use a
-          -- notation, so we avoid doing that for operator names in that case.
-    let renderedFunction
-          | Qualid qf <- f, any (\case
-                                   NamedArg _ _ -> True
-                                   _ -> False) args = renderGallina' appPrec qf
-          | otherwise = renderGallina' appPrec f
-    in renderedFunction </> align (renderArgs' (appPrec + 1) H args)
+    $ renderedFunction </> align (renderArgs' (appPrec + 1) H args)
+   where
+     -- If we're providing a named argument, it turns out we can't use a
+     -- notation, so we avoid doing that for operator names in that case.
+     renderedFunction :: Doc
+     renderedFunction
+       | Qualid qf <- f, any isNamedArg args = renderGallina' appPrec qf
+       | otherwise = renderGallina' appPrec f
+
+     isNamedArg :: Arg -> Bool
+     isNamedArg (NamedArg _ _) = True
+     isNamedArg _ = False
   renderGallina' p (ExplicitApp qid args) = maybeParen (p > appPrec)
     $ "@"
     <> renderGallina qid
