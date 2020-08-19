@@ -76,7 +76,7 @@ infixToCoq op = case splitModule op of
 splitModule :: Ident -> Maybe (ModuleIdent, AccessIdent)
 splitModule = fmap fixup . either (const Nothing) Just . parse qualid ""
  where
-  qualid = do
+  qualid                 = do
     let modFrag = Text.cons <$> upper
           <*> (Text.pack <$> many (alphaNum <|> char '_' <|> char '\''))
     modIdent <- Text.intercalate "." <$> many1 (try (modFrag <* char '.'))

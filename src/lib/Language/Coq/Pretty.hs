@@ -189,7 +189,7 @@ renderOptionalRetunrType = maybe mempty renderReturnType
 
 -- Module-local
 renderInAnnot :: Maybe (Qualid, [Pattern]) -> Doc
-renderInAnnot Nothing = mempty
+renderInAnnot Nothing            = mempty
 renderInAnnot (Just (qid, pats))
   = softline <> "in" <+> renderGallina qid <+> renderArgs H pats
 
@@ -353,7 +353,7 @@ instance Gallina Term where
 
     isNamedArg :: Arg -> Bool
     isNamedArg (NamedArg _ _) = True
-    isNamedArg _ = False
+    isNamedArg _              = False
   renderGallina' p (ExplicitApp qid args) = maybeParen (p > appPrec)
     $ "@"
     <> renderGallina qid
@@ -479,26 +479,26 @@ instance Gallina MultPattern where
   renderGallina' _ (MultPattern pats) = commaList $ renderGallina <$> pats
 
 instance Gallina Pattern where
-  renderGallina' _ (ArgsPat qid []) = renderGallina qid
-  renderGallina' p (ArgsPat qid args) = maybeParen (p > appPrec)
+  renderGallina' _ (ArgsPat qid [])           = renderGallina qid
+  renderGallina' p (ArgsPat qid args)         = maybeParen (p > appPrec)
     $ renderGallina' appPrec qid </> renderArgs' (appPrec + 1) H args
   renderGallina' p (ExplicitArgsPat qid args) = maybeParen (p > appPrec)
     $ "@"
     <> renderGallina' appPrec qid
     <> softlineIf args
     <> renderArgs' (appPrec + 1) H args
-  renderGallina' _p (InfixPat l op r) = parensN
+  renderGallina' _p (InfixPat l op r)         = parensN
     $ -- TODO precedence
     renderGallina l </> renderOp op </> renderGallina r
   renderGallina' _p (AsPat pat x)
     = parensN $ renderGallina pat <+> "as" <+> renderGallina x
   renderGallina' _p (InScopePat pat scope)
     = parensN $ renderGallina pat <> "%" <> renderIdent scope
-  renderGallina' _p (QualidPat qid) = renderGallina qid
-  renderGallina' _ UnderscorePat = char '_'
-  renderGallina' _ (NumPat n) = renderNum n
-  renderGallina' _ (StringPat s) = renderString s
-  renderGallina' _ (OrPats orPats) = parensN . align . group
+  renderGallina' _p (QualidPat qid)           = renderGallina qid
+  renderGallina' _ UnderscorePat              = char '_'
+  renderGallina' _ (NumPat n)                 = renderNum n
+  renderGallina' _ (StringPat s)              = renderString s
+  renderGallina' _ (OrPats orPats)            = parensN . align . group
     $ sepWith (<>) (</>) "," (renderGallina <$> orPats)
 
 instance Gallina OrPattern where
@@ -574,7 +574,7 @@ instance Gallina Definition where
   renderGallina' _ = \case
     DefinitionDef loc name args oty body -> renderDef
       (renderLocality loc <> "Definition") name args oty body
-    LetDef name args oty body -> renderDef "Let" name args oty body
+    LetDef name args oty body            -> renderDef "Let" name args oty body
    where
     renderDef def name args oty body = hang 2
       ((def
@@ -598,7 +598,7 @@ instance Gallina IndBody where
     <> spaceIf params
     <> renderArgsWithType H params ty <!> renderCons cons
    where
-    renderCons [] = ":="
+    renderCons []                   = ":="
     renderCons (conDecl : conDecls) = align
       $ foldl' (<!>) (renderCon ":=" conDecl) (renderCon "| " <$> conDecls)
 

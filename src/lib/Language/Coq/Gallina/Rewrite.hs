@@ -52,8 +52,9 @@ rewrite1 (Rewrite patVars lhs rhs) term
 -- | Normalizes the outermost constructor
 norm :: Term -> Term
 norm (HsString s) = String s
-norm t | Just (f, args) <- collectArgs t = appList (Qualid f) (map PosArg args)
-norm t = t
+norm t            | Just (f, args) <- collectArgs t = appList (Qualid f)
+                    (map PosArg args)
+norm t            = t
 
 match :: [Ident] -> Term -> Term -> Maybe (Map.Map Qualid Term)
 match patVars lhs term = execWriterT (go lhs term)
@@ -124,19 +125,19 @@ match patVars lhs term = execWriterT (go lhs term)
   goP (OrPats pats1) (OrPats pats2) = zipWithSameLengthM_ goOP pats1 pats2
   goP _ _ = mzero
 
-  patToTerm (ArgsPat con args) = appList (Qualid con)
+  patToTerm (ArgsPat con args)         = appList (Qualid con)
     <$> traverse (fmap PosArg . patToTerm) args
   patToTerm (ExplicitArgsPat con args)
     = ExplicitApp con . toList <$> traverse patToTerm args
   patToTerm (InfixPat lhs' op rhs')
     = mkApp2 (Qualid $ Bare op) <$> patToTerm lhs' <*> patToTerm rhs'
-  patToTerm (InScopePat p scope) = InScope <$> patToTerm p <*> pure scope
-  patToTerm (QualidPat qid) = Just $ Qualid qid
-  patToTerm (NumPat n) = Just $ Num n
-  patToTerm (StringPat s) = Just $ String s
-  patToTerm (AsPat _ _) = Nothing
-  patToTerm UnderscorePat = Nothing
-  patToTerm (OrPats _) = Nothing
+  patToTerm (InScopePat p scope)       = InScope <$> patToTerm p <*> pure scope
+  patToTerm (QualidPat qid)            = Just $ Qualid qid
+  patToTerm (NumPat n)                 = Just $ Num n
+  patToTerm (StringPat s)              = Just $ String s
+  patToTerm (AsPat _ _)                = Nothing
+  patToTerm UnderscorePat              = Nothing
+  patToTerm (OrPats _)                 = Nothing
 
   goPQid lhs'@(Bare v) rhs'
     | isPatVar v = tell $ Map.singleton lhs' (Qualid rhs')
@@ -151,6 +152,6 @@ match patVars lhs term = execWriterT (go lhs term)
                       -> f ()
   zipWithSameLengthM_ f as0 bs0
     = let zipGo (a : as) (b : bs) = f a b *> zipGo as bs
-          zipGo [] [] = pure ()
-          zipGo _ _ = empty
+          zipGo [] []             = pure ()
+          zipGo _ _               = empty
       in zipGo (toList as0) (toList bs0)

@@ -55,7 +55,7 @@
       "record-fields": true,
       "where": true,
       "limits": [
-        10,
+        20,
         25
       ]
     },

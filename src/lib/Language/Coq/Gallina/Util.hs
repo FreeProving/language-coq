@@ -120,16 +120,16 @@ isLetCofix (Let f [] Nothing (Cofix (FixOne fb@(FixBody f' _ _ _ _))) body)
 isLetCofix _ = Nothing
 
 termHead :: Term -> Maybe Qualid
-termHead (Forall _ t) = termHead t
-termHead (HasType t _) = termHead t
-termHead (CheckType t _) = termHead t
-termHead (ToSupportType t) = termHead t
-termHead (Parens t) = termHead t
-termHead (InScope t _) = termHead t
-termHead (App t _) = termHead t
+termHead (Forall _ t)         = termHead t
+termHead (HasType t _)        = termHead t
+termHead (CheckType t _)      = termHead t
+termHead (ToSupportType t)    = termHead t
+termHead (Parens t)           = termHead t
+termHead (InScope t _)        = termHead t
+termHead (App t _)            = termHead t
 termHead (ExplicitApp name _) = Just name
-termHead (Qualid name) = Just name
-termHead _ = Nothing
+termHead (Qualid name)        = Just name
+termHead _                    = Nothing
 
 fixBodyName :: Lens' FixBody Qualid
 fixBodyName = lens (\(FixBody name _ _ _ _) -> name)
@@ -188,7 +188,7 @@ qualidModule (Bare _)          = Nothing
 qualidModule (Qualified qid _) = Just qid
 
 qualidMapBase :: (Ident -> Ident) -> Qualid -> Qualid
-qualidMapBase f (Bare base) = Bare $ f base
+qualidMapBase f (Bare base)             = Bare $ f base
 qualidMapBase f (Qualified prefix base) = Qualified prefix $ f base
 
 qualidExtendBase :: Text -> Qualid -> Qualid
@@ -243,7 +243,7 @@ collectArgs (App t args) = do
   return (f, args1 ++ args2)
  where
   fromArg (PosArg arg) = return arg
-  fromArg _ = fail "non-positional argument"
+  fromArg _            = fail "non-positional argument"
 collectArgs (Arrow a1 a2) = return (arrow_qid, [a1, a2])
  where
   arrow_qid = Qualified "GHC.Prim" "arrow"

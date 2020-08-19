@@ -88,18 +88,18 @@ instance HasBV Qualid MultPattern where
 -- /applied/ to arguments, as binders cannot be so applied.
 -- See Note [Bound variables in patterns]
 instance HasBV Qualid Pattern where
-  bvOf (ArgsPat con xs) = fvOf' con <> foldMap bvOf xs
+  bvOf (ArgsPat con xs)         = fvOf' con <> foldMap bvOf xs
   bvOf (ExplicitArgsPat con xs) = fvOf' con <> foldMap bvOf xs
-  bvOf (InfixPat l op r) = bvOf l <> fvOf' (Bare op) <> bvOf r
-  bvOf (AsPat pat x) = bvOf pat <> binder x
-  bvOf (InScopePat pat _scp) = bvOf pat
+  bvOf (InfixPat l op r)        = bvOf l <> fvOf' (Bare op) <> bvOf r
+  bvOf (AsPat pat x)            = bvOf pat <> binder x
+  bvOf (InScopePat pat _scp)    = bvOf pat
   bvOf (QualidPat qid@(Bare _)) = binder qid
     -- See [Note Bound variables in patterns]
-  bvOf (QualidPat qid) = fvOf' qid
-  bvOf UnderscorePat = mempty
-  bvOf (NumPat _num) = mempty
-  bvOf (StringPat _str) = mempty
-  bvOf (OrPats ors) =
+  bvOf (QualidPat qid)          = fvOf' qid
+  bvOf UnderscorePat            = mempty
+  bvOf (NumPat _num)            = mempty
+  bvOf (StringPat _str)         = mempty
+  bvOf (OrPats ors)             =
     -- We don't check that all the or-patterns bind the same variables
     foldMap bvOf ors
 
@@ -111,22 +111,22 @@ instance HasBV Qualid (Qualid, [Pattern]) where
   bvOf (con, pats) = fvOf' con <> foldMap bvOf pats
 
 instance HasBV Qualid Sentence where
-  bvOf (AssumptionSentence assum) = bvOf assum
-  bvOf (DefinitionSentence def) = bvOf def
-  bvOf (InductiveSentence ind) = bvOf ind
-  bvOf (FixpointSentence fix) = bvOf fix
-  bvOf (ProgramSentence sen _) = bvOf sen
+  bvOf (AssumptionSentence assum)     = bvOf assum
+  bvOf (DefinitionSentence def)       = bvOf def
+  bvOf (InductiveSentence ind)        = bvOf ind
+  bvOf (FixpointSentence fix)         = bvOf fix
+  bvOf (ProgramSentence sen _)        = bvOf sen
   bvOf (AssertionSentence assert _pf) = bvOf assert
-  bvOf (ModuleSentence _mod) = mempty
-  bvOf (ClassSentence cls) = bvOf cls
-  bvOf (ExistingClassSentence name) = fvOf' name
-  bvOf (RecordSentence rcd) = bvOf rcd
-  bvOf (InstanceSentence ins) = bvOf ins
-  bvOf (NotationSentence notation) = bvOf notation
-  bvOf (LocalModuleSentence lmd) = bvOf lmd
-  bvOf (SectionSentence sec) = bvOf sec
-  bvOf (ArgumentsSentence _arg) = mempty
-  bvOf (CommentSentence com) = fvOf' com
+  bvOf (ModuleSentence _mod)          = mempty
+  bvOf (ClassSentence cls)            = bvOf cls
+  bvOf (ExistingClassSentence name)   = fvOf' name
+  bvOf (RecordSentence rcd)           = bvOf rcd
+  bvOf (InstanceSentence ins)         = bvOf ins
+  bvOf (NotationSentence notation)    = bvOf notation
+  bvOf (LocalModuleSentence lmd)      = bvOf lmd
+  bvOf (SectionSentence sec)          = bvOf sec
+  bvOf (ArgumentsSentence _arg)       = mempty
+  bvOf (CommentSentence com)          = fvOf' com
 
 instance HasBV Qualid Assumption where
   bvOf (Assumption _kwd assumptions) = bvOf assumptions
@@ -137,7 +137,7 @@ instance HasBV Qualid Assums where
 instance HasBV Qualid Definition where
   bvOf (DefinitionDef _locality x args oty def) = binder x
     <> bindsNothing (foldScopes bvOf args $ fvOf oty <> fvOf def)
-  bvOf (LetDef x args oty def) = binder x
+  bvOf (LetDef x args oty def)                  = binder x
     <> bindsNothing (foldScopes bvOf args $ fvOf oty <> fvOf def)
 
 instance HasBV Qualid Inductive where
@@ -180,15 +180,16 @@ instance HasBV Qualid NotationToken where
   bvOf (NIdent nid)  = binder (Bare nid)
 
 instance HasBV Qualid Notation where
-  bvOf (ReservedNotationIdent _) = mempty
-  bvOf (NotationBinding nb) = bvOf nb
+  bvOf (ReservedNotationIdent _)        = mempty
+  bvOf (NotationBinding nb)             = bvOf nb
   bvOf (NotationDefinition ts def mods)
     = let isSymbol (NSymbol _) = True
           isSymbol (NIdent _)  = False
-          (symbols, vars) = partition isSymbol ts
-          freeVars = foldScopes bvOf vars $ fvOf def <> foldMap fvOf mods
+          (symbols, vars)      = partition isSymbol ts
+          freeVars
+            = foldScopes bvOf vars $ fvOf def <> foldMap fvOf mods
       in foldMap bvOf symbols <> bindsNothing freeVars
-  bvOf (InfixDefinition op defn _ _) = binder (Bare op) <> fvOf' defn
+  bvOf (InfixDefinition op defn _ _)    = binder (Bare op) <> fvOf' defn
 
 instance HasBV Qualid NotationBinding where
   bvOf (NotationIdentBinding op def) = binder (Bare op) <> fvOf' def
@@ -234,36 +235,37 @@ instance HasFV Qualid Qualid where
   fvOf = occurrence
 
 instance HasFV Qualid Term where
-  fvOf (Forall xs t) = foldScopes bvOf xs $ fvOf t
-  fvOf (Fun xs t) = foldScopes bvOf xs $ fvOf t
-  fvOf (Fix fbs) = forgetBinders $ bvOf fbs -- The fixpoint name stays local
-  fvOf (Cofix cbs) = forgetBinders $ bvOf cbs
-  fvOf (Let x args oty val body) = foldScopes bvOf args (fvOf oty <> fvOf val)
+  fvOf (Forall xs t)               = foldScopes bvOf xs $ fvOf t
+  fvOf (Fun xs t)                  = foldScopes bvOf xs $ fvOf t
+  fvOf (Fix fbs)                   = forgetBinders $ bvOf fbs -- The fixpoint name stays local
+  fvOf (Cofix cbs)                 = forgetBinders $ bvOf cbs
+  fvOf (Let x args oty val body)   = foldScopes bvOf args (fvOf oty <> fvOf val)
     <> binder x `scopesOver` fvOf body
   fvOf (LetTuple xs oret val body)
     = fvOf oret <> fvOf val <> foldScopes bvOf xs (fvOf body)
-  fvOf (LetTick pat def body) = fvOf def <> bvOf pat `scopesOver` fvOf body
-  fvOf (If _ c oret t f) = fvOf c <> fvOf oret <> fvOf t <> fvOf f
-  fvOf (HasType tm ty) = fvOf tm <> fvOf ty
-  fvOf (CheckType tm ty) = fvOf tm <> fvOf ty
-  fvOf (ToSupportType tm) = fvOf tm
-  fvOf (Arrow ty1 ty2) = fvOf ty1 <> fvOf ty2
-  fvOf (App f xs) = fvOf f <> fvOf xs
-  fvOf (ExplicitApp qid xs) = fvOf qid <> fvOf xs
-  fvOf (InScope t _scope) = fvOf t
-  fvOf (Match items oret eqns) = foldMap bvOf items
+  fvOf (LetTick pat def body)
+    = fvOf def <> bvOf pat `scopesOver` fvOf body
+  fvOf (If _ c oret t f)           = fvOf c <> fvOf oret <> fvOf t <> fvOf f
+  fvOf (HasType tm ty)             = fvOf tm <> fvOf ty
+  fvOf (CheckType tm ty)           = fvOf tm <> fvOf ty
+  fvOf (ToSupportType tm)          = fvOf tm
+  fvOf (Arrow ty1 ty2)             = fvOf ty1 <> fvOf ty2
+  fvOf (App f xs)                  = fvOf f <> fvOf xs
+  fvOf (ExplicitApp qid xs)        = fvOf qid <> fvOf xs
+  fvOf (InScope t _scope)          = fvOf t
+  fvOf (Match items oret eqns)     = foldMap bvOf items
     `scopesOver` (fvOf oret <> fvOf eqns)
-  fvOf (Qualid qid) = fvOf qid
-  fvOf (RawQualid qid) = fvOf qid
-  fvOf (Sort _sort) = mempty
-  fvOf (Num _num) = mempty
-  fvOf (String _str) = mempty
-  fvOf (HsString _str) = mempty
-  fvOf (HsChar _char) = mempty
-  fvOf Underscore = mempty
-  fvOf (Parens t) = fvOf t
-  fvOf (Bang t) = fvOf t
-  fvOf (Record defns) = fvOf defns
+  fvOf (Qualid qid)                = fvOf qid
+  fvOf (RawQualid qid)             = fvOf qid
+  fvOf (Sort _sort)                = mempty
+  fvOf (Num _num)                  = mempty
+  fvOf (String _str)               = mempty
+  fvOf (HsString _str)             = mempty
+  fvOf (HsChar _char)              = mempty
+  fvOf Underscore                  = mempty
+  fvOf (Parens t)                  = fvOf t
+  fvOf (Bang t)                    = fvOf t
+  fvOf (Record defns)              = fvOf defns
 
 instance HasFV Qualid Arg where
   fvOf (PosArg t)      = fvOf t

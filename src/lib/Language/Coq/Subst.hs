@@ -94,8 +94,8 @@ instance Subst Assums where
   subst f (Assums xs ty) = Assums xs (subst f ty)
 
 instance Subst Definition where
-  subst f (LetDef x args oty def) = LetDef x (subst f args) (subst f oty)
-    (subst f def)
+  subst f (LetDef x args oty def)            = LetDef x (subst f args)
+    (subst f oty) (subst f def)
   subst f (DefinitionDef isL x args oty def) = DefinitionDef isL x
     (subst f args) (subst f oty) (subst f def)
 
@@ -167,39 +167,40 @@ instance Subst Equation where
   subst f (Equation nep t) = Equation nep (subst f t)
 
 instance Subst Term where
-  subst f (Forall xs t) = Forall (subst f xs) (subst f t)
-  subst f (Fun xs t) = Fun (subst f xs) (subst f t)
-  subst f (Fix fbs) = Fix (subst f fbs)
-  subst f (Cofix cbs) = Cofix (subst f cbs)
-  subst f (Let x args oty val body) = Let x (subst f args) (subst f oty)
+  subst f (Forall xs t)               = Forall (subst f xs) (subst f t)
+  subst f (Fun xs t)                  = Fun (subst f xs) (subst f t)
+  subst f (Fix fbs)                   = Fix (subst f fbs)
+  subst f (Cofix cbs)                 = Cofix (subst f cbs)
+  subst f (Let x args oty val body)   = Let x (subst f args) (subst f oty)
     (subst f val) (subst f body)
   subst f (LetTuple xs oret val body) = LetTuple xs (subst f oret) (subst f val)
     (subst f body)
-  subst f (LetTick pat def body) = LetTick (subst f pat) (subst f def)
+  subst f (LetTick pat def body)      = LetTick (subst f pat) (subst f def)
     (subst f body)
-  subst f (If is c oret t fa) = If is (subst f c) (subst f oret) (subst f t)
-    (subst f fa)
-  subst f (HasType tm ty) = HasType (subst f tm) (subst f ty)
-  subst f (CheckType tm ty) = CheckType (subst f tm) (subst f ty)
-  subst f (ToSupportType tm) = ToSupportType (subst f tm)
-  subst f (Arrow ty1 ty2) = Arrow (subst f ty1) (subst f ty2)
-  subst f (App fu xs) = App (subst f fu) (subst f xs)
-  subst f (ExplicitApp qid xs) = ExplicitApp qid (subst f xs)
-  subst f (InScope t scope) = InScope (subst f t) scope
+  subst f (If is c oret t fa)         = If is (subst f c) (subst f oret)
+    (subst f t) (subst f fa)
+  subst f (HasType tm ty)             = HasType (subst f tm) (subst f ty)
+  subst f (CheckType tm ty)           = CheckType (subst f tm) (subst f ty)
+  subst f (ToSupportType tm)          = ToSupportType (subst f tm)
+  subst f (Arrow ty1 ty2)             = Arrow (subst f ty1) (subst f ty2)
+  subst f (App fu xs)                 = App (subst f fu) (subst f xs)
+  subst f (ExplicitApp qid xs)        = ExplicitApp qid (subst f xs)
+  subst f (InScope t scope)           = InScope (subst f t) scope
     -- The scope is a different sort of identifier, not a term-level variable.
-  subst f (Match items oret eqns) = Match (subst f items) (subst f oret)
+  subst f (Match items oret eqns)     = Match (subst f items) (subst f oret)
     (subst f eqns)
-  subst f x@(Qualid qid) = fromMaybe x (Map.lookup qid f)
-  subst f x@(RawQualid qid) = fromMaybe x (Map.lookup qid f)
-  subst _f x@(Sort _sort) = x
-  subst _f x@(Num _num) = x
-  subst _f x@(String _str) = x
-  subst _f x@(HsString _str) = x
-  subst _f x@(HsChar _char) = x
-  subst _f x@Underscore = x
-  subst f (Parens t) = Parens (subst f t)
-  subst f (Bang t) = Bang (subst f t)
-  subst f (Record defns) = Record [(v, subst f t) | (v, t) <- defns]
+  subst f x@(Qualid qid)              = fromMaybe x (Map.lookup qid f)
+  subst f x@(RawQualid qid)           = fromMaybe x (Map.lookup qid f)
+  subst _f x@(Sort _sort)             = x
+  subst _f x@(Num _num)               = x
+  subst _f x@(String _str)            = x
+  subst _f x@(HsString _str)          = x
+  subst _f x@(HsChar _char)           = x
+  subst _f x@Underscore               = x
+  subst f (Parens t)                  = Parens (subst f t)
+  subst f (Bang t)                    = Bang (subst f t)
+  subst f (Record defns)
+    = Record [(v, subst f t) | (v, t) <- defns]
 
 instance (Subst a, Functor f) => Subst (f a) where
   subst f = fmap (subst f)
