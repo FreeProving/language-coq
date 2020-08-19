@@ -99,9 +99,10 @@ instance HasBV Qualid Pattern where
   bvOf UnderscorePat = mempty
   bvOf (NumPat _num) = mempty
   bvOf (StringPat _str) = mempty
-  bvOf (OrPats ors) = foldMap bvOf ors
-
+  bvOf (OrPats ors) =
     -- We don't check that all the or-patterns bind the same variables
+    foldMap bvOf ors
+
 instance HasBV Qualid OrPattern where
   bvOf (OrPattern pats) = foldMap bvOf pats
 
@@ -161,12 +162,13 @@ instance HasBV Qualid ClassDefinition where
     `telescope` mconcat [binder field <> fvOf' ty | (field, ty) <- fields]
 
 instance HasBV Qualid RecordDefinition where
-  bvOf (RecordDefinition name params _osort build fields) = binder name
+  bvOf (RecordDefinition name params _osort build fields) =
+    -- TODO: If build is Nothing, we could synthesize the expected build name
+    binder name
     <> foldMap binder build
     <> foldTelescope bvOf params
     `telescope` mconcat [binder field <> fvOf' ty | (field, ty) <- fields]
 
-      -- TODO: If build is Nothing, we could synthesize the expected build name
 instance HasBV Qualid InstanceDefinition where
   bvOf (InstanceDefinition inst params cl defns _mpf) = binder inst
     <> bindsNothing (foldScopes bvOf params $ fvOf cl <> fvOf defns)
@@ -265,10 +267,11 @@ instance HasFV Qualid Term where
 
 instance HasFV Qualid Arg where
   fvOf (PosArg t)      = fvOf t
-  fvOf (NamedArg _x t) = fvOf t
-
+  fvOf (NamedArg _x t) =
     -- The name here is the name of a function parameter; it's not an occurrence
     -- of a Gallina-level variable.
+    fvOf t
+
 instance HasFV Qualid Order where
   fvOf (StructOrder qid)       = fvOf qid
   fvOf (MeasureOrder expr rel) = fvOf expr <> fvOf rel

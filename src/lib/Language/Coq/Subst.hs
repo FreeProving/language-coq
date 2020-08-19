@@ -86,9 +86,10 @@ instance Subst Sentence where
   subst _ s@(CommentSentence _)         = s
 
 instance Subst Assumption where
-  subst f (Assumption kwd assumptions) = Assumption kwd (subst f assumptions)
-
+  subst f (Assumption kwd assumptions) =
     -- The @kwd@ part is pro forma – there are no free variables there
+    Assumption kwd (subst f assumptions)
+
 instance Subst Assums where
   subst f (Assums xs ty) = Assums xs (subst f ty)
 

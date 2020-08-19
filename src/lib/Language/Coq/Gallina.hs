@@ -482,11 +482,13 @@ data ModuleSentence
 -- | @/class_definition/ ::=@ /(extra)/
 data ClassDefinition
   = ClassDefinition Qualid [Binder] (Maybe Sort) [(Qualid, Term)]
-  -- ^ @Class /ident/ [/binders/] [: /sort/] :=
+  -- ^ @
+  --   Class /ident/ [/binders/] [: /sort/] :=
   --      { [/ident/ : /term/ ; … ; /ident/ : /term/] } .
+  --   @
+  -- TODO: field arguments (which become @forall@ed)
  deriving ( Eq, Ord, Show, Read )
 
--- TODO: field arguments (which become @forall@ed)
 -- | @/record_definition/ ::=@ /(extra)/
 data RecordDefinition = RecordDefinition Qualid
                                          [Binder]

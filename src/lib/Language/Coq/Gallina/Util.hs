@@ -84,9 +84,9 @@ appList f = maybe f (App f) . nonEmpty
 mkVarPat :: Ident -> Pattern
 mkVarPat x = QualidPat (Bare x)
 
+mkApp1Pat :: Qualid -> Pattern -> Pattern
 mkApp1Pat c x = ArgsPat c [x]
 
-mkApp1Pat :: Qualid -> Pattern -> Pattern
 mkApp2Pat :: Qualid -> Pattern -> Pattern -> Pattern
 mkApp2Pat c x1 x2 = ArgsPat c [x1, x2]
 

@@ -158,9 +158,10 @@ renderString = dquotes . string .: Text.concatMap
     c   -> Text.singleton c
 
 renderOp :: Op -> Doc
-renderOp o = text $ o <> (if "." `Text.isSuffixOf` o then "(**)" else "")
-
+renderOp o =
   -- [x .&. y] would be illegal, so print [x .&.(**) y]
+  text $ o <> (if "." `Text.isSuffixOf` o then "(**)" else "")
+
 renderQOp :: Qualid -> Doc
 renderQOp qid = case qualidToOp qid of
   Just op -> renderOp op
