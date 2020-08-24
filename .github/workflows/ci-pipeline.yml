@@ -204,13 +204,13 @@ jobs:
     - name: Check code style using HLint
       run: hlint src
 
-  # All Haskell source files should be formatted using Brittany.
-  brittany:
-    name: Run Brittany
+  # All Haskell source files should be formatted using Floskell.
+  floskell:
+    name: Run Floskell
     runs-on: ubuntu-latest
-    container: just95/brittany:0.12.1.1
+    container: just95/floskell:0.10.4
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Check code style using Brittany
+    - name: Check code style using Floskell
       run: ./tool/check-formatting.sh

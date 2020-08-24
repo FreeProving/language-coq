@@ -1,0 +1,23 @@
+# This file contains repository-specific configuration options for the Floskell
+# formatter. This file is used to generate the `floskell.json` file. It should
+# be merged with the template configuration file
+# <https://github.com/FreeProving/guidelines/blob/main/floskell.toml>
+# as described in the comments of the template.
+
+extensions = [
+    # No extensions are enabled by default in the `.cabal` file.
+  ]
+
+fixities = [
+    # Infix operators from `Data.Composition`.
+    "infixr 8 .:",
+
+    # Custom infix operators from `Data.List.NonEmpty`.
+    "infixr 5 <|"
+  ]
+
+# All non-`Main` modules in this repository use the `Language.Coq` prefix. They
+# should be sorted into their own group.
+[[formatting.options.sort-imports]]
+  prefixes = ["Language.Coq"]
+  order    = "sorted"
