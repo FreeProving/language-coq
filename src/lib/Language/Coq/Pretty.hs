@@ -535,6 +535,8 @@ instance Gallina Sentence where
   renderGallina' p (NotationSentence notation)  = renderGallina' p notation
   renderGallina' p (ArgumentsSentence arg)      = renderGallina' p arg
   renderGallina' p (CommentSentence com)        = renderGallina' p com
+  renderGallina' p (HintSentence hint)          = renderGallina' p hint
+  renderGallina' p (OptionSentence opt)         = renderGallina' p opt
   renderGallina' p (LocalModuleSentence lmd)    = renderGallina' p lmd
   renderGallina' p (SectionSentence sec)        = renderGallina' p sec
 
@@ -786,6 +788,59 @@ instance Gallina ArgumentSpec where
             ArgMaximal  -> braces
       in wrap (renderGallina arg)
          <> maybe mempty (("%" <>) . renderIdent) oscope
+
+instance Gallina Direction where
+  renderGallina' _ LeftToRight = "->"
+  renderGallina' _ RightToLeft = "<-"
+
+instance Gallina Transparency where
+  renderGallina' _ Transparent = "Transparent"
+  renderGallina' _ Opaque      = "Opaque"
+
+instance Gallina HintDefinition where
+  renderGallina' _ (HintResolve qualids Nothing Nothing) =
+    "Resolve" <+> foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintResolve qualids mbCost mbPat) =
+    "Resolve" <+> foldr (\q r -> renderGallina q <+> r) "" qualids <+>
+    "|" <+> maybe "" renderNum mbCost <+>
+    maybe "" (renderGallina' 400) mbPat
+  renderGallina' _ (HintResolveImp dir qualids) =
+    "Resolve" <+> renderGallina dir <+>
+    foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintImmediate qualids) =
+    "Immediate" <+> foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintConstructors qualids) =
+    "Constructors" <+> foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintUnfold qualids) =
+    "Unfold" <+> foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintTransparency trans qualids) =
+    renderGallina trans <+> foldr (\q r -> renderGallina q <+> r) "" qualids
+  renderGallina' _ (HintVariables trans) =
+    "Variables" <+> renderGallina trans
+  renderGallina' _ (HintConstants trans) =
+    "Constants" <+> renderGallina trans
+  renderGallina' _ (HintExtern cost mbPat tac) =
+    "Extern" <+> renderNum cost <+> maybe "" (renderGallina' 400) mbPat
+    <+> "=>" <+> text tac
+
+instance Gallina Hint where
+  renderGallina' _ (Hint mbLoc def []) =
+    maybe "" renderGallina mbLoc <+> "Hint" <+> renderGallina def <> "."
+  renderGallina' _ (Hint mbLoc def dbs) =
+    maybe "" renderGallina mbLoc <+> "Hint" <+>  renderGallina def <+> ":" <+>
+    foldr (\db r -> renderIdent db <+> r) "" dbs <> "."
+
+instance Gallina OptionValue where
+  renderGallina' _ (OVNum n) = renderNum n
+  renderGallina' _ (OVText t) = text t
+
+instance Gallina Option where
+  renderGallina' _ (SetOption name Nothing) =
+    "Set" <+> text name <> "."
+  renderGallina' _ (SetOption name (Just opt)) =
+    "Set" <+> text name <+> renderGallina opt <> "."
+  renderGallina' _ (UnsetOption name) =
+    "Unset" <+> text name <> "."
 
 instance Gallina LocalModule where
   renderGallina' _ (LocalModule name sentences) = vcat

@@ -71,6 +71,13 @@ module Language.Coq.Gallina
   , Arguments(..)
   , ArgumentSpec(..)
   , ArgumentExplicitness(..)
+  , Direction(..)
+  , Transparency(..)
+  , HintDefinition(..)
+  , Hint(..)
+  , SettingName
+  , OptionValue(..)
+  , Option(..)
   ) where
 
 import           Prelude            hiding ( Num )
@@ -359,6 +366,10 @@ data Sentence
     -- ^ @/arguments/@ – extra
   | CommentSentence Comment
     -- ^ @/comment/@ – extra
+  | HintSentence Hint
+    -- ^ @/hint/@ – extra
+  | OptionSentence Option
+    -- ^ @/option/@ – extra
   | LocalModuleSentence LocalModule
   | SectionSentence Section
  deriving ( Eq, Ord, Show, Read )
@@ -591,6 +602,62 @@ data ArgumentExplicitness
   | ArgImplicit -- ^@[ ⋯ ]@ – wrap in square brackets
   | ArgMaximal  -- ^@{ ⋯ }@ – wrap in braces
  deriving ( Eq, Ord, Show, Read, Enum, Bounded )
+
+-- |@/direction/ ::=@ /(extra)/
+data Direction
+  = LeftToRight -- ^@->@
+  | RightToLeft -- ^@<-@
+ deriving ( Eq, Ord, Show, Read )
+
+-- |@/transparency/ ::=@ /(extra)/
+data Transparency
+  = Transparent -- ^@Transparent@
+  | Opaque      -- ^@Opaque@
+ deriving ( Eq, Ord, Show, Read )
+
+-- |@/hint_definition/ ::=@ /(extra)/
+data HintDefinition
+  = HintResolve (NonEmpty Qualid) (Maybe Num) (Maybe Pattern)
+  -- ^@Resolve /qualid/ … /qualid/ [| [/num/] [/pattern/]]@
+  | HintResolveImp Direction (NonEmpty Qualid)
+  -- ^@Resolve /direction/ /qualid/ … /qualid/@
+  | HintImmediate (NonEmpty Qualid)
+  -- ^@Immediate /qualid/ … /qualid/@
+  | HintConstructors (NonEmpty Qualid)
+  -- ^@Constructors /qualid/ … /qualid/@
+  | HintUnfold (NonEmpty Qualid)
+  -- ^@Unfold /qualid/ … /qualid/@
+  | HintTransparency Transparency (NonEmpty Qualid)
+  -- ^@/transparency/ /qualid/ … /qualid/@
+  | HintVariables Transparency
+  -- ^@Variables /transparency/@
+  | HintConstants Transparency
+  -- ^@Constants /transparency/@
+  | HintExtern Num (Maybe Pattern) Tactics
+  -- ^@Extern /num/ [/pattern/] => /tactics/@
+ deriving ( Eq, Ord, Show, Read )
+
+-- |@/hint/ ::=@ /(extra)/
+data Hint
+  = Hint (Maybe Locality) HintDefinition [Ident]
+    -- ^@Hint [/Local/] /hint_definition/ [: /ident/ … /ident/] .@
+ deriving ( Eq, Ord, Show, Read )
+
+type SettingName = Text
+
+-- |@/option_value/ ::=@ /(extra)/
+data OptionValue
+  = OVNum Num   -- ^@/num/@
+  | OVText Text -- ^@/text/@
+ deriving ( Eq, Ord, Show, Read )
+
+-- |@/option/ ::=@ /(extra)/
+data Option
+  = SetOption SettingName (Maybe OptionValue)
+    -- ^@Set /setting_name/ [/option_value/] .@
+  | UnsetOption SettingName
+    -- ^@Unset /setting_name/ .@
+ deriving ( Eq, Ord, Show, Read )
 
 data LocalModule = LocalModule Ident [Sentence]
  deriving ( Eq, Ord, Show, Read )
