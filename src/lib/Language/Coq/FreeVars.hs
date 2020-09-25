@@ -200,8 +200,8 @@ instance HasBV Qualid Hint where
   bvOf (Hint _locality hint_definition _databases) = bvOf hint_definition
 
 instance HasBV Qualid HintDefinition where
-  bvOf (HintResolve _ _ (Just pattern)) = bvOf pattern
-  bvOf (HintExtern _ (Just pattern) _) = bvOf pattern
+  bvOf (HintResolve _ _ (Just pat)) = bvOf pat
+  bvOf (HintExtern _ (Just pat) _) = bvOf pat
   bvOf _ = mempty
 
 instance HasBV Qualid LocalModule where

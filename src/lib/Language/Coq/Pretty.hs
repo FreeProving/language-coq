@@ -837,7 +837,7 @@ instance Gallina Hint where
 
 instance Gallina OptionValue where
   renderGallina' _ (OVNum n)  = renderNum n
-  renderGallina' _ (OVText t) = text t
+  renderGallina' _ (OVText t) = dquotes $ text t
 
 instance Gallina Option where
   renderGallina' _ (SetOption name Nothing)    = "Set" <+> text name <> "."
