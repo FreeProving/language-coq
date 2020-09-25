@@ -639,7 +639,7 @@ data HintDefinition
 
 -- |@/hint/ ::=@ /(extra)/
 data Hint = Hint (Maybe Locality) HintDefinition [Ident]
-  -- ^@Hint [/Local/] /hint_definition/ [: /ident/ … /ident/] .@
+  -- ^@[/Local/] Hint /hint_definition/ [: /ident/ … /ident/] .@
  deriving ( Eq, Ord, Show, Read )
 
 type SettingName = Text
@@ -652,10 +652,10 @@ data OptionValue
 
 -- |@/option/ ::=@ /(extra)/
 data Option
-  = SetOption SettingName (Maybe OptionValue)
-    -- ^@Set /setting_name/ [/option_value/] .@
-  | UnsetOption SettingName
-    -- ^@Unset /setting_name/ .@
+  = SetOption (Maybe Locality) SettingName (Maybe OptionValue)
+    -- ^@[/Local/] Set /setting_name/ [/option_value/] .@
+  | UnsetOption (Maybe Locality) SettingName
+    -- ^@[/Local/] Unset /setting_name/ .@
  deriving ( Eq, Ord, Show, Read )
 
 data LocalModule = LocalModule Ident [Sentence]

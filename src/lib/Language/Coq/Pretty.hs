@@ -840,10 +840,15 @@ instance Gallina OptionValue where
   renderGallina' _ (OVText t) = dquotes $ text t
 
 instance Gallina Option where
-  renderGallina' _ (SetOption name Nothing)    = "Set" <+> text name <> "."
-  renderGallina' _ (SetOption name (Just opt))
-    = "Set" <+> text name <+> renderGallina opt <> "."
-  renderGallina' _ (UnsetOption name)          = "Unset" <+> text name <> "."
+  renderGallina' _ (SetOption mbLoc name Nothing)
+    = maybe "" renderGallina mbLoc <+> "Set" <+> text name <> "."
+  renderGallina' _ (SetOption mbLoc name (Just opt)) = maybe "" renderGallina
+    mbLoc
+    <+> "Set"
+    <+> text name
+    <+> renderGallina opt <> "."
+  renderGallina' _ (UnsetOption mbLoc name)
+    = maybe "" renderGallina mbLoc <+> "Unset" <+> text name <> "."
 
 instance Gallina LocalModule where
   renderGallina' _ (LocalModule name sentences) = vcat
