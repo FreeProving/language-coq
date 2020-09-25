@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0.0 / 2020-08-25
+
+ - **Support hints**
+   + Hint sentences have been added to the Coq AST that support a wide range of hints.
+ - **Support options and flags**
+   + Option sentences have been added to the Coq AST that allow to set and unset arbitrary options and flags.
+
 ## 0.2.0.0 / 2020-08-22
 
  - **Extended notation definitions**
