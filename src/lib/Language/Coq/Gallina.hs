@@ -618,29 +618,28 @@ data Transparency
 -- |@/hint_definition/ ::=@ /(extra)/
 data HintDefinition
   = HintResolve (NonEmpty Qualid) (Maybe Num) (Maybe Pattern)
-  -- ^@Resolve /qualid/ … /qualid/ [| [/num/] [/pattern/]]@
+    -- ^@Resolve /qualid/ … /qualid/ [| [/num/] [/pattern/]]@
   | HintResolveImp Direction (NonEmpty Qualid)
-  -- ^@Resolve /direction/ /qualid/ … /qualid/@
+    -- ^@Resolve /direction/ /qualid/ … /qualid/@
   | HintImmediate (NonEmpty Qualid)
-  -- ^@Immediate /qualid/ … /qualid/@
+    -- ^@Immediate /qualid/ … /qualid/@
   | HintConstructors (NonEmpty Qualid)
-  -- ^@Constructors /qualid/ … /qualid/@
+    -- ^@Constructors /qualid/ … /qualid/@
   | HintUnfold (NonEmpty Qualid)
-  -- ^@Unfold /qualid/ … /qualid/@
+    -- ^@Unfold /qualid/ … /qualid/@
   | HintTransparency Transparency (NonEmpty Qualid)
-  -- ^@/transparency/ /qualid/ … /qualid/@
+    -- ^@/transparency/ /qualid/ … /qualid/@
   | HintVariables Transparency
-  -- ^@Variables /transparency/@
+    -- ^@Variables /transparency/@
   | HintConstants Transparency
-  -- ^@Constants /transparency/@
+    -- ^@Constants /transparency/@
   | HintExtern Num (Maybe Pattern) Tactics
-  -- ^@Extern /num/ [/pattern/] => /tactics/@
+    -- ^@Extern /num/ [/pattern/] => /tactics/@
  deriving ( Eq, Ord, Show, Read )
 
 -- |@/hint/ ::=@ /(extra)/
-data Hint
-  = Hint (Maybe Locality) HintDefinition [Ident]
-    -- ^@Hint [/Local/] /hint_definition/ [: /ident/ … /ident/] .@
+data Hint = Hint (Maybe Locality) HintDefinition [Ident]
+  -- ^@Hint [/Local/] /hint_definition/ [: /ident/ … /ident/] .@
  deriving ( Eq, Ord, Show, Read )
 
 type SettingName = Text

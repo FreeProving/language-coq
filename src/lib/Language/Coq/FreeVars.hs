@@ -201,7 +201,7 @@ instance HasBV Qualid Hint where
 
 instance HasBV Qualid HintDefinition where
   bvOf (HintResolve _ _ (Just pattern)) = bvOf pattern
-  bvOf (HintExtern _ (Just pattern) _)  = bvOf pattern
+  bvOf (HintExtern _ (Just pattern) _) = bvOf pattern
   bvOf _ = mempty
 
 instance HasBV Qualid LocalModule where
