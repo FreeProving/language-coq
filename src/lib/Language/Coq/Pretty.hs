@@ -828,8 +828,8 @@ instance Gallina HintDefinition where
 
 instance Gallina Hint where
   renderGallina' _ (Hint mbLoc def [])
-    = maybe "" renderGallina mbLoc <+> "Hint" <+> renderGallina def <> "."
-  renderGallina' _ (Hint mbLoc def dbs) = maybe "" renderGallina mbLoc
+    = renderFullLocality mbLoc <+> "Hint" <+> renderGallina def <> "."
+  renderGallina' _ (Hint mbLoc def dbs) = renderFullLocality mbLoc
     <+> "Hint"
     <+> renderGallina def
     <+> ":"
@@ -841,14 +841,13 @@ instance Gallina OptionValue where
 
 instance Gallina Option where
   renderGallina' _ (SetOption mbLoc name Nothing)
-    = maybe "" renderGallina mbLoc <+> "Set" <+> text name <> "."
-  renderGallina' _ (SetOption mbLoc name (Just opt)) = maybe "" renderGallina
-    mbLoc
+    = renderFullLocality mbLoc <+> "Set" <+> text name <> "."
+  renderGallina' _ (SetOption mbLoc name (Just opt)) = renderFullLocality mbLoc
     <+> "Set"
     <+> text name
     <+> renderGallina opt <> "."
   renderGallina' _ (UnsetOption mbLoc name)
-    = maybe "" renderGallina mbLoc <+> "Unset" <+> text name <> "."
+    = renderFullLocality mbLoc <+> "Unset" <+> text name <> "."
 
 instance Gallina LocalModule where
   renderGallina' _ (LocalModule name sentences) = vcat
