@@ -69,6 +69,7 @@ instance Subst OrPattern where
 -}
 instance Subst Sentence where
   subst f (AssumptionSentence assum)    = AssumptionSentence (subst f assum)
+  subst f (ContextSentence binds)       = ContextSentence (subst f binds)
   subst f (DefinitionSentence def)      = DefinitionSentence (subst f def)
   subst f (InductiveSentence ind)       = InductiveSentence (subst f ind)
   subst f (FixpointSentence fix)        = FixpointSentence (subst f fix)

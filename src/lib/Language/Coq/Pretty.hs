@@ -519,6 +519,8 @@ renderObligation Nothing        = empty
 
 instance Gallina Sentence where
   renderGallina' p (AssumptionSentence ass)     = renderGallina' p ass
+  renderGallina' p (ContextSentence binds)
+    = "Context" <+> hsep [renderGallina' p b | b <- toList binds] <> "."
   renderGallina' p (DefinitionSentence def)     = renderGallina' p def
   renderGallina' p (InductiveSentence ind)      = renderGallina' p ind
   renderGallina' p (FixpointSentence fix)       = renderGallina' p fix

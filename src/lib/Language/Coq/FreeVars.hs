@@ -112,6 +112,7 @@ instance HasBV Qualid (Qualid, [Pattern]) where
 
 instance HasBV Qualid Sentence where
   bvOf (AssumptionSentence assum)     = bvOf assum
+  bvOf (ContextSentence binds)        = foldMap bvOf binds
   bvOf (DefinitionSentence def)       = bvOf def
   bvOf (InductiveSentence ind)        = bvOf ind
   bvOf (FixpointSentence fix)         = bvOf fix
