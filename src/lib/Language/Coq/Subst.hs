@@ -84,6 +84,8 @@ instance Subst Sentence where
   subst _ s@(ExistingClassSentence _)   = s
   subst _ s@(ArgumentsSentence _)       = s
   subst _ s@(CommentSentence _)         = s
+  subst _ s@(HintSentence _)            = s
+  subst _ s@(OptionSentence _)          = s
 
 instance Subst Assumption where
   subst f (Assumption kwd assumptions) =

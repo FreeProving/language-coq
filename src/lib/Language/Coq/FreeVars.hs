@@ -9,7 +9,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Language.Coq.FreeVars
-  ( -- * Constraint syonyms
+  ( -- * Constraint synonyms
     FreeVars
     -- * Main query functions
   , getFreeVars
@@ -127,6 +127,8 @@ instance HasBV Qualid Sentence where
   bvOf (SectionSentence sec)          = bvOf sec
   bvOf (ArgumentsSentence _arg)       = mempty
   bvOf (CommentSentence com)          = fvOf' com
+  bvOf (HintSentence hint)            = bvOf hint
+  bvOf (OptionSentence _option)       = mempty
 
 instance HasBV Qualid Assumption where
   bvOf (Assumption _kwd assumptions) = bvOf assumptions
@@ -193,6 +195,14 @@ instance HasBV Qualid Notation where
 
 instance HasBV Qualid NotationBinding where
   bvOf (NotationIdentBinding op def) = binder (Bare op) <> fvOf' def
+
+instance HasBV Qualid Hint where
+  bvOf (Hint _locality hint_definition _databases) = bvOf hint_definition
+
+instance HasBV Qualid HintDefinition where
+  bvOf (HintResolve _ _ (Just pat)) = bvOf pat
+  bvOf (HintExtern _ (Just pat) _) = bvOf pat
+  bvOf _ = mempty
 
 instance HasBV Qualid LocalModule where
   bvOf (LocalModule _name sentences) = foldTelescope bvOf sentences
