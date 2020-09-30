@@ -45,7 +45,7 @@ In order to use this package in your own project, include the following stanza i
 source-repository-package
   type: git
   location: git://github.com/FreeProving/language-coq.git
-  tag: v0.3.0.0
+  tag: v0.4.0.0
 ```
 
 ## Get Involved
