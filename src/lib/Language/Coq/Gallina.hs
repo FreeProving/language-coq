@@ -340,6 +340,8 @@ newtype Comment = Comment Text -- ^ @(* … *)@
 data Sentence
   = AssumptionSentence Assumption
     -- ^ @/assumption/@
+  | ContextSentence Binders
+    -- ^ @Context /binders/ .@
   | DefinitionSentence Definition
     -- ^ @/definition/@
   | InductiveSentence Inductive
