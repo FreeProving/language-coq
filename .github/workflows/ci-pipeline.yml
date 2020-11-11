@@ -71,9 +71,9 @@ jobs:
     steps:
     ### SETUP CACHE ###########################################################
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Setup Haskell
-      uses: actions/setup-haskell@v1
+      uses: actions/setup-haskell@v1.1.3
       with:
         ghc-version: '8.6.5'
         cabal-version: '3.2'
@@ -85,7 +85,7 @@ jobs:
         echo "::set-output name=cabal-index-hash::$(cat ~/.cabal/packages/**/01-index.cache | sha256sum -b | awk '{ print $1 }')"
         echo "::set-output name=haskell-source-hash::$(cat $(find src -name '*.hs') | sha256sum | awk '{ print $1 }')"
     - name: Cache ~/.cabal/packages
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.cabal/packages
         key: ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
@@ -93,7 +93,7 @@ jobs:
           ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-
           ${{ matrix.os }}-cabal-packages-
     - name: Cache ~/.cabal/store
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.cabal/store
         key: ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
@@ -101,7 +101,7 @@ jobs:
           ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-
           ${{ matrix.os }}-cabal-store-
     - name: Cache dist-newstyle
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: dist-newstyle
         key: ${{ matrix.os }}-dist-newstyle-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}-${{ steps.cabal-update.outputs.haskell-source-hash }}
@@ -134,9 +134,9 @@ jobs:
     steps:
     ### SETUP CACHE ###########################################################
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Setup Haskell
-      uses: actions/setup-haskell@v1
+      uses: actions/setup-haskell@v1.1.3
       with:
         ghc-version: '8.6.5'
         cabal-version: '3.2'
@@ -148,7 +148,7 @@ jobs:
         echo "::set-output name=cabal-index-hash::$(cat ~/.cabal/packages/**/01-index.cache | sha256sum -b | awk '{ print $1 }')"
         echo "::set-output name=haskell-source-hash::$(cat $(find src -name '*.hs') | sha256sum | awk '{ print $1 }')"
     - name: Cache ~/.cabal/packages
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.cabal/packages
         key: ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
@@ -156,7 +156,7 @@ jobs:
           ${{ matrix.os }}-cabal-packages-${{ steps.cabal-update.outputs.cabal-hash }}-
           ${{ matrix.os }}-cabal-packages-
     - name: Cache ~/.cabal/store
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.cabal/store
         key: ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}
@@ -164,7 +164,7 @@ jobs:
           ${{ matrix.os }}-cabal-store-${{ steps.cabal-update.outputs.cabal-hash }}-
           ${{ matrix.os }}-cabal-store-
     - name: Cache dist-newstyle
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: dist-newstyle
         key: ${{ matrix.os }}-dist-newstyle-${{ steps.cabal-update.outputs.cabal-hash }}-${{ steps.cabal-update.outputs.cabal-index-hash }}-${{ steps.cabal-update.outputs.haskell-source-hash }}
@@ -183,7 +183,7 @@ jobs:
         mkdir -p ./build/docs
         cp -R $doc_path ./build/docs
     - name: Upload documentation
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: documentation
         path: ./build/docs
@@ -200,7 +200,7 @@ jobs:
     container: just95/hlint:3.1.1
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Check code style using HLint
       run: hlint src
 
@@ -211,6 +211,6 @@ jobs:
     container: just95/floskell:0.10.4
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Check code style using Floskell
       run: ./tool/check-formatting.sh
